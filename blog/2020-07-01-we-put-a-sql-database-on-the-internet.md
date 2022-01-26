@@ -146,7 +146,7 @@ IP addresses.
 Excluding simple show queries, we saw 17,128 SQL queries with 2,485 syntax
 errors in the queries. We sent back almost 40GB of data in response to the
 queries. The response times were phenomenal. Sub-second responses to nearly all
-of the queries.
+the queries.
 
 Someone in the HN comments suggested that column stores are bad at joins, which
 led to someone coming in and trying to join the table to itself. Ordinarily,
