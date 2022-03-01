@@ -90,6 +90,8 @@ function Navbar(): JSX.Element {
         "navbar-sidebar--show": sidebarShown,
       })}
     >
+      <div className={clsx("navbar-ua", "navbar-ua--blue")} />
+      <div className={clsx("navbar-ua", "navbar-ua--yellow")} />
       <div className={clsx("navbar__inner", styles.inner)}>
         <div className="navbar__items">
           <div

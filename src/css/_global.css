@@ -466,3 +466,30 @@ html[data-theme='light'] [class^='footer__tagline'] {
 html[data-theme='light'] [class^='footer__github'][href*="github.com"] {
   background-color: var(--palette-white);
 }
+
+.navbar-ua {
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  z-index: -1;
+}
+
+.navbar-ua--blue {
+  top: 0;
+  background: #0057B8;
+}
+
+.navbar-ua--yellow {
+  background: #FFD700;
+  top: 50%;
+}
+
+.navbar__inner {
+  background: var(--palette-charade);
+  border-radius: var(--ifm-global-border-radius);
+  z-index: 1;
+}
+
+html[data-theme='light'] .navbar__inner {
+  background: var(--palette-white);
+}
