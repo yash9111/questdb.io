@@ -11,7 +11,8 @@ questdb
 ├── conf
 ├── db
 ├── log
-└── public
+├── public
+└── snapshot (optional)
 ```
 
 By default, QuestDB's root directory will be the following:
@@ -194,3 +195,8 @@ Contains the web files for the Web Console:
     ├── qdb.css
     └── ...
 ```
+
+## `snapshot` directory
+
+Created when a filesystem (disk) [snapshot](/docs/reference/sql/snapshot/) is
+collected. Contains table metadata file copies.
