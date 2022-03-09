@@ -121,6 +121,12 @@ address of the load balancer._)
 Now we can run some quick queries to make sure our import was successful. The
 `head` and `tail` functions are useful in this case for a quick sanity check:
 
+```python
+df.head()
+
+df.tails()
+```
+
 <Screenshot
   alt="A screenshot showing head and tail functions in Jupyter Notebook"
   height={305}
@@ -131,12 +137,20 @@ Now we can run some quick queries to make sure our import was successful. The
 Alternatively, we can use the `info` and `describe` commands to get a sense of
 the data types and distribution:
 
+```python
+df.info()
+```
+
 <Screenshot
   alt="A screenshot showing an info function in Jupyter Notebook"
   height={231}
   src="/img/tutorial/2022-03-08/info.png"
   width={692}
 />
+
+```python
+df.describe()
+```
 
 <Screenshot
   alt="A screenshot showing head a describe function in Jupyter Notebook"
@@ -165,6 +179,11 @@ questions. For example, we can find the five lowest price of Solana by running
 the `nsmallest` function on the column we’re interested in (e.g. High, Low,
 Open, Close). Similarly, we can use the `nlargest` function for the opposite:
 
+```python
+df.nsmallest(5, 'High')
+# df.nlargest(10, 'Low')
+```
+
 <Screenshot
   alt="A screenshot showing nlargest function in Jupyter Notebook"
   height={165}
@@ -174,6 +193,10 @@ Open, Close). Similarly, we can use the `nlargest` function for the opposite:
 
 We can also find days when the open price was lower than the closing price by
 using the `query` function:
+
+```python
+df.query('Open < Close').head()
+```
 
 <Screenshot
   alt="A screenshot showing query function in Jupyter Notebook"
@@ -186,6 +209,12 @@ To get a better sense of the trends, we can resample the dataset. For example,
 we can get the mean prices by week by using the `resample` function on the
 `Date` column:
 
+```python
+df_weekly = df.resample("W", on="Date").mean()
+
+df_weekly.head()
+```
+
 <Screenshot
   alt="A screenshot showing resample function on date in Jupyter Notebook"
   height={196}
@@ -195,6 +224,12 @@ we can get the mean prices by week by using the `resample` function on the
 
 Now our data is aggregated by weeks. Similarly, we can get a rolling average
 over a set window via the `rolling` function:
+
+```python
+df_rolling_mean = df.rolling(?).mean()
+
+df_rolling_mean.tail()
+```
 
 <Screenshot
   alt="A screenshot showing rolling function in Jupyter Notebook"
@@ -210,6 +245,18 @@ To visualize our crypto dataset, we’ll use the
 [matplotlib](https://matplotlib.org/). First import both libraries, and let’s
 plot a simple graph of Solana’s opening price over time:
 
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+```python
+sns.set(rc={'figure.figsize':(11, 4)})
+
+df = df.set_index('Date')
+df['Open'].plot(linewidth=0.5);
+```
+
 <Screenshot
   alt="A screenshot showing price over time plot"
   height={281}
@@ -220,6 +267,13 @@ plot a simple graph of Solana’s opening price over time:
 Note that seaborn chose some sane defaults for the x-axis. We can also specify
 our own labels as well as legends like the plot below comparing the High, Low,
 and Opening prices of Solana over time:
+
+```python
+cols_plot = ['High', 'Low', 'Open']
+axes = df[cols_plot].plot(marker='.', alpha=0.5, linestyle='None', figsize=(11, 9), subplots=True)
+for ax in axes:
+    ax.set_ylabel('Price ($)')
+```
 
 <Screenshot
   alt="A screenshot showing high, low and open price plots"
@@ -237,6 +291,15 @@ and seven day rolling mean.
 After giving each of the dataset a different marker, we can plot all of them on
 the same graph to see when the opening price was above or below the weekly or
 moving window average:
+
+```python
+fig, ax = plt.subplots()
+ax.plot(df.loc['2021-01-01 23:59:59': 'Open'], marker='.', linestyle='-', linewidth=0.5, label='Daily')
+ax.plot(df_weekly.loc['2021-01-01': 'Open'], marker='o', markersize=8, linestyle='-', label='Weekly Mean Resample')
+ax.plot(df_rolling_mean.loc['2021-01-01 23:59:59': 'Open'], marker='.', linestyle='-', label='7-d Rolling Mean')
+ax.set_ylabel('Price ($)')
+ax.legend();
+```
 
 <Screenshot
   alt="A screenshot showing moving window average plot"
