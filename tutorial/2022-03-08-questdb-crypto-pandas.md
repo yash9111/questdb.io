@@ -65,7 +65,7 @@ import Screenshot from "@theme/Screenshot"
 
 <Screenshot
   alt="Import CSV section of QuestDB Web Console"
-  height={221}
+  height={281}
   src="/img/tutorial/2022-03-08/import.png"
   width={692}
 />
