@@ -22,6 +22,9 @@ import Banner from "@theme/Banner"
   <a href="https://unsplash.com">Unsplash</a>
 </Banner>
 
+_This submission comes from one of our community contributors
+[Yitaek Hwang](https://yitaek.medium.com/)_.
+
 In [Part I of this series](/tutorial/2022/02/10/questdb-google-data-studio), we
 used Google Data Studio to quickly import multiple data sources and compare the
 price action of various cryptocurrencies over time. Even though Google Data
