@@ -4,7 +4,6 @@ author: Dean Markwick
 description: Build Bitcoin volume curves using Julia and QuestDB to
 better understand the flow of trading throughout the day. 
 featureType: resource
-date: 2022-04-01
 ---
 
 When is the Bitcoin market most active and how does this activity change
