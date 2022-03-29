@@ -133,7 +133,7 @@ web GUI and check to make sure everything worked by counting the
 number of rows.
 
     
-![QuestDB GUI screenshot](/img/tutorial/2022-04-01/questdb_gui.png "QuestDB GUI screenshot")
+![QuestDB GUI screenshot](/img/tutorial/2022-03-29/questdb_gui.png "QuestDB GUI screenshot")
 
 Now let's connect to the database in Julia and see if we get the same result.
 
@@ -211,7 +211,7 @@ plot(vPlot, nPlot)
 
 
 
-![Daily Bitcoin trends](/img/tutorial/2022-04-01/output_10_0.svg "Daily Bitcoin trends")
+![Daily Bitcoin trends](/img/tutorial/2022-03-29/output_10_0.svg "Daily Bitcoin trends")
 
 
 
@@ -222,7 +222,7 @@ Both the total notional traded and the total number of daily trades dropped off 
 plot(dailyVolume.t, dailyVolume.sum ./ dailyVolume.count, label = "Average Trade Size")
 ```
 
-![Bitcoin average trade size](/img/tutorial/2022-04-01/output_12_0.svg "Bitcoin average trade size")
+![Bitcoin average trade size](/img/tutorial/2022-03-29/output_12_0.svg "Bitcoin average trade size")
 
 Dividing the average daily notional by the total number of daily trades shows this steady reduction in the average trade size.
 
@@ -292,7 +292,7 @@ plot(intraVolume.ts, intraVolume.frac,
      xticks = (ticks, tick_labels), seriestype = :scatter, label=:none, ylabel="Fraction of Volume Traded")
 ```
 
-![Intraday Bitcoin profile](/img/tutorial/2022-04-01/output_20_0.svg "Intraday Bitcoin profile")
+![Intraday Bitcoin profile](/img/tutorial/2022-03-29/output_20_0.svg "Intraday Bitcoin profile")
 
 This looks great, we see trading is at the lowest at 10:00 but peaks at 16:00. It is very noisy though. 
 
@@ -305,7 +305,7 @@ plot(intraVolume.ts, 1 .- cumsum(intraVolume.frac),  xticks = (ticks, tick_label
      ylabel = "Fraction of Total Volume Remaining")
 ```
 
-![Bitcoin fraction left to trade over the day](/img/tutorial/2022-04-01/output_22_0.svg
+![Bitcoin fraction left to trade over the day](/img/tutorial/2022-03-29/output_22_0.svg
  "Bitcoin fraction left to trade over the day")
 
 So we can see that by 06:00 there is roughly still 75% of the day's
@@ -379,7 +379,7 @@ plot(intraVolume_day.ts,
      ylabel="Fraction of Volume Traded")
 ```
 
-![Weekday volume curves](/img/tutorial/2022-04-01/output_27_0.svg "Weekday
+![Weekday volume curves](/img/tutorial/2022-03-29/output_27_0.svg "Weekday
  volume curves")
 
 Very noisy! We can sort of see the general increase of volume at 16:00
@@ -399,7 +399,7 @@ plot(intraVolume_day.ts,
 ```
 
 
-![Weekday fraction left to trade](/img/tutorial/2022-04-01/output_28_0.svg
+![Weekday fraction left to trade](/img/tutorial/2022-03-29/output_28_0.svg
  "Weekday fraction left to trade")
 
 
@@ -425,7 +425,7 @@ smoothPlot = plot(intraVolume.ts, intraVolume.frac, xticks = (ticks, tick_labels
 plot!(smoothPlot, intraVolume.ts, vs, label = "LOESS - 0.15", linewidth=3)
 ```
 
-![svg](/img/tutorial/2022-04-01/output_31_0.svg)
+![svg](/img/tutorial/2022-03-29/output_31_0.svg)
 
 This smoothed curve produces a sensible-looking approximation to the
 raw data and removes much of the noise. The curve is a more sensible
@@ -496,7 +496,7 @@ weekendPlot = plot(weekends.ts,
 plot(weekdayPlot, weekendPlot)
 ```
 
-![svg](/img/tutorial/2022-04-01/output_35_0.svg)
+![svg](/img/tutorial/2022-03-29/output_35_0.svg)
 
 
 Much more interpretable! The smoothed curves make it easier to see
