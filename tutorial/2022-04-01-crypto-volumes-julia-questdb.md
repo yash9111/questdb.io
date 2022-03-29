@@ -1,8 +1,9 @@
 ---
 title: Crypto Volume Profiles with QuestDB and Julia
 author: Dean Markwick
-description: Build Bitcoin volume curves using Julia and QuestDB to
-better understand the flow of trading throughout the day. 
+description: 
+  Build Bitcoin volume curves using Julia and QuestDB to
+  better understand the flow of trading throughout the day. 
 featureType: resource
 ---
 
