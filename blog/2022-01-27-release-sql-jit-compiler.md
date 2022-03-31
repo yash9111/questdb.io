@@ -72,7 +72,7 @@ import Screenshot from "@theme/Screenshot"
 The SQL JIT compiler is a beta feature and is disabled by default. To enable it,
 you should change the `cairo.sql.jit.mode` setting in your `server.conf` file.
 
-```bash title="path/to/server.conf"
+```ini title="path/to/server.conf"
 cairo.sql.jit.mode=on
 ```
 
@@ -141,7 +141,7 @@ default timeout for ILP commit is set to 1 second. For more information on
 setting this parameter, see the
 [server configuration documentation](/docs/reference/configuration/).
 
-```bash title="/path/to/server.conf"
+```ini title="/path/to/server.conf"
 # Default is 1 sec
 line.tcp.commit.timeout=1000
 ```
@@ -158,7 +158,7 @@ statements when sending the queries and the built-in QuestDB's query cache
 becomes much less efficient. To avoid unnecessary memory usage, we added new
 settings that allow disabling the SELECT and INSERT query caches.
 
-```bash title="/path/to/server.conf"
+```ini title="/path/to/server.conf"
 # Default is true
 pg.select.cache.enabled=false
 # Default is true
