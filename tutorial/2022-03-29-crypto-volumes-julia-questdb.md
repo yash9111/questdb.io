@@ -5,6 +5,7 @@ description:
   Build Bitcoin volume curves using Julia and QuestDB to
   better understand the flow of trading throughout the day. 
 featureType: resource
+image: /img/tutorial/2022-03-29/graph.png
 ---
 
 When is the Bitcoin market most active and how does this activity change
