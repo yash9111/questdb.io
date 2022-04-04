@@ -51,7 +51,7 @@ Content-Type with following optional URL parameters which must be URL encoded:
 | -------------------- | -------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `atomicity`          | No       | `2`              | `0`, `1` or `2`. Behaviour when an error is detected in the data. `0`: the entire file will be skipped. `1`: the row is skipped. `2`: the column is skipped.                                                                                                    |
 | `commitLag`          | No       | `0`              | commit lag of the import in microsecond precision (e.g. 2 minutes is expressed as 120000000, 120 followed by 6 zeros). For context, see [the commit lag guide](/docs/guides/out-of-order-commit-lag/).                                                          |
-| `delimiter`          | No       |                  | URL encoded delimiter character. When set, import not try to detect the delimiter automatically. Since automatic delimiter detection requires at least two lines (rows) to be present in the file, this parameter may be used to allow single line file import. |
+| `delimiter`          | No       |                  | URL encoded delimiter character. When set, import will try to detect the delimiter automatically. Since automatic delimiter detection requires at least two lines (rows) to be present in the file, this parameter may be used to allow single line file import. |
 | `durable`            | No       | `false`          | `true` or `false`. When set to `true`, import will be resilient against OS errors or power losses by forcing the data to be fully persisted before sending a response back to the user.                                                                         |
 | `fmt`                | No       | `tabular`        | Can be set to `json` to get the response formatted as such.                                                                                                                                                                                                     |
 | `forceHeader`        | No       | `false`          | `true` or `false`. When `false`, QuestDB will try to infer if the first line of the file is the header line. When set to `true`, QuestDB will expect that line to be the header line.                                                                           |
@@ -271,6 +271,50 @@ parsing the timestamp column:
 |              2  |          tempF  |                      INT  |           0  |
 |              3  |          dewpF  |                      INT  |           0  |
 +------------------------------------------------------------------------------+
+```
+
+#### JSON response
+
+If you intend to upload CSV programmatically, it's easier to request that
+responses come back as JSON.
+
+Here's a successfull example:
+
+```json
+{
+  "status": "OK",
+  "location": "example_table",
+  "rowsRejected": 0,
+  "rowsImported": 3,
+  "header": false,
+  "columns": [
+    {"name": "col1", "type": "SYMBOL", "size": 4, "errors": 0},
+    {"name": "col2", "type": "DOUBLE", "size": 8, "errors": 0},
+    {"name": "col3", "type": "BOOLEAN", "size": 1, "errors": 0}]
+}
+```
+
+Here is an example with request-level errors:
+
+```json
+{
+  "status": "not enough lines [table=example_table]"
+}
+```
+
+Here is an example with column-level errors due to unsuccessful casts:
+
+```json
+{
+  "status": "OK",
+  "location": "example_table2",
+  "rowsRejected": 0,
+  "rowsImported": 3,
+  "header": false,
+  "columns": [
+    {"name": "col1", "type": "DOUBLE", "size": 8, "errors": 3},
+    {"name": "col2", "type": "SYMBOL", "size": 4, "errors": 0},
+    {"name": "col3", "type": "BOOLEAN", "size": 1, "errors": 0}]}
 ```
 
 #### Out-of-order import

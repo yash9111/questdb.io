@@ -445,6 +445,15 @@ sock.close()
 
 </Tabs>
 
+## Timestamps
+
+Providing a timestamp is optional. If one isn't provided, the server will
+automatically assign the server's system time as the row's timestamp value.
+
+Timestamps are interpreted as the number of nanoseconds from 1st Jan 1970 UTC,
+unless otherwise configured. See `cairo.timestamp.locale` and
+`line.tcp.timestamp` [configuration options](/docs/reference/configuration).
+
 ## ILP Datatypes and Casts
 
 ### Strings vs Symbols

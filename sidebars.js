@@ -77,11 +77,6 @@ module.exports = {
       ],
     },
     {
-      label: "Tutorials",
-      type: 'link',
-      href: '/tutorial',
-    },
-    {
       label: "Deployment",
       type: "category",
       items: [
@@ -218,6 +213,11 @@ module.exports = {
       items: [
         "faq/troubleshooting"
       ],
+    },
+    {
+      label: "Tutorials",
+      type: 'link',
+      href: '/tutorial',
     },
   ].filter(Boolean),
 }
