@@ -5,6 +5,8 @@ description:
   analytics on time series data.
 ---
 
+<!-- TODO: update summary -->
+
 QuestDB is a relational column-oriented database designed for time series and
 event data. It uses SQL with extensions for time series to assist with real-time
 analytics. These pages cover core concepts of QuestDB, including setup steps,
@@ -54,16 +56,16 @@ programming languages through our various network endpoints.
 
 ## Guides
 
-- [Create your first database](/docs/guides/first-database)
-- [Configuring commit lag of out-of-order (O3) data](/docs/guides/out-of-order-commit-lag/)
-- [Importing data in bulk via CSV](/docs/guides/importing-data/)
-- [Version 6.0 migration](/docs/guides/v6-migration/)
+- [Create your first database](/docs/how-do-i/get-started-with-sql)
+- [Configuring commit lag of out-of-order (O3) data](/docs/how-do-i/ingest-data-out-of-order)
+- [Importing data in bulk via CSV](/docs/how-do-i/bulk-csv-import)
+- [Version 6.0 migration](/docs/how-do-i/migrate-to-v6)
 
 ### Deployment
 
-- [Deploy a QuestDB AMI to AWS using Packer](/docs/guides/aws-packer/)
-- [Run QuestDB on Kubernetes](/docs/guides/kubernetes/)
-- [Google Cloud Platform](/docs/guides/google-cloud-platform/)
+- [Deploy a QuestDB AMI to via AWS Marketplace](/docs/deployment/aws-official-ami)
+- [Run QuestDB on Kubernetes](/docs/deployment/kubernetes)
+- [Google Cloud Platform](/docs/deployment/google-cloud-platform)
 
 ## Third-party tools
 

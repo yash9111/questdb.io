@@ -1,5 +1,6 @@
 ---
 title: Timestamps and time zones
+sidebar_label: Use timestamps & time zones
 description:
   This document describes how to work with time zones in QuestDB, including
   hints how to convert timestamps to UTC, to a specific time zone or by a UTC

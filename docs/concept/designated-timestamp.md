@@ -31,7 +31,7 @@ Checking if tables contain a designated timestamp column can be done via the
 
 As of version 6.0.0, QuestDB supports ingestion of records which are
 out-of-order (O3) by time. Configuring how often out-of-order data is committed
-is done via [commit lag and row count](/docs/guides/out-of-order-commit-lag/).
+is done via [commit lag and row count](/docs/how-do-i/ingest-data-out-of-order).
 
 :::info
 

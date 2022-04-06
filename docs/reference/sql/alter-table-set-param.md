@@ -8,7 +8,7 @@ The following keywords allow for setting table parameters via SQL. This is
 useful for applying configuration for how the system handles out-of-order data
 ingestion on a per-table basis. For more information on these values including
 details on why these settings should be applied, see the documentation for
-[out-of-order data commits](/docs/guides/out-of-order-commit-lag/).
+[out-of-order data commits](/docs/how-do-i/ingest-data-out-of-order).
 
 :::info
 
@@ -25,7 +25,7 @@ functions which are described in the
 
 The following two sections describe table parameters relating to out-of-order
 ingestion. For context on commit lag and max uncommitted rows, see the guide for
-[configuring commit lag of out-of-order data](/docs/guides/out-of-order-commit-lag/).
+[configuring commit lag of out-of-order data](/docs/how-do-i/ingest-data-out-of-order).
 
 ### commitLag
 

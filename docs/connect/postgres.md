@@ -141,7 +141,9 @@ class App {
 
     try (PreparedStatement preparedStatement = connection.prepareStatement(
         "INSERT INTO TRADES  VALUES (?, ?, ?, ?)")) {
-      preparedStatement.setTimestamp(1, new Timestamp(io.questdb.std.Os.currentTimeMicros()));
+      preparedStatement.setTimestamp(
+        1,
+        new Timestamp(io.questdb.std.Os.currentTimeMicros()));
       preparedStatement.setDate(2, new Date(System.currentTimeMillis()));
       preparedStatement.setString(3, "abc");
       preparedStatement.setInt(4, 123);
@@ -430,7 +432,3 @@ gcc libpq_example.c -o run_example.c -I pgsql/include -L /usr/local/Cellar/postg
 -->
 
 </Tabs>
-
-
-## Query Data
-

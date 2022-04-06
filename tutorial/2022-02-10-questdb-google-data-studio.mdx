@@ -83,7 +83,7 @@ $ gcloud container clusters \
 
 ## Running QuestDB on GKE using Helm
 
-QuestDB provides an [official Helm chart](/docs/guides/kubernetes/) that deploys
+QuestDB provides an [official Helm chart](/docs/deployment/kubernetes/) that deploys
 a single `StatefulSet` pod with 50Gi PVC by default. To make the PostgreSQL wire
 endpoint accessible by Google Data Studio, we need to modify the service type
 and set the expose field to `true`. Create a new `values.yaml` file with the

@@ -1,5 +1,6 @@
 ---
 title: Version 6.0 migration
+sidebar_label: Migrate to version 6.0
 description:
   This document describes details about automatic upgrades with QuestDB version
   6.0 and instructions for manually reverting tables for compatibility with

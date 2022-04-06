@@ -1,5 +1,5 @@
 ---
-title: A first SQL dataset
+title: Get started with SQL
 description:
   This document shows how to work with QuestDB as a time series database by
   generating dummy time series data, insert the data into a table, then querying
@@ -9,7 +9,7 @@ description:
 The goal of this guide is to explore QuestDB's features and to interact with
 time series data and assumes you have an instance running. You can find guides
 to setup QuestDB on the [introduction page](/docs/introduction/). In this
-tutorial, you will learn how to
+tutorial, you will learn how to:
 
 1. [Create tables](#creating-a-table)
 2. [Populate tables with sample data](#inserting-data)

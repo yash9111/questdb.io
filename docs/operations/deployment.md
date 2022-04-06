@@ -23,12 +23,14 @@ A guide for deploying QuestDB using Docker is provided in the
 
 ## Deployment guides
 
+<!-- TODO: update summary -->
+
 The following guides describe how to deploy QuestDB to various cloud platforms
 using a variety of tools:
 
-- [AWS AMI with Packer](/docs/guides/aws-packer/) guide describes how to build
+- [AWS AMI with Packer](/docs/deployment/aws-packer) guide describes how to build
   the AWS AMI using Packer, with configuration for monitoring and logging via
   CloudWatch
-- [Kubernetes guide](/docs/guides/kubernetes/) describes how to fetch the
+- [Kubernetes guide](/docs/deployment/kubernetes) describes how to fetch the
   official QuestDB Helm chart and shows how to run and query the running QuestDB
   instance.

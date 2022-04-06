@@ -6,6 +6,13 @@ description:
   Packer and how to run this AMI on Amazon Web Services
 ---
 
+:::note
+
+This functionality has been superseded by the
+[QuestDB AMI via the AWS Marketplace](/docs/deployment/aws-official-ami).
+
+:::
+
 This guide describes how to create an AWS Amazon Machine Image (AMI) based on
 Amazon Linux with QuestDB installed and uses the official QuestDB
 [packer AMI]({@githubOrgUrl@}/questdb-packer-ami) with a template that can be

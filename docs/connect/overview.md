@@ -4,12 +4,12 @@ You can interact with a QuestDB database in one of several ways.
 
 These are the network endpoints to you connect to:
 
-|Network Endpoint|Port|Inserting data|Querying data|Authentication|
-|----------------|----|--------------|-------------|--------------|
-|[Web Console](web-console)|9000|SQL `insert`, CSV|SQL `select`, charting|None|
-|[InfluxDB Line Protocol](ilp)|9009|High performance bulk insert|None|Optional|
-|[HTTP REST API](rest)|9000|SQL `insert`, CSV|SQL `select`, CSV|None|
-|[PostgreSQL Protocol](postgres)|8812|SQL `insert`|SQL `select`|None|
+|Network Endpoint|Port|Inserting data|Querying data|
+|----------------|----|--------------|-------------|
+|[Web Console](web-console)|9000|SQL `insert`, CSV|SQL `select`, charting|
+|[InfluxDB Line Protocol](ilp)|9009|High performance bulk insert|-|
+|[HTTP REST API](rest)|9000|SQL `insert`, CSV|SQL `select`, CSV|
+|[PostgreSQL Protocol](postgres)|8812|SQL `insert`|SQL `select`|
 
 
 ## Web console

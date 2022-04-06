@@ -234,7 +234,7 @@ timestamp.
 A time zone may be provided for sampling with calendar alignment. Details on the
 options for specifying time zones with available formats are provided in the
 guide for
-[working with timestamps and time zones](/docs/guides/working-with-timestamps-timezones/).
+[working with timestamps and time zones](/docs/how-do-i/use-timestamps-and-timezones).
 
 ```questdb-sql
 SELECT ts, count() FROM sensors

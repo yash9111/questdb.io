@@ -5,7 +5,7 @@ description: Table and database metadata function reference documentation.
 ---
 
 These functions provide table information including column details and metadata
-such as [commit lag parameters](/docs/guides/out-of-order-commit-lag/). These
+such as [commit lag parameters](/docs/how-do-i/ingest-data-out-of-order). These
 functions are particularly useful for checking if tables contain a
 [designated timestamp](/docs/concept/designated-timestamp/) column.
 

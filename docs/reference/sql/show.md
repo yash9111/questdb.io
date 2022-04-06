@@ -5,7 +5,7 @@ description: SHOW SQL keyword reference documentation.
 ---
 
 This keyword provides column and table information including metadata such as
-[commit lag and max uncommitted row count](/docs/guides/out-of-order-commit-lag/).
+[commit lag and max uncommitted row count](/docs/how-do-i/ingest-data-out-of-order).
 The `SHOW` keyword is useful for checking if tables contain a
 [designated timestamp](/docs/concept/designated-timestamp/) column.
 

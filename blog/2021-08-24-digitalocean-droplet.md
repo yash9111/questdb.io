@@ -94,7 +94,7 @@ the database and inserting data.
 
 More details on deploying the droplet, along with information on securing the
 instance and the interfaces that are exposed can be found on the
-[DigitalOcean deploy guide](/docs/guides/digitalocean/).
+[DigitalOcean deploy guide](/docs/deployment/digitalocean/).
 
 ## Get started with QuestDB on DigitalOcean
 

@@ -1,6 +1,6 @@
 ---
 title: Configuring commit lag of out-of-order (O3) data
-sidebar_label: Out-of-order commit lag
+sidebar_label: Ingest data out-of-order
 description:
   This document describes server configuration parameters for out-of-order
   commit-lag along with details when and why these settings should be applied
@@ -229,6 +229,6 @@ FROM unordered_trades
 Using the lag and batch size parameters during `INSERT AS SELECT` statements is
 a convenient strategy to load and order large datasets from CSV in bulk. This
 strategy along with an example workflow is described in the
-[importing data guide](/docs/guides/importing-data/).
+[importing data guide](/docs/how-do-i/ingest-data-out-of-order).
 
 :::

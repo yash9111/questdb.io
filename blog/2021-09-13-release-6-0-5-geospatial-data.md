@@ -129,7 +129,7 @@ It's now possible to pass parameters relating to out-of-order ingestion via REST
 API. The `/imp` endpoint accepts the `commitLag` and `maxUncommittedRows` query
 parameters on partitioned tables. For more information on the meaning and usage
 of these parameters, see the
-[out-of-order ingestion](/docs/guides/out-of-order-commit-lag/) documentation.
+[out-of-order ingestion](/docs/how-do-i/ingest-data-out-of-order) documentation.
 
 ```bash title="Out-of-order params via REST API"
 curl -F data=@weather.csv \

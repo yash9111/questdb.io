@@ -1,6 +1,6 @@
 ---
 title: Importing data in bulk via CSV
-sidebar_label: Bulk CSV imports
+sidebar_label: Bulk import CSV
 description:
   This document describes how to load CSV data and specify text loader
   configuration for timestamp and date parsing

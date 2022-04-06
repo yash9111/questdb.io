@@ -51,6 +51,46 @@
   to = "/docs/third-party-tools/grafana"
 
 [[redirects]]
+    from = "/docs/guides/aws-official-ami"
+    to = "/docs/deployment/aws-official-ami"
+
+[[redirects]]
+    from = "/docs/guides/aws-packer"
+    to = "/docs/deployment/aws-packer"
+
+[[redirects]]
+    from = "/docs/guides/digitalocean"
+    to = "/docs/deployment/digitalocean"
+
+[[redirects]]
+    from = "/docs/guides/google-cloud-platform"
+    to = "/docs/deployment/google-cloud-platform"
+
+[[redirects]]
+    from = "/docs/guides/kubernetes"
+    to = "/docs/deployment/kubernetes"
+
+[[redirects]]
+    from = "/docs/guides/importing-data"
+    to = "/docs/how-do-i/bulk-csv-import"
+
+[[redirects]]
+    from = "/docs/guides/first-database"
+    to = "/docs/how-do-i/get-started-with-sql"
+
+[[redirects]]
+    from = "/docs/guides/out-of-order-commit-lag"
+    to = "/docs/how-do-i/ingest-data-out-of-order"
+
+[[redirects]]
+    from = "/docs/guides/v6-migration"
+    to = "/docs/how-do-i/migrate-to-v6"
+
+[[redirects]]
+    from = "/docs/guides/working-with-timestamps-timezones"
+    to = "/docs/how-do-i/use-timestamps-and-timezones"
+
+[[redirects]]
   from = "/blog/2020/12/10/building-a-garbage-free-network-stack-for-kafka-streams"
   to = "/blog/2020/12/10/garbage-free-stack-for-kafka-streams"
 
