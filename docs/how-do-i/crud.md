@@ -96,9 +96,9 @@ This results in the latest state for each order:
 
 |*timestamp* ts             |id *symbol*|status *symbol*|
 |---------------------------|-----------|---------------|
-|2022-04-05T16:17:42.802850Z|order1     |placed         |
-|2022-04-05T16:11:39.473330Z|order2     |placed         |
-|2022-04-05T16:30:55.818791Z|order3     |in-transit     |
+|2022-04-07T15:33:43.944922Z|order1     |arrived        |
+|2022-04-07T15:33:37.370694Z|order2     |placed         |
+|2022-04-07T15:33:50.829323Z|order3     |in-transit     |
 
 If timestamps don't work for you here, you can also use an extra integer column
 called `version`, an extra boolean `deleted` column or similar.
