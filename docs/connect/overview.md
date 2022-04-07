@@ -2,7 +2,7 @@
 
 You can interact with a QuestDB database in one of several ways.
 
-These are the network endpoints to you connect to:
+These are the network endpoints you may connect to:
 
 |Network Endpoint|Port|Inserting data|Querying data|
 |----------------|----|--------------|-------------|
@@ -35,7 +35,7 @@ import Screenshot from "@theme/Screenshot"
 The fastest way to insert data into QuestDB is using the InfluxDB Line
 Protocol (ILP).
 
-This is a insert-only protocol that bypasses SQL `insert` statements achieving
+It is an insert-only protocol that bypasses SQL `insert` statements achieving
 higher throughput.
 
 ```shell
@@ -44,7 +44,7 @@ readings,city=London temperature=23.6 1465839830100700000\n
 readings,make=Honeywell temperature=23.2,humidity=0.443 1465839830100800000\n
 ```
 
-Our [ILP tutorial](ilp) covers basic usage through our various client libraries.
+Our [ILP tutorial](ilp) covers ingesting data with our various client libraries.
 
 For a more in-depth understanding, see our
 [protocol documentation](/docs/reference/api/ilp/overview).
@@ -58,13 +58,14 @@ importing data and querying.
 curl -F data=@data.csv http://localhost:9000/imp
 ```
 
-Read our [REST tutorial](rest) to get started, and our
+Read our [REST tutorial](rest) for code examples, and our
 [REST reference](/docs/reference/api/rest) for further details.
 
 ## PostgreSQL Wire Protocol
 
-QuestDB also supports the same wire protocol as PostgreSQL, as such you can
-reuse a wide number of pre-existing client libraries and tools.
+QuestDB also supports the same wire protocol as PostgreSQL, allowing you to
+connect and query the database with various third-party pre-existing client
+libraries and tools.
 
 ```python
 import psycopg2

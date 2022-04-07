@@ -6,10 +6,11 @@ import TabItem from "@theme/TabItem"
 The InfluxDB Line Protocol (ILP) is a text protocol over TCP or UDP on port
 9009.
 
-It is designed to be a one-way protocol to insert data, focusing on simplicity
+It is a one-way protocol to insert data, focusing on simplicity
 and performance.
 
-This is how it compares with ways to insert data that we support:
+Here is a summary table is how it compares with ways to insert data that we
+support:
 
 | Protocol | Record Insertion Reporting | Data Insertion Performance |
 | -------- | -------------------------- | -------------------------- |
@@ -17,8 +18,8 @@ This is how it compares with ways to insert data that we support:
 | CSV upload via HTTP REST | Configurable | Very Good |
 | PostgreSQL insert statements | Transaction-level | Good |
 
-No errors and confirmations get sent back, but with sufficient client-side
-validation this isn't necessarily a concern.
+With sufficient client-side validation, the lack of errors and confirmation
+isn't necessarily a concern.
 
 This interface is the preferred ingestion method as it provides the following
 benefits:
@@ -30,11 +31,11 @@ benefits:
   [server configuration](/docs/reference/configuration/#influxdb-line-protocol-tcp)
   settings
 
-For additional details on the message format, ports and authentication can be
-found on the [InfluxDB line protocol](/docs/reference/api/ilp/overview/) page,
-and a guide on the Telegraf agent for collecting and sending metrics to QuestDB
-via this protocol can be found on the
-[Telegraf guide](/docs/third-party-tools/telegraf/).
+On the [InfluxDB line protocol](/docs/reference/api/ilp/overview/) page, you may
+find additional details on the message format, ports and authentication.
+
+The [Telegraf guide](/docs/third-party-tools/telegraf/) helps you configure a
+Telegraf agent to collect and send metrics to QuestDB via ILP.
 
 ## ILP Client Libraries
 
@@ -50,7 +51,7 @@ We have client libraries for a growing number of languages:
 
 ## Examples
 
-These examples send a few rows of input. The use client libraries for C++, C#,
+These examples send a few rows of input. These use client libraries for C++, C#,
 Java and C, and raw TCP socket connections for NodeJS, Go and Python.
 
 <Tabs defaultValue="cpp" values={[

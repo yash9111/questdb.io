@@ -122,10 +122,10 @@ This is a feature in the
 [works](/docs/faq/troubleshooting#how-do-i-update-or-delete-a-row).
 
 Workarounds:
-  * Use the same work-around detailed above for `UPDATE`, for example adding a
-    `deleted` column and selecting `.. WHERE NOT deleted`.
-  *  Create [partitioned tables](/docs/concept/partitions) and delete
-     partitions no longer in use with
-     [`ALTER TABLE DROP PARTITION`](/docs/reference/sql/alter-table-drop-partition).
-     This is useful if you only intend to keep, for example, a month's
-     worth of data.
+  * Use the same work-around detailed above for `UPDATE`, for example by adding
+    a `deleted` column and selecting `.. WHERE NOT deleted`.
+  * Create [partitioned tables](/docs/concept/partitions) and delete
+    partitions no longer in use with
+    [`ALTER TABLE DROP PARTITION`](/docs/reference/sql/alter-table-drop-partition).
+    This is useful if you only intend to keep, for example, a month's
+    worth of data.

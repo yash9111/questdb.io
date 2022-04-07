@@ -3,8 +3,9 @@
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
-QuestDB supports the same wire format as PostgreSQL. This means that you can
-use any variety of PostgreSQL libraries.
+QuestDB also supports the same wire protocol as PostgreSQL, allowing you to
+connect and query the database with various third-party pre-existing client
+libraries and tools.
 
 You can connect to TCP port `8812` and use both `insert` and `select` SQL
 queries.
@@ -61,7 +62,7 @@ docker run -it --rm --network=host -e PGPASSWORD=quest \
 <TabItem value="python">
 
 This example uses the [psycopg2](https://github.com/psycopg/psycopg2) database
-adapter which does not support prepared statements (bind variables). This
+adapter, which does not support prepared statements (bind variables). This
 functionality is on the roadmap for the antecedent
 [psychopg3](https://github.com/psycopg/psycopg3/projects/1) adapter.
 
@@ -231,7 +232,7 @@ start()
 
 
 This example uses the [pgx](https://github.com/jackc/pgx) driver and toolkit for
-postgres in Go. More details on the use of this toolkit can be found on the
+PostgreSQL in Go. More details on the use of this toolkit can be found on the
 [GitHub repository for pgx](https://github.com/jackc/pgx/wiki/Getting-started-with-pgx).
 
 ```go

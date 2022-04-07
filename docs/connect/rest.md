@@ -3,7 +3,7 @@
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
-QuestDB exposes a REST API for compatibility with a wide range of libraries and
+QuestDB exposes a REST API for compatibility with multiple libraries and
 tools. The REST API is accessible on port `9000` and has the following
 entrypoints:
 
@@ -13,21 +13,19 @@ entrypoints:
 |[`/exp?query=..`](#exp-sql-query-to-csv)|GET|Export SQL Query as CSV|[Reference](/docs/reference/api/rest#exp---export-data)|
 |[`/exec?query=..`](#exec-sql-query-to-json)|GET|Run SQL Query returning JSON result set|[Reference](/docs/reference/api/rest#exec---execute-queries)|
 
-For details such as content type, query parameters et cetera, refer to the
+For details such as content type, query parameters and more, refer to the
 [REST API](/docs/reference/api/rest) docs.
-
-Here we'll get you started with a few examples in different programming languages.
 
 ## `/imp`: Uploading Tabular Data
 
 :::tip
 
 [InfluxDB Line Protocol](ilp) is the recommended primary ingestion method in
-QuestDB. CSV uploading offers insert feedback and error reporting, but has worse
-overall performance.
+QuestDB. CSV uploading offers insertion feedback and error reporting, but has
+worse overall performance.
 
 See `/imp`'s [`atomicity`](/docs/reference/api/rest#url-parameters) query
-parameter to customise behaviour on error.
+parameter to customize behavior on error.
 
 :::
 
@@ -61,8 +59,8 @@ c,,True
 
 </Tabs>
 
-You can do so via the command line using `cURL`, or programmatically via HTTP
-APIs in your own scripts and applications:
+You can do so via the command line using `cURL` or programmatically via HTTP
+APIs in your scripts and applications:
 
 <Tabs defaultValue="curl" values={[
   { label: "cURL", value: "curl" },
@@ -80,9 +78,9 @@ This example imports a CSV file with automatic schema detection.
 curl -F data=@data.csv http://localhost:9000/imp
 ```
 
-This example overwrites an existing table, specifies a timestamp format and a
-designated timestamp column. For more information on the optional parameters for
-specifying timestamp formats, partitioning and renaming tables, see the
+This example overwrites an existing table and specifies a timestamp format and a
+designated timestamp column. For more information on the optional parameters to
+specify timestamp formats, partitioning and renaming tables, see the
 [REST API documentation](/docs/reference/api/rest#examples).
 
 ```bash title="Providing a user-defined schema"

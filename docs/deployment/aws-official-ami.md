@@ -1,6 +1,6 @@
 ---
 title: Launch the official QuestDB AMI via the AWS Marketplace
-sidebar_label: Official AWS Marketplace AMI
+sidebar_label: AWS Marketplace AMI
 description:
   This document describes how to launch the official AWS Marketplace AMI with
   QuestDB installed and how to access and secure the instance on Amazon Web
