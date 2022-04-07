@@ -47,7 +47,7 @@ const currentOpenings: Opening[] = [
   },
 
   {
-    href: "solution-engineer/",
+    href: "/careers/solution-engineer/",
     title: "Solution Engineer",
     location: "Remote",
   },
