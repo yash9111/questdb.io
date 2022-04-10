@@ -5,32 +5,10 @@ description:
   analytics on time series data.
 ---
 
-<!-- TODO: update summary -->
-
 QuestDB is a relational column-oriented database designed for time series and
 event data. It uses SQL with extensions for time series to assist with real-time
 analytics. These pages cover core concepts of QuestDB, including setup steps,
 usage guides, and reference documentation for syntax, APIs and configuration.
-
-## Concepts
-
-This section describes the architecture of QuestDB, how it stores and queries
-data, and introduces features and capabilities unique to the system.
-
-- [Designated timestamp](/docs/concept/designated-timestamp/) is a core feature
-  that enables time-oriented language capabilities and partitioning
-- [Symbol](/docs/concept/symbol/) type makes storing and retrieving repetitive
-  strings efficient
-- [Storage model](/docs/concept/storage-model/) describes how QuestDB stores
-  records and partitions within tables
-- [Indexes](/docs/concept/indexes/) can be used for faster read access on
-  specific columns
-- [Partitions](/docs/concept/partitions/) can be used for significant
-  performance benefits on calculations and queries
-- [SQL extensions](/docs/concept/sql-extensions/) allow performant time series
-  analysis with a concise syntax
-- [Root directory](/docs/concept/root-directory-structure/) describes the
-  directory contents of QuestDB for storage and configuration
 
 ## Install
 
@@ -54,30 +32,21 @@ programming languages through our various network endpoints.
 - [HTTP REST API](/docs/connect/rest) for SQL queries and CSV functionality.
 - [PostgreSQL Protocol](/docs/connect/postgres) for compatibility with a wide number of tools and libraries.
 
-## Guides
+## How do I?
 
-- [Create your first database](/docs/how-do-i/get-started-with-sql)
-- [Configuring commit lag of out-of-order (O3) data](/docs/how-do-i/ingest-data-out-of-order)
-- [Importing data in bulk via CSV](/docs/how-do-i/bulk-csv-import)
-- [Version 6.0 migration](/docs/how-do-i/migrate-to-v6)
+- [Get started with SQL](/docs/how-do-i/get-started-with-sql)
+- [Insert, Query, Update, Delete](/docs/how-do-i/crud)
+- [Use timestamps & time zones](/docs/how-do-i/use-timestamps-and-timezones)
+- [Bulk import CSV](/docs/how-do-i/bulk-csv-import)
+- [Ingest data out-of-order](/docs/how-do-i/ingest-data-out-of-order)
+- [Migrate to version 6.0](/docs/how-do-i/migrate-to-v6)
 
-### Deployment
+## Deployment
 
-- [Deploy a QuestDB AMI to via AWS Marketplace](/docs/deployment/aws-official-ami)
-- [Run QuestDB on Kubernetes](/docs/deployment/kubernetes)
+- [AWS Marketplace AMI](/docs/deployment/aws-official-ami)
+- [Kubernetes](/docs/deployment/kubernetes)
 - [Google Cloud Platform](/docs/deployment/google-cloud-platform)
-
-## Third-party tools
-
-This section describes how to integrate QuestDB with third-party tools and
-utilities for collecting metrics and visualizing data:
-
-- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting
-  QuestDB as a datasource for building visualizations and dashboards
-- [Kafka](/docs/third-party-tools/kafka/) guide for ingesting data from topics
-  into QuestDB by means of Kafka Connect
-- [Telegraf](/docs/third-party-tools/telegraf/) guide for collecting system
-  metrics, specifying QuestDB as an output and visualizing the results
+- [DigitalOcean Droplet](/docs/deployment/digitalocean)
 
 ## Operations
 
@@ -90,6 +59,43 @@ pages for the following topics:
   and save disk space
 - [Health monitoring](/docs/operations/health-monitoring/) endpoint for
   determining the status of the instance
+- [Backup and restore](/docs/operations/backup/) using filesystem and
+  point-in-time backup functionality. Notes for cloud providers.
+
+## Third-party tools
+
+This section describes how to integrate QuestDB with third-party tools and
+utilities for collecting metrics and visualizing data:
+
+- [Prometheus](/docs/third-party-tools/prometheus/) monitoring and alerting.
+- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting
+  QuestDB as a datasource for building visualizations and dashboards
+- [Kafka](/docs/third-party-tools/kafka/) guide for ingesting data from topics
+  into QuestDB by means of Kafka Connect
+- [Telegraf](/docs/third-party-tools/telegraf/) guide for collecting system
+  metrics, specifying QuestDB as an output and visualizing the results
+
+## Concepts
+
+This section describes the architecture of QuestDB, how it stores and queries
+data, and introduces features and capabilities unique to the system.
+
+- [Storage model](/docs/concept/storage-model/) describes how QuestDB stores
+  records and partitions within tables
+- [Designated timestamp](/docs/concept/designated-timestamp/) is a core feature
+  that enables time-oriented language capabilities and partitioning
+- [SQL extensions](/docs/concept/sql-extensions/) allow performant time series
+  analysis with a concise syntax
+- [JIT compiler](/docs/concept/jit-compiler) to speed up queries
+- [Partitions](/docs/concept/partitions/) can be used for significant
+  performance benefits on calculations and queries
+- [Symbol](/docs/concept/symbol/) type makes storing and retrieving repetitive
+  strings efficient
+- [Indexes](/docs/concept/indexes/) can be used for faster read access on
+  specific columns
+- [Geospatial data](/docs/concept/geohashes) with geohashes
+- [Root directory](/docs/concept/root-directory-structure/) describes the
+  directory contents of QuestDB for storage and configuration
 
 ## Reference
 
@@ -102,11 +108,6 @@ This section contains the reference documentation for the following categories:
 - [InfluxDB](/docs/reference/api/ilp/overview/)
 - [Java (embedded)](/docs/reference/api/java-embedded/)
 
-### Configuration
-
-The [configuration](/docs/reference/configuration/) page shows all the
-properties that can be used to customize QuestDB.
-
 ### Command-line options
 
 The following resource provides info on options that may be passed to QuestDB
@@ -115,22 +116,35 @@ when starting services:
 - [Command-line options](/docs/reference/command-line-options/) for starting and
   running QuestDB from an executable
 
+### Configuration
+
+The [configuration](/docs/reference/configuration/) page shows all the
+properties that can be used to customize QuestDB.
+
+### Data Types
+
+The [data types](/docs/reference/sql/datatypes) page lists the datatypes that
+can be used in QuestDB.
+
 ### Functions
 
-- [Aggregation](/docs/reference/function/aggregation/)
-- [Conditional](/docs/reference/function/conditional/)
-- [Date time](/docs/reference/function/date-time/)
-- [Meta](/docs/reference/function/meta/)
-- [Numeric](/docs/reference/function/numeric/)
-- [Random value generator](/docs/reference/function/random-value-generator/)
-- [Row generator](/docs/reference/function/row-generator/)
-- [Text](/docs/reference/function/text/)
-- [Timestamp generator](/docs/reference/function/timestamp-generator/)
-- [Timestamp](/docs/reference/function/timestamp/)
+- [Aggregate](/docs/reference/function/aggregation)
+- [Boolean](/docs/reference/function/boolean)
+- [Conditional](/docs/reference/function/conditional)
+- [Date and time](/docs/reference/function/date-time)
+- [Meta](/docs/reference/function/meta)
+- [Numeric](/docs/reference/function/numeric)
+- [Random value generator](/docs/reference/function/random-value-generator)
+- [Row generator](/docs/reference/function/row-generator)
+- [Spatial](/docs/reference/function/spatial)
+- [Text](/docs/reference/function/text)
+- [Timestamp generator](/docs/reference/function/timestamp-generator)
+- [Timestamp](/docs/reference/function/timestamp)
 
 ### Operators
 
 - [Bitwise](/docs/reference/operators/bitwise/)
+- [Spatial](/docs/reference/operators/spatial)
 
 ### SQL
 
@@ -164,17 +178,10 @@ when starting services:
 - [SHOW](/docs/reference/sql/show/)
 - [SNAPSHOT](/docs/reference/sql/snapshot/)
 - [TRUNCATE TABLE](/docs/reference/sql/truncate/)
-- [VACUUM PARTITIONS](/docs/reference/sql/vacuum-partitions/)
 - [UNION](/docs/reference/sql/union/)
+- [VACUUM PARTITIONS](/docs/reference/sql/vacuum-partitions/)
 - [WHERE](/docs/reference/sql/where/)
 - [WITH](/docs/reference/sql/with/)
-
-### Web console
-
-QuestDB is bundled with a user interface which runs by default on port 9000. The
-following is reference documentation which describes how to use this UI:
-
-- [Web console](/docs/connect/web-console) reference for using the bundled UI
 
 ## Support
 

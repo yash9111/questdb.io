@@ -55,10 +55,6 @@
     to = "/docs/deployment/aws-official-ami"
 
 [[redirects]]
-    from = "/docs/guides/aws-packer"
-    to = "/docs/deployment/aws-packer"
-
-[[redirects]]
     from = "/docs/guides/digitalocean"
     to = "/docs/deployment/digitalocean"
 
@@ -185,3 +181,12 @@
 [[redirects]]
   from = "/docs/guides/influxdb-line-protocol"
   to = "/docs/reference/api/ilp/overview"
+
+# Deleted pages, redirected to closest equivalent.
+[[redirects]]
+    from = "/docs/guides/aws-packer"
+    to = "/docs/deployment/aws-official-ami"
+
+[[redirects]]
+    from = "/docs/operations/deployment"
+    to = "/docs/deployment/aws-official-ami"

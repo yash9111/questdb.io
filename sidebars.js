@@ -54,8 +54,8 @@ module.exports = {
       label: "How do I?",
       type: "category",
       items: [
-        "how-do-i/crud",
         "how-do-i/get-started-with-sql",
+        "how-do-i/crud",
         "how-do-i/use-timestamps-and-timezones",
         "how-do-i/bulk-csv-import",
         "how-do-i/ingest-data-out-of-order",
