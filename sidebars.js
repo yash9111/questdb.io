@@ -40,22 +40,31 @@ module.exports = {
       ],
     },
     {
-      label: "Connect",
+      label: "Develop",
       type: "category",
       items: [
-        "connect/overview",
-        "connect/web-console",
-        "connect/ilp",
-        "connect/rest",
-        "connect/postgres"
-      ],
+        "develop/connect",
+        "develop/insert",
+        "develop/query",
+        "develop/update_delete"
+      ]
     },
+    // {
+    //   label: "Connect",
+    //   type: "category",
+    //   items: [
+    //     "connect/overview",
+    //     "connect/web-console",
+    //     "connect/ilp",
+    //     "connect/rest",
+    //     "connect/postgres"
+    //   ],
+    // },
     {
       label: "How do I?",
       type: "category",
       items: [
         "how-do-i/get-started-with-sql",
-        "how-do-i/crud",
         "how-do-i/use-timestamps-and-timezones",
         "how-do-i/bulk-csv-import",
         "how-do-i/ingest-data-out-of-order",
