@@ -6,10 +6,10 @@ These are the network endpoints you may connect to:
 
 |Network Endpoint|Port|Inserting data|Querying data|
 |----------------|----|--------------|-------------|
-|[Web Console](web-console)|9000|SQL `insert`, CSV|SQL `select`, charting|
+|[Web Console](web-console)|9000|SQL `INSERT`, CSV|SQL `SELECT`, charting|
 |[InfluxDB Line Protocol](ilp)|9009|High performance bulk insert|-|
-|[HTTP REST API](rest)|9000|SQL `insert`, CSV|SQL `select`, CSV|
-|[PostgreSQL Protocol](postgres)|8812|SQL `insert`|SQL `select`|
+|[HTTP REST API](rest)|9000|SQL `INSERT`, CSV|SQL `SELECT`, CSV|
+|[PostgreSQL Protocol](postgres)|8812|SQL `INSERT`|SQL `SELECT`|
 
 
 ## Web console
@@ -35,7 +35,7 @@ import Screenshot from "@theme/Screenshot"
 The fastest way to insert data into QuestDB is using the InfluxDB Line
 Protocol (ILP).
 
-It is an insert-only protocol that bypasses SQL `insert` statements achieving
+It is an insert-only protocol that bypasses SQL `INSERT` statements achieving
 higher throughput.
 
 ```shell
@@ -52,7 +52,7 @@ For a more in-depth understanding, see our
 ## HTTP REST API
 
 The HTTP interface that hosts the web console also provides a REST API for
-importing data and querying.
+importing data, exporting data and querying.
 
 ```shell
 curl -F data=@data.csv http://localhost:9000/imp
