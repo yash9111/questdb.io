@@ -16,7 +16,7 @@ support:
 | -------- | -------------------------- | -------------------------- |
 | ILP | None | **Best** |
 | CSV upload via HTTP REST | Configurable | Very Good |
-| PostgreSQL insert statements | Transaction-level | Good |
+| `INSERT` statements over PostgreSQL or HTTP | Transaction-level | Good |
 
 With sufficient client-side validation, the lack of errors and confirmation
 isn't necessarily a concern.

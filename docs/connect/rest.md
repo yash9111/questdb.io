@@ -278,7 +278,7 @@ For obtaining results in JSON, use `/exec` instead, documented next.
 <TabItem value="curl">
 
 ```bash
-curl -G --data-urlencode "query=select * from example_table2 limit 3" http://localhost:9000/exp
+curl -G --data-urlencode "query=SELECT * FROM example_table2 LIMIT 3" http://localhost:9000/exp
 ```
 
 ```csv
@@ -466,12 +466,12 @@ func checkErr(err error) {
 
 ### Inserting Data
 
-Note that the `/exec` entry point can also execute SQL `insert` statements.
+Note that the `/exec` entry point can also execute SQL `INSERT` statements.
 
 :::tip
 
 [InfluxDB Line Protocol](ilp) is the recommended primary ingestion method in
-QuestDB. SQL `insert` statements offer feedback and error reporting, but have
+QuestDB. SQL `INSERT` statements offer feedback and error reporting, but have
 worse overall performance.
 
 :::
