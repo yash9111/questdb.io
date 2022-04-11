@@ -7,18 +7,18 @@ QuestDB also supports the same wire protocol as PostgreSQL, allowing you to
 connect and query the database with various third-party pre-existing client
 libraries and tools.
 
-You can connect to TCP port `8812` and use both `insert` and `select` SQL
+You can connect to TCP port `8812` and use both `INSERT` and `SELECT` SQL
 queries.
 
 :::tip
 
 [InfluxDB Line Protocol](ilp) is the recommended primary ingestion method in
-QuestDB. SQL `insert` statements over the PostgreSQL offer feedback and error
+QuestDB. SQL `INSERT` statements over the PostgreSQL offer feedback and error
 reporting, but have worse overall performance.
 
 :::
 
-Here are a few examples demonstrating both SQL `insert` and `select` queries:
+Here are a few examples demonstrating both SQL `INSERT` and `SELECT` queries:
 
 <Tabs defaultValue="psql" values={[
   { label: "psql", value: "psql" },
@@ -348,7 +348,7 @@ fn main() -> Result<(), Error> {
 
     // Prepared statement
     let mut txn = client.transaction()?;
-    let statement = txn.prepare("insert into trades values ($1,$2,$3,$4)")?;
+    let statement = txn.prepare("INSERT INTO trades VALUES ($1,$2,$3,$4)")?;
     for value in 0..10 {
         let utc = Utc::now();
         let sys_time = SystemTime::now();

@@ -378,7 +378,7 @@ Considering the query:
 
 ```shell
 curl -G \
-  --data-urlencode "query=select timestamp, tempF from weather limit 2;" \
+  --data-urlencode "query=SELECT timestamp, tempF FROM weather LIMIT 2;" \
   --data-urlencode "count=true" \
   http://localhost:9000/exec
 ```
@@ -387,7 +387,7 @@ A HTTP status code of `200` is returned with the following response body:
 
 ```json
 {
-  "query": "select timestamp, tempF from weather limit 2;",
+  "query": "SELECT timestamp, tempF FROM weather LIMIT 2;",
   "columns": [
     {
       "name": "timestamp",
@@ -428,7 +428,7 @@ Considering the query:
 
 ```shell
 curl -G \
-  --data-urlencode "query=select AccidentIndex2, Date, Time from 'Accidents0514.csv'" \
+  --data-urlencode "query=SELECT AccidentIndex2, Date, Time FROM 'Accidents0514.csv'" \
   --data-urlencode "limit=5" \
   http://localhost:9000/exp
 ```
