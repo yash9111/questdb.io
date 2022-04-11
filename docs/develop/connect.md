@@ -6,15 +6,15 @@ These are the network endpoints you may connect to:
 
 |Network Endpoint|Port|Inserting data|Querying data|
 |----------------|----|--------------|-------------|
-|[Web Console](/docs/connect/web-console)|9000|SQL `insert`, CSV|SQL `select`, charting|
-|[InfluxDB Line Protocol](/docs/connect/ilp)|9009|High performance bulk insert|-|
-|[HTTP REST API](/docs/connect/rest)|9000|SQL `insert`, CSV|SQL `select`, CSV|
-|[PostgreSQL Protocol](/docs/connect/postgres)|8812|SQL `insert`|SQL `select`|
+|[Web Console](web-console)|9000|SQL `INSERT`, CSV|SQL `SELECT`, charting|
+|[InfluxDB Line Protocol](ilp)|9009|High performance bulk insert|-|
+|[HTTP REST API](rest)|9000|SQL `INSERT`, CSV|SQL `SELECT`, CSV|
+|[PostgreSQL Protocol](postgres)|8812|SQL `INSERT`|SQL `SELECT`|
 
 
 ## Web console
 
-The [web console](/docs/connect/web-console) is a general admin and query interface.
+The [web console](web-console) is a general admin and query interface.
 It's great for quickly trying things out. You can also chart your query results.
 
 Connect your web browser to http://questdb-server:9000/, e.g.
@@ -35,7 +35,7 @@ import Screenshot from "@theme/Screenshot"
 The fastest way to insert data into QuestDB is using the InfluxDB Line
 Protocol (ILP).
 
-It is an insert-only protocol that bypasses SQL `insert` statements achieving
+It is an insert-only protocol that bypasses SQL `INSERT` statements achieving
 higher throughput.
 
 ```shell
@@ -44,7 +44,7 @@ readings,city=London temperature=23.6 1465839830100700000\n
 readings,make=Honeywell temperature=23.2,humidity=0.443 1465839830100800000\n
 ```
 
-Our [ILP tutorial](/docs/connect/ilp) covers ingesting data with our various client libraries.
+Our [ILP tutorial](ilp) covers ingesting data with our various client libraries.
 
 For a more in-depth understanding, see our
 [protocol documentation](/docs/reference/api/ilp/overview).
@@ -52,13 +52,13 @@ For a more in-depth understanding, see our
 ## HTTP REST API
 
 The HTTP interface that hosts the web console also provides a REST API for
-importing data and querying.
+importing data, exporting data and querying.
 
 ```shell
 curl -F data=@data.csv http://localhost:9000/imp
 ```
 
-Read our [REST tutorial](/docs/connect/rest) for code examples, and our
+Read our [REST tutorial](rest) for code examples, and our
 [REST reference](/docs/reference/api/rest) for further details.
 
 ## PostgreSQL Wire Protocol
@@ -83,5 +83,5 @@ finally:
         connection.close()
 ```
 
-See how you can connect through the [PostgreSQL Wire protocol](/docs/connect/postgres) from
+See how you can connect through the [PostgreSQL Wire protocol](postgres) from
 different programming languages.

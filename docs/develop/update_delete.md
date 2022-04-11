@@ -12,39 +12,39 @@ updated values.
 Here's a worked example using the timestamp column:
 
 ```questdb-sql
-create table takeaway_order (
+CREATE TABLE takeaway_order (
     ts timestamp,
     id symbol,
     status symbol)
-        timestamp(ts);
+        TIMESTAMP(ts);
 
-insert into 'takeaway_order' values (now(), 'order1', 'placed');
-insert into 'takeaway_order' values (now(), 'order2', 'placed');
-insert into 'takeaway_order' values (now(), 'order1', 'cooking');
-insert into 'takeaway_order' values (now(), 'order1', 'in-transit');
-insert into 'takeaway_order' values (now(), 'order1', 'arrived');
-insert into 'takeaway_order' values (now(), 'order3', 'placed');
-insert into 'takeaway_order' values (now(), 'order3', 'cooking');
-insert into 'takeaway_order' values (now(), 'order3', 'in-transit');
+INSERT INTO takeaway_order VALUES (now(), 'order1', 'placed');
+INSERT INTO takeaway_order VALUES (now(), 'order2', 'placed');
+INSERT INTO takeaway_order VALUES (now(), 'order1', 'cooking');
+INSERT INTO takeaway_order VALUES (now(), 'order1', 'in-transit');
+INSERT INTO takeaway_order VALUES (now(), 'order1', 'arrived');
+INSERT INTO takeaway_order VALUES (now(), 'order3', 'placed');
+INSERT INTO takeaway_order VALUES (now(), 'order3', 'cooking');
+INSERT INTO takeaway_order VALUES (now(), 'order3', 'in-transit');
 ```
 
 We join the latest timestamp of an order id against the rest of the data to
 obtain full details.
 
 ```questdb-sql
-with
-    ts_takeaway_order as (
-        select
-            max(ts) as ts,
+WITH
+    ts_takeaway_order AS (
+        SELECT
+            max(ts) AS ts,
             id
-        from
-            'takeaway_order' group by id)
-select
+        FROM
+            takeaway_order GROUP BY id)
+SELECT
     o.*
-from
+FROM
     ts_takeaway_order ts_o
-    inner join 'takeaway_order' o
-    on ts_o.ts = o.ts
+    INNER JOIN 'takeaway_order' o
+    ON ts_o.ts = o.ts
 ```
 
 This results in the latest state for each order:
