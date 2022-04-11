@@ -52,7 +52,7 @@ For a more in-depth understanding, see our
 ## HTTP REST API
 
 The HTTP interface that hosts the web console also provides a REST API for
-importing data and querying.
+importing data, exporting data and querying.
 
 ```shell
 curl -F data=@data.csv http://localhost:9000/imp
