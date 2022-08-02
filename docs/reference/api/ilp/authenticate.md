@@ -129,9 +129,10 @@ disconnect and log the failure.
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
 
-<Tabs defaultValue="nodejs" values={[ { label: "NodeJS", value: "nodejs" }, 
-{label: "Go", value: "go" }, 
-{label: "Python", value: "python" }
+<Tabs defaultValue="go" values={[{label: "Go", value: "go" }, 
+{label: "Python", value: "python" },
+{label: "Java", value: "java" },
+{ label: "NodeJS", value: "nodejs" }
 ]}>
 
 
@@ -321,6 +322,43 @@ def send_with_auth():
 if __name__ == '__main__':
     send_with_auth()
 ```    
+</TabItem>
+
+<TabItem value="java">
+
+
+```java
+
+
+package com.example;
+
+import io.questdb.client.Sender;
+
+public class SenderExample {
+    public static void main(String[] args) {
+        // replace:
+        // 1. "localhost:9000" with a host and port of your QuestDB server
+        // 2. "testUser1" with KID from your JSON Web Key
+        // 3. token with the D portion of your JSON Web Key
+        try (Sender sender = Sender.builder()
+                .address("localhost:9009")
+                .enableAuth("testUser1").authToken("GwBXoGG5c6NoUTLXnzMxw_uNiVa8PKobzx5EiuylMW0")
+                .build()) {
+            sender.table("inventors")
+                    .symbol("born", "Austrian Empire")
+                    .longColumn("id", 0)
+                    .stringColumn("name", "Nicola Tesla")
+                    .atNow();
+            sender.table("inventors")
+                    .symbol("born", "USA")
+                    .longColumn("id", 1)
+                    .stringColumn("name", "Thomas Alva Edison")
+                    .atNow();
+        }
+    }
+}
+```
+
 </TabItem>
 
 
