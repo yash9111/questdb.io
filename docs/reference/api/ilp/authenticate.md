@@ -328,8 +328,6 @@ if __name__ == '__main__':
 
 
 ```java
-
-
 package com.example;
 
 import io.questdb.client.Sender;
