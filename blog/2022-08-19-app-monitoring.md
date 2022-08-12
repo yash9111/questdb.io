@@ -5,19 +5,25 @@ author_title: Guest post
 author_url: https://www.itechcreations.in/portfolio-2/
 author_image_url: https://dl.airtable.com/.attachments/e7947774cf075063f8c1b67a985124ab/6c97d2ae/20210731105430_IMG_2140.jpg?userId=usrLQ2kaNUqxOmv9c
 description:
-  TBD
+  Benefits of using time series data bases for application monitoring.
 keywords:
-  - TBD
+  - tiemseries
+  - monitoring
+  - grafana 
+  - influxdb 
+  - timescale
+  - telegraf 
+  - cloud
 
 
 image: /img/blog/2022-08-19/banner.png
-tags: [TBD, TBD]
+tags: [timeseries, monitoring, grafana, influxdb, timescale, telegraf, cloud]
 ---
 
 import Banner from "@theme/Banner"
 
 <Banner
-  alt="QuestDB log and nginx logo"
+  alt="photo of a clock"
   height={467}
   src="/img/blog/2022-08-19/banner.png"
   width={650}
