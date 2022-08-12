@@ -24,7 +24,7 @@ import Banner from "@theme/Banner"
 
 <Banner
   alt="photo of a clock"
-  height={467}
+  height={360}
   src="/img/blog/2022-08-19/banner.png"
   width={650}
 ></Banner>
