@@ -147,7 +147,9 @@ According to Timescale, you can write millions of data points per second per nod
 
 [QuestDB](https://questdb.io/) is the [fastest open source](https://www.g2.com/categories/time-series-databases) time series database. Its read and write performance is at least [three times faster](https://towardsdatascience.com/questdb-vs-timescaledb-38160a361c0e) than its competition. 
 
-The tool, which offers enhanced SQL for time series operations, stores its data in the form of a relational database and supports relational time series joins. QuestDB works with on-premise, cloud, and embedded setups and integrates with tools including Postgres, Telegraf, and Python. It supports the InfluxDB protocol for ingesting data. It is a good choice if you are looking for a long-term solution.
+The tool, which offers enhanced SQL for time series operations, stores its data in the form of a relational database and supports relational time series joins. QuestDB open source works with on-premise or embedded setups, with a range of [ILP client libraries](/docs/reference/clients/overview) to facilitate data injection. It integrates with tools including Postgres, Grafana, and Telegraf. It supports the InfluxDB protocol for ingesting data. It is a good choice if you are looking for a long-term solution.
+
+[The QuestDB Cloud](/cloud) provides an enhanced service with managed infrastructure.
 
 ### Graphite
 
