@@ -6,13 +6,13 @@ import TabItem from "@theme/TabItem"
 This page shows how to insert data into QuestDB using different programming
 languages and tools.
 
+QuestDB supports large CSV import via SQL `COPY` statements and `INSERT` statements for ad hoc row ingestion. Both can be accessed using the embedded [Web Console](/docs/develop/web-console).
+
+For smaller CSV fil import, you can use [HTTP REST API](#http-rest-api).
+
 [InfluxDB Line Protocol](#influxdb-line-protocol) is the recommended primary
 ingestion method in QuestDB and is recommended for high-performance
 applications.
-
-The [Web Console](#web-console) makes it
-easy to import large CSV files or rows via SQL statements. You can also perform
-these same actions via the [HTTP REST API](#http-rest-api).
 
 Applications that intend to insert via SQL programmatically should prefer the
 [PostgreSQL wire protocol](#postgresql-wire-protocol) as it provides
@@ -20,9 +20,9 @@ parameterized querys which avoid SQL injection issues.
 
 In summary, these are the different options:
 
-- [Web Console](#web-console)
-  - CSV import via SQL `COPY` statements.
-  - SQL `INSERT` statements.
+- SQL keywords
+  - `COPY` for large CSV file import.
+  - `INSERT` for ad hoc row ingestion.
 - [InfluxDB Line Protocol](#influxdb-line-protocol)
   - High performance.
   - Optional automatic timestamps.
@@ -37,7 +37,7 @@ In summary, these are the different options:
   - SQL `INSERT` statements.
   - Use `curl` on the command line.
 
-## Web Console
+## SQL keywords
 
 QuestDB ships with an embedded [Web Console](/docs/develop/web-console) running
 by default on port `9000`.
@@ -45,12 +45,22 @@ by default on port `9000`.
 SQL statements can be written in the code editor and executed by clicking the
 **Run** button. Note that the web console runs a single statement at a time. 
 
-Use the `COPY` SQL keyword to [import large CSV file](/docs/guides/importing-data):
+
+### `COPY`
+
+Use the `COPY` SQL keyword to import large CSV files:
 
 ```questdb-sql title='Importing a csv'
 
 COPY weather from 'test_file.csv' WITH HEADER true;
 ```
+:::note
+
+[Large CSV import](/docs/guides/importing-data) provides a detailed guide on the steps.
+
+:::
+
+### `INSERT`
 
 Use the [`INSERT` SQL keyword](/docs/reference/sql/insert) to insert rows into a table:
 
