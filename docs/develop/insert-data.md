@@ -14,7 +14,13 @@ For smaller CSV fil import, you can use [HTTP REST API](#http-rest-api).
 ingestion method in QuestDB and is recommended for high-performance
 applications.
 
+<<<<<<< HEAD
 [PostgreSQL wire protocol](#postgresql-wire-protocol) is less performant but offers more feedback. It is better suited for applications inserting via SQL programmatically as it provides parameterized queries which avoid SQL injection issues.
+=======
+For applications inserting data via SQL programmatically, the
+[PostgreSQL wire protocol](#postgresql-wire-protocol) is recommended as it provides
+parameterized queries which avoid SQL injection issues.
+>>>>>>> b33c426ca70d2f7a6072a0bc60fb1ebb2b70b1ac
 
 In summary, these are the different options:
 
