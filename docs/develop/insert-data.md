@@ -14,9 +14,7 @@ For smaller CSV fil import, you can use [HTTP REST API](#http-rest-api).
 ingestion method in QuestDB and is recommended for high-performance
 applications.
 
-Applications that intend to insert via SQL programmatically should prefer the
-[PostgreSQL wire protocol](#postgresql-wire-protocol) as it provides
-parameterized querys which avoid SQL injection issues.
+[PostgreSQL wire protocol](#postgresql-wire-protocol) is less performant but offers more feedback. It is better suited for applications inserting via SQL programmatically as it provides parameterized queries which avoid SQL injection issues.
 
 In summary, these are the different options:
 
@@ -1355,10 +1353,10 @@ parameterized queries that are necessary to avoid SQL injection issues.
 
 :::tip
 
-Prefer the [PostgreSQL interface](#postgresql-wire-protocol) if you are
-generating sql programmatically.
+Use the [PostgreSQL interface](#postgresql-wire-protocol) if you are
+generating SQL programmatically.
 
-Prefer [ILP](#influxdb-line-protocol) if you need high-performance inserts.
+Use [ILP](#influxdb-line-protocol) if you need high-performance inserts.
 
 :::
 
