@@ -1104,8 +1104,8 @@ For details such as content type, query parameters and more, refer to the
 
 :::tip
 
-[InfluxDB Line Protocol](#influxdb-line-protocol) is the recommended primary
-ingestion method in QuestDB. CSV uploading offers insertion feedback and error
+[SQL `COPY` keyword](#copy) is the recommended primary
+ingestion method in QuestDB. HTTP REST API CSV uploading offers insertion feedback and error
 reporting, but has worse overall performance.
 
 See `/imp`'s [`atomicity`](/docs/reference/api/rest#url-parameters) query
