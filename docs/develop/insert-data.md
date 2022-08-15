@@ -8,19 +8,12 @@ languages and tools.
 
 QuestDB supports large CSV import via SQL `COPY` statements and `INSERT` statements for ad hoc row ingestion. Both can be accessed using the embedded [Web Console](/docs/develop/web-console).
 
-For smaller CSV fil import, you can use [HTTP REST API](#http-rest-api).
+For smaller CSV file import, you can use [HTTP REST API](#http-rest-api).
 
-[InfluxDB Line Protocol](#influxdb-line-protocol) is the recommended primary
-ingestion method in QuestDB and is recommended for high-performance
+[InfluxDB Line Protocol](#influxdb-line-protocol) is the recommended primary ingestion method in QuestDB for high-performance
 applications.
 
-<<<<<<< HEAD
 [PostgreSQL wire protocol](#postgresql-wire-protocol) is less performant but offers more feedback. It is better suited for applications inserting via SQL programmatically as it provides parameterized queries which avoid SQL injection issues.
-=======
-For applications inserting data via SQL programmatically, the
-[PostgreSQL wire protocol](#postgresql-wire-protocol) is recommended as it provides
-parameterized queries which avoid SQL injection issues.
->>>>>>> b33c426ca70d2f7a6072a0bc60fb1ebb2b70b1ac
 
 In summary, these are the different options:
 
@@ -1108,7 +1101,7 @@ For details such as content type, query parameters and more, refer to the
 
 :::tip
 
-[SQL `COPY` keyword](#copy) is the recommended primary
+[InfluxDB Line Protocol](#influxdb-line-protocol) is the recommended primary
 ingestion method in QuestDB. HTTP REST API CSV uploading offers insertion feedback and error
 reporting, but has worse overall performance.
 
