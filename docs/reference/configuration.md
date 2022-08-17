@@ -65,7 +65,7 @@ export QDB_SHARED_WORKER_COUNT=5
 
 ## Docker
 
-This section describes how configure QuestDB server settings when running
+This section describes how to configure QuestDB server settings when running
 QuestDB in a Docker container. A command to run QuestDB via Docker with default
 interfaces is as follows:
 
@@ -115,7 +115,7 @@ configuration above, HTTP ports for the web console and REST API will be
 available on `localhost:4000`:
 
 ```bash
-docker run -v "$(pwd):/root/.questdb/conf" -p 4000:4000 questdb/questdb
+docker run -v "$(pwd):/var/lib/questdb/conf" -p 4000:4000 questdb/questdb
 ```
 
 To mount the full root directory of QuestDB when running in a Docker container,
@@ -128,7 +128,7 @@ http.bind.to=0.0.0.0:4000
 Mount the current directory using the `-v` flag:
 
 ```bash
-docker run -v "$(pwd):/root/.questdb/" -p 4000:4000 questdb/questdb
+docker run -v "$(pwd):/var/lib/questdb/" -p 4000:4000 questdb/questdb
 ```
 
 The current directory will then have data persisted to disk:
@@ -185,7 +185,7 @@ the [health monitoring page](/docs/operations/health-monitoring).
 | http.min.enabled                | true         | Enable or disable Minimal HTTP server.                                                                                                                                                                                               |
 | http.min.bind.to                | 0.0.0.0:9003 | IPv4 address and port of the server. `0` means it will bind to all network interfaces, otherwise the IP address must be one of the existing network adapters.                                                                        |
 | http.min.net.connection.limit   | 4            | Active connection limit.                                                                                                                                                                                                             |
-| http.min.net.connection.timeout | 300000       | Idle connection timeout is milliseconds.                                                                                                                                                                                              |
+| http.min.net.connection.timeout | 300000       | Idle connection timeout is milliseconds.                                                                                                                                                                                             |
 | http.min.net.connection.hint    | false        | Windows specific flag to overcome OS limitations on TCP backlog size.                                                                                                                                                                |
 | http.min.worker.count           |              | By default, minimal HTTP server uses shared thread pool for CPU core count 16 and below. It will use dedicated thread for core count above 16. When `0`, the server will use the shared pool. Do not set pool size to more than `1`. |
 | http.min.worker.affinity        |              | Core number to pin thread to.                                                                                                                                                                                                        |
@@ -212,7 +212,7 @@ default on port `9000`. For details on the use of this component, refer to the
 | http.receive.buffer.size                     | 1m             | Size of receive buffer.                                                                                                                                                                                                                                                                                                                                                                                                                |
 | http.request.header.buffer.size              | 64k            | Size of internal buffer allocated for HTTP request headers. The value is rounded up to the nearest power of 2. When HTTP requests contain headers that exceed the buffer size server will disconnect the client with HTTP error in server log.                                                                                                                                                                                         |
 | http.response.header.buffer.size             | 32k            | Size of the internal response buffer. The value will be rounded up to the nearest power of 2. The buffer size should be large enough to accommodate max size of server response headers.                                                                                                                                                                                                                                               |
-| http.worker.count                            | 0              | Number of threads in private worker pool. When value is 0, HTTP server will be using shared worker pool of the server. Values above 0 switch on private pool.                                                                                                                                                                                                                                                                          |
+| http.worker.count                            | 0              | Number of threads in private worker pool. When `0`, HTTP server will be using shared worker pool of the server. Values above `0` switch on private pool.                                                                                                                                                                                                                                                                               |
 | http.worker.affinity                         |                | Comma separated list of CPU core indexes. The number of items in this list must be equal to the worker count.                                                                                                                                                                                                                                                                                                                          |
 | http.worker.haltOnError                      | false          | **Changing the default value is strongly discouraged**. Flag that indicates if worker thread must shutdown on unhandled error.                                                                                                                                                                                                                                                                                                         |
 | http.send.buffer.size                        | 2m             | Size of the internal send buffer. Larger buffer sizes result in fewer I/O interruptions the server is making at the expense of memory usage per connection. There is a limit of send buffer size after which increasing it stops being useful in terms of performance. 2MB seems to be optimal value.                                                                                                                                  |
@@ -240,7 +240,7 @@ default on port `9000`. For details on the use of this component, refer to the
 | http.query.cache.enabled                     | true           | Enable or disable the query cache. Cache capacity is `number_of_blocks * number_of_rows`.                                                                                                                                                                                                                                                                                                                                              |
 | http.query.cache.block.count                 | 4              | Number of blocks for the query cache.                                                                                                                                                                                                                                                                                                                                                                                                  |
 | http.query.cache.row.count                   | 16             | Number of rows for the query cache.                                                                                                                                                                                                                                                                                                                                                                                                    |
-| http.security.readonly                       | false          | Forces HTTP read only mode when `true`, which disables commands which modify the data or data structure.                                                                                                                                                                                                                                                                                                                               |
+| http.security.readonly                       | false          | Forces HTTP read only mode when `true`, disabling commands which modify the data or data structure, e.g. INSERT, UPDATE, or CREATE TABLE.                                                                                                                                                                                                                                                                                              |
 | http.security.max.response.rows              | Long.MAX_VALUE | Limit the number of response rows over HTTP.                                                                                                                                                                                                                                                                                                                                                                                           |
 | http.security.interrupt.on.closed.connection | true           | Switch to enable termination of SQL processing if the HTTP connection is closed. The mechanism affects performance so the connection is only checked after `circuit.breaker.throttle` calls are made to the check method. The mechanism also reads from the input stream and discards it since some HTTP clients send this as a keep alive in between requests, `circuit.breaker.buffer.size` denotes the size of the buffer for this. |
 | circuit.breaker.throttle                     | 2000000        | Number of internal iterations such as loops over data before checking if the HTTP connection is still open                                                                                                                                                                                                                                                                                                                             |
@@ -279,7 +279,7 @@ QuestDB.
 | cairo.mkdir.mode                               | 509               | File permission mode for new directories.                                                                                                                                                                                |
 | cairo.parallel.index.threshold                 | 100000            | Minimum number of rows before allowing use of parallel indexation.                                                                                                                                                       |
 | cairo.reader.pool.max.segments                 | 5                 | Number of attempts to get TableReader.                                                                                                                                                                                   |
-| cairo.spin.lock.timeout                        | 1_000             | Timeout when attempting to get BitmapIndexReaders in millisecond.                                                                                                                                                       |
+| cairo.spin.lock.timeout                        | 1_000             | Timeout when attempting to get BitmapIndexReaders in millisecond.                                                                                                                                                        |
 | cairo.character.store.capacity                 | 1024              | Size of the CharacterStore.                                                                                                                                                                                              |
 | cairo.character.store.sequence.pool.capacity   | 64                | Size of the CharacterSequence pool.                                                                                                                                                                                      |
 | cairo.column.pool.capacity                     | 4096              | Size of the Column pool in the SqlCompiler.                                                                                                                                                                              |
@@ -339,26 +339,53 @@ QuestDB.
 
 ### CSV import
 
-This section describes configuration settings for using `COPY` to import large CSV files.
+This section describes configuration settings for using `COPY` to import large
+CSV files.
 
 Mandatory settings to enable `COPY`:
 
-| Property                            | Default | Description                                                                                                                                                                                           |
-|-------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cairo.sql.copy.root                 | null    | Input root directory for CSV imports via `COPY` SQL. This path should not overlap with other directory (e.g. db, conf) of running instance, otherwise import may delete or overwrite existing files. |
-| cairo.sql.copy.work.root            | null    | Temporary import file directory. Same as `cairo.sql.copy.root` if not set explicitly.                                                                                                                |
+| Property                 | Default | Description                                                                                                                                                                                          |
+| ------------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cairo.sql.copy.root      | null    | Input root directory for CSV imports via `COPY` SQL. This path should not overlap with other directory (e.g. db, conf) of running instance, otherwise import may delete or overwrite existing files. |
+| cairo.sql.copy.work.root | null    | Temporary import file directory. Same as `cairo.sql.copy.root` if not set explicitly.                                                                                                                |
 
 Optional settings for `COPY`:
 
-| Property                            | Default | Description                                                                                                                                                                                           |
-|-------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cairo.iouring.enabled               | true    | Enable or disable io_uring implementation. Applicable to newer Linux kernels only. Can be used to switch io_uring interface usage off if there's a kernel bug affecting it.                                                                                        |
-| cairo.sql.copy.buffer.size          | 2 MiB   | Size of read buffers used in import.                                                                                                                                                                   |
-| cairo.sql.copy.log.retention.days   | 3       | Number of days to keep import messages in `sys.text_import_log`.                                                                                                                                       |
-| cairo.sql.copy.max.index.chunk.size | 100m  | Maximum size of index chunk file used to limit total memory requirements of import. Indexing phase should use roughly `thread_count * cairo.sql.copy.max.index.chunk.size` of memory.               |
-| cairo.sql.copy.queue.capacity       | 32      | Size of copy task queue. Should be increased if there's more than 32 import workers.                                                                                                                |
-| cairo.sql.copy.max.index.chunk.size | 100m    | Maximum size of index chunk file used to limit total memory requirements of import. Indexing phase should use roughly `thread_count * cairo.sql.copy.max.index.chunk.size`  of memory.               |
+| Property                            | Default | Description                                                                                                                                                                           |
+| ----------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cairo.iouring.enabled               | true    | Enable or disable io_uring implementation. Applicable to newer Linux kernels only. Can be used to switch io_uring interface usage off if there's a kernel bug affecting it.           |
+| cairo.sql.copy.buffer.size          | 2 MiB   | Size of read buffers used in import.                                                                                                                                                  |
+| cairo.sql.copy.log.retention.days   | 3       | Number of days to keep import messages in `sys.text_import_log`.                                                                                                                      |
+| cairo.sql.copy.max.index.chunk.size | 100m    | Maximum size of index chunk file used to limit total memory requirements of import. Indexing phase should use roughly `thread_count * cairo.sql.copy.max.index.chunk.size` of memory. |
+| cairo.sql.copy.queue.capacity       | 32      | Size of copy task queue. Should be increased if there's more than 32 import workers.                                                                                                  |
+| cairo.sql.copy.max.index.chunk.size | 100m    | Maximum size of index chunk file used to limit total memory requirements of import. Indexing phase should use roughly `thread_count * cairo.sql.copy.max.index.chunk.size` of memory. |
 
+#### CSV import configuration for Docker
+
+For QuestDB instances using Docker:
+
+- `cairo.sql.copy.root` must be defined using one of the following settings:
+  - The environment variable `QDB_CAIRO_SQL_COPY_ROOT`.
+  - The `cairo.sql.copy.root` in `server.conf`.
+- The path for the source CSV file is mounted.
+- The source CSV file path and the path defined by `QDB_CAIRO_SQL_COPY_ROOT` are identical.
+- It is optional to define `QDB_CAIRO_SQL_COPY_WORK_ROOT`.
+
+The following is an example command to start a QuestDB instance on Docker, in order to import a CSV file:
+
+  ```shell
+  docker run -p 9000:9000 \
+  -v "/tmp/questdb:/var/lib/questdb" \
+  -v "/tmp/questdb/my_input_root:/var/lib/questdb/questdb_import" \
+  -e QDB_CAIRO_SQL_COPY_ROOT=/var/lib/questdb/questdb_import \
+  questdb/questdb
+  ```
+
+  Where:
+  - `-v "/tmp/questdb/my_input_root:/var/lib/questdb/questdb_import"`: Defining a source CSV file location to be `/tmp/questdb/my_input_root` on local machine and mounting it to `/var/lib/questdb/questdb_import` in the container.
+  - `-e QDB_CAIRO_SQL_COPY_ROOT=/var/lib/questdb/questdb_import`: Defining the copy root directory to be `var/lib/questdb/questdb_import`.
+
+  It is important that the two path to be identical (`var/lib/questdb/questdb_import` in the example).
 
 ### Parallel SQL execution
 
@@ -388,6 +415,7 @@ PostgresSQL wire protocol.
 | pg.net.connection.rcvbuf         | -1           | Maximum send buffer size on each TCP socket. If value is -1 socket send buffer remains unchanged from OS default.                                                                                 |
 | pg.net.connection.sndbuf         | -1           | Maximum receive buffer size on each TCP socket. If value is -1, the socket receive buffer remains unchanged from OS default.                                                                      |
 | pg.net.connection.hint           | false        | Windows specific flag to overcome OS limitations on TCP backlog size                                                                                                                              |
+| pg.security.readonly             | false        | Forces PG Wire read only mode when `true`, disabling commands which modify the data or data structure, e.g. INSERT, UPDATE, or CREATE TABLE.                                                      |
 | pg.character.store.capacity      | 4096         | Size of the CharacterStore.                                                                                                                                                                       |
 | pg.character.store.pool.capacity | 64           | Size of the CharacterStore pool capacity .                                                                                                                                                        |
 | pg.connection.pool.capacity      | 64           | The maximum amount of pooled connections this interface may have.                                                                                                                                 |
@@ -440,9 +468,9 @@ line protocol.
 | line.tcp.commit.interval.default           | 2000         | Default commit interval in milliseconds. Used when no commit lag set for a table or the fraction is set to 0.                                                                                                                                         |
 | line.tcp.max.measurement.size              | 32768        | Maximum size of any measurement.                                                                                                                                                                                                                      |
 | line.tcp.writer.queue.size                 | 128          | Size of the queue between network I/O and writer jobs. Each queue entry represents a measurement.                                                                                                                                                     |
-| line.tcp.writer.worker.count               | 1            | Number of dedicated I/O worker threads assigned to write data to tables. When `0`, the writer jobs will use the shared pool.                                                                                                                          |
+| line.tcp.writer.worker.count               |              | Number of dedicated I/O worker threads assigned to write data to tables. When `0`, the writer jobs will use the shared pool.                                                                                                                          |
 | line.tcp.writer.worker.affinity            |              | Comma-separated list of thread numbers which should be pinned for line protocol ingestion over TCP. CPU core indexes are 0-based.                                                                                                                     |
-| line.tcp.io.worker.count                   | 0            | Number of dedicated I/O worker threads assigned to parse TCP input. When `0`, the writer jobs will use the shared pool.                                                                                                                               |
+| line.tcp.io.worker.count                   |              | Number of dedicated I/O worker threads assigned to parse TCP input. When `0`, the writer jobs will use the shared pool.                                                                                                                               |
 | line.tcp.io.worker.affinity                |              | Comma-separated list of thread numbers which should be pinned for line protocol ingestion over TCP. CPU core indexes are 0-based.                                                                                                                     |
 | line.tcp.default.partition.by              | DAY          | Table partition strategy to be used with tables that are created automatically by ILP. Possible values are: `HOUR`, `DAY`, `MONTH` and `YEAR`                                                                                                         |
 | line.tcp.disconnect.on.error               | true         | Disconnect TCP socket that sends malformed messages.                                                                                                                                                                                                  |
@@ -579,7 +607,7 @@ w.http.min.scope=http-min-server
 The current directory can be mounted:
 
 ```shell title="Mount the current directory to a QuestDB container"
-docker run -p 9000:9000 -v "$(pwd):/root/.questdb/" questdb/questdb
+docker run -p 9000:9000 -v "$(pwd):/var/lib/questdb/" questdb/questdb
 ```
 
 The container logs will be written to disk using the logging level and file name
@@ -591,7 +619,6 @@ QuestDB includes a log writer that sends any message logged at critical level
 (logger.critical("may-day")) to Prometheus Alertmanager over a TCP/IP socket.
 Details for configuring this can be found in the
 [Prometheus documentation](/docs/third-party-tools/prometheus).
-
 To configure this writer, add it to the `writers` config alongside other log
 writers.
 
