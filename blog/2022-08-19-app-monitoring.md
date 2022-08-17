@@ -96,19 +96,7 @@ Time series databases allow you to store large volumes of data, but some types o
 
 ## Best practices for time series database monitoring
 
-Once you’ve decided to use a time series database and have selected the data to be collected, there are certain best practices you should follow in implementing your database.
-
-### Continuously optimize
-
-The database insert rate is critical for time series, because workloads tend to grow exponentially. Keep continuously optimizing your database with techniques like compression, downsampling, and retiring, to ensure you pay only for what you really need.
-
-### Enable compression
-
-Compression sounds like a basic tactic, but it can be effective in reducing storage costs, speeding up queries, and allowing you to retain more data for longer. As time series data, especially metrics, has a fixed time-value structure, it lends itself well to compression.
-
-### Use effective querying
-
-Effective querying is a concept many software and DevOps engineers learn when starting out but tend to overlook as they move forward. Utilizing industry standard frameworks for querying can help you predict trends and forecast future events effectively. But the data collected by you is unique. Understanding the data and getting creative with your sub-pattern or nearest neighbor queries will allow you to gain new insights.
+Once you’ve decided to use a time series database and have selected the data to be collected, there are certain points you should take into consideration when deciding for an implementation:
 
 ### Choose the right database
 
@@ -124,14 +112,29 @@ Using interactive dashboards increases the effectiveness of extracting and analy
 
 The database architecture, flexibility, and query language used are some crucial technical factors that determine how well you use the data collected. Before you begin, you should have a good understanding of your tool stack, your query language, and the expertise level of your developer team.
 
+<!--Once your database is set up, the following tips can help you benefit further from your monitoring system: -->
+
+### Continuously optimize
+
+The database insert rate is critical for time series, because workloads tend to grow exponentially. Keep continuously optimizing your database with techniques like compression, downsampling, and retiring, to ensure you pay only for what you really need.
+
+### Enable compression
+
+Compression sounds like a basic tactic, but it can be effective in reducing storage costs, speeding up queries, and allowing you to retain more data for longer. As time series data, especially metrics, has a fixed time-value structure, it lends itself well to compression.
+
+### Use effective querying
+
+Effective querying is a concept many software and DevOps engineers learn when starting out but tend to overlook as they move forward. Utilizing industry standard frameworks for querying can help you predict trends and forecast future events effectively. But the data collected by you is unique. Understanding the data and getting creative with your sub-pattern or nearest neighbor queries will allow you to gain new insights.
+
 ## Time series database tooling options
 
-There are many time series databases available. The following is an introduction to five well-known options. Be sure to weigh what each offers against your organization’s specific needs.
+There are many time series databases available. Be sure to weigh what each offers against your organization’s specific needs by considering these factors:
 
-Before you dive in, remember that your choice of time series database tooling will depend on these two factors:
 
 - **How long you want to store your data:** Some databases like Prometheus are excellent for short-term solutions where you do not need to store data for a long time. The default storage duration for Prometheus is fifteen days, and the lowest you can go is two hours. However, if you want to store collected data for a year or more, you should consider databases that support long-term storage solutions.
 - **What level of indexing you need for working with the data:** Time-stamped data is intrinsically indexed on time, but you might need indexing on other metrics like event time, host name, or service utilized. Databases that use relational models to store data on the disks, like TimeScale and QuestDB, are easier to adapt and manipulate for indexing. Those using tag set data models, like Prometheus and InfluxDB, may be more difficult to index extensively.
+
+The following is an introduction to five well-known options. 
 
 ### Prometheus with Grafana
 
@@ -167,4 +170,4 @@ As Graphite is just a graphing system, its longevity depends upon the backend us
 
 A time series database offers a fast, comprehensive solution for your application monitoring needs. You can collect vast amounts of data to generate insights about application downtime, peak performance, resource utilization, bugs, and other issues. With that information, you can take action to ensure maximum availability and the best UX.
 
-The database tools noted above should give you a good start on monitoring your applications. They offer you a creative, reliable way to augment your CI/CD pipelines. 
+The database tools presented above should give you a good start on monitoring your applications. They offer you a creative, reliable way to augment your CI/CD pipelines. 
