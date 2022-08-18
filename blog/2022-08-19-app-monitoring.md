@@ -59,7 +59,7 @@ Time series databases offer multiple features that are ideal for application mon
 
 - Alerts for high-priority events: Saving data in a time series database enables observability across the entire distributed infrastructure. It’s easier to create real-time alerts for high-priority events using time-stamped data sets, which can either notify team members or take automated steps to solve the problems quickly.
 
-## Application monitoring with time series databases
+## What data should you collect?
 
 In order to implement application monitoring, you need to decide which data to collect and how to organize the data, in order to perform these tasks:
 
@@ -71,8 +71,6 @@ You should also collect and store data on discrete and infrequent occurrences to
 
 An event should carry enough information that it can be interpreted on its own. Each event record must include what happened, when it happened, and anything else you need to know in order to act.
 
-## What data should you collect?
-
 Time series databases allow you to store large volumes of data, but some types of data are more valuable for your purposes. Here’s how to ensure your data provides enough information and context:
 
 - Add as much metadata as you can to each piece of data. When you look at a piece of data, you should not struggle to understand the context.
@@ -80,7 +78,7 @@ Time series databases allow you to store large volumes of data, but some types o
 - Tag the scope of each piece of data exhaustively. Each metric affects multiple processes/pipelines. Extensive tagging helps you understand the full scope of a change.
 - Raw data is the best kind of data there is, because you can  analyze it more thoroughly for better insights. Determine how long you need to store data in its raw form.
 
-## Tips for using time series databases
+## Tips for choosing time a series database
 
 Once you’ve decided to use a time series database and have selected the data to be collected, there are certain points you should take into consideration when choosing the right database for you. Time series workloads tend to scale faster than other types of data, so you need a database that can grow with data size without costing too much or compromising on performance. You should be able to grow, shrink, or migrate workloads easily in real time. Overall, these are the main factors to consider:
 
@@ -94,13 +92,11 @@ Once you’ve decided to use a time series database and have selected the data t
 
 - Understand your technology: The database architecture, flexibility, and query language used are some crucial technical factors that determine how well you use the data collected. Before you begin, you should have a good understanding of your tool stack, your query language, and the expertise level of your developer team.
 
-Once your database is set up, the following tips can help you benefit further from your monitoring system:
+- Data ingestion performance: The database insert rate is critical for time series databases because workloads could grow exponentially in a short period of time. It is crucial to understand what your performance bottlenecks may be and plan ahead. It might be that you can fine-tune some parameters, or you have to increase the number of CPU cores, etc. Each database could be different.
 
-- Continuously optimize: The database insert rate is critical for time series, because workloads tend to grow exponentially. Keep continuously optimizing your database with techniques like compression, downsampling, and retiring, to ensure you pay only for what you really need.
+- Storage efficiency: TBD - compression, data retention, cold storage, etc.
 
-- Enable compression: Compression sounds like a basic tactic, but it can be effective in reducing storage costs, speeding up queries, and allowing you to retain more data for longer. As time series data, especially metrics, has a fixed time-value structure, it lends itself well to compression.
-
-- Use effective querying: Effective querying is a concept many software and DevOps engineers learn when starting out but tend to overlook as they move forward. Utilizing industry standard frameworks for querying can help you predict trends and forecast future events effectively. But the data collected by you is unique. Understanding the data and getting creative with your sub-pattern or nearest neighbor queries will allow you to gain new insights.
+- Querying methods: TBD - how SQL-like a database querying language can be; learning curves...
 
 ## Time series database tooling options
 
