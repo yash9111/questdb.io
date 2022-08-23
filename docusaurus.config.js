@@ -47,6 +47,7 @@ const config = {
   plugins: [
     require.resolve("./plugins/fetch-latest-release/index"),
     require.resolve("./plugins/fetch-repo/index"),
+    require.resolve("./plugins/remote-repo-example/index"),
     require.resolve("./plugins/fetch-contributors-count/index"),
     require.resolve("./plugins/webpack-ts/index"),
     require.resolve("./plugins/optimize/index"),
@@ -86,8 +87,8 @@ const config = {
         ],
       },
     ],
-    [ 
-      require.resolve('./plugins/blog'),
+    [
+      require.resolve("./plugins/blog"),
       {
         remarkPlugins: [variable, math],
         rehypePlugins: [katex],
@@ -96,9 +97,12 @@ const config = {
           copyright: customFields.copyright,
         },
         showReadingTime: true,
-        blogTagsPostsComponent: require.resolve("./src/theme/BlogListPage/index.tsx"),
-      }
-    ]
+        postsPerPage: 12,
+        blogTagsPostsComponent: require.resolve(
+          "./src/theme/BlogListPage/index.tsx",
+        ),
+      },
+    ],
   ],
   themeConfig: {
     announcementBar: {
@@ -126,7 +130,7 @@ const config = {
         "ini",
         "toml",
         "ruby",
-        "php"
+        "php",
       ],
       theme: require("./src/internals/prism-github"),
       darkTheme: require("./src/internals/prism-dracula"),
@@ -325,7 +329,7 @@ const config = {
           rehypePlugins: [katex],
           sidebarPath: require.resolve("./sidebars.js"),
         },
-        
+
         sitemap: {
           // Removed: https://github.com/ekalinin/sitemap.js/blob/master/CHANGELOG.md#50-breaking-changes
           // cacheTime: 600 * 1000, // 600 sec - cache purge period
