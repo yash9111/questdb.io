@@ -2,6 +2,7 @@
 
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
+import { RemoteRepoExample } from '@theme/RemoteRepoExample'
 
 This page shows how to insert data into QuestDB using different programming
 languages and tools.
@@ -10,50 +11,31 @@ languages and tools.
 ingestion method in QuestDB and is recommended for high-performance
 applications.
 
-For operational (ad-hoc) data ingestion the [Web Console](#web-console) makes it
-easy to upload CSV files and insert via SQL statements. You can also perform
-these same actions via the [HTTP REST API](#http-rest-api).
+For transactional data inserts, use the [PostgreSQL wire protocol](#postgresql-wire-protocol).
 
-Applications that intend to insert via SQL programmatically should prefer the
-[PostgreSQL wire protocol](#postgresql-wire-protocol) as it provides
-parameterized querys which avoid SQL injection issues.
+For operational (ad-hoc) data ingestion, the [Web Console](#web-console) makes it
+easy to upload CSV files and insert via SQL statements. You can also perform
+these same actions via the [HTTP REST API](#http-rest-api). For [large CSV import](/docs/guides/importing-data) (database migrations), use SQL `COPY`.
 
 In summary, these are the different options:
 
-- [Web Console](#web-console)
-  - CSV upload.
-  - SQL `INSERT` statements.
 - [InfluxDB Line Protocol](#influxdb-line-protocol)
   - High performance.
   - Optional automatic timestamps.
   - Optional integrated authentication.
-  - Client libraries in various programming languages.
+  - [Client libraries](/docs/reference/clients/overview) in various programming languages.
 - [PostgreSQL wire protocol](#postgresql-wire-protocol)
   - SQL `INSERT` statements, including parameterized queries.
   - Use `psql` on the command line.
   - Interoperability with third-party tools and libraries.
+- [Web Console](#web-console)
+  - CSV upload.
+  - SQL `INSERT` statements.
+  - SQL `COPY` for [large CSV import](/docs/guides/importing-data/).
 - [HTTP REST API](#http-rest-api)
   - CSV upload.
   - SQL `INSERT` statements.
   - Use `curl` on the command line.
-
-## Web Console
-
-QuestDB ships with an embedded [Web Console](/docs/develop/web-console) running
-by default on port `9000`.
-
-```questdb-sql title='Creating a table and inserting some data'
-
-CREATE TABLE takeaway_order (ts TIMESTAMP, id SYMBOL, status SYMBOL)
-  TIMESTAMP(ts);
-
-INSERT INTO takeaway_order VALUES (now(), 'order1', 'placed');
-INSERT INTO takeaway_order VALUES (now(), 'order2', 'placed');
-```
-
-SQL statements can be written in the code editor and executed by clicking the
-**Run** button. Note that the web console runs a single statement at a time. You
-can also use the Web Console to upload CSV.
 
 ## InfluxDB Line Protocol
 
@@ -62,7 +44,7 @@ port 9009.
 
 It is a one-way protocol to insert data, focusing on simplicity and performance.
 
-Here is a summary table is how it compares with ways to insert data that we
+Here is a summary table showing how it compares with other ways to insert data that we
 support:
 
 | Protocol                 | Record Insertion Reporting       | Data Insertion Performance |
@@ -70,14 +52,16 @@ support:
 | InfluxDB Line Protocol   | Server logs; Disconnect on error | **Best**                   |
 | CSV upload via HTTP REST | Configurable                     | Very Good                  |
 | SQL `INSERT` statements  | Transaction-level                | Good                       |
+| SQL `COPY` statements    | Transaction-level                | Suitable for one-off data migration|
+
 
 This interface is the preferred ingestion method as it provides the following
 benefits:
 
-- high-throughput ingestion
-- robust ingestion from multiple sources into tables with dedicated systems for
+- High-throughput ingestion
+- Robust ingestion from multiple sources into tables with dedicated systems for
   reducing congestion
-- configurable commit-lag for out-of-order data via
+- Configurable commit-lag for out-of-order data via
   [server configuration](/docs/reference/configuration#influxdb-line-protocol-tcp)
   settings
 
@@ -102,408 +86,51 @@ The [ILP client libraries](/docs/reference/clients/overview) provide more user-f
 
 These examples send a few rows of input. These use client libraries as well as raw TCP socket connections, when a client library is not available.
 
-<Tabs defaultValue="cpp" values={[
-  { label: "C++", value: "cpp" },
+<Tabs defaultValue="python" values={[
+  { label: "Python", value: "python" },
+  { label: "Go", value: "go" },
   { label: "Java", value: "java" },
+  { label: "NodeJS", value: "nodejs" },
   { label: "C#", value: "csharp" },
   { label: "C", value: "c" },
-  { label: "NodeJS", value: "nodejs" },
-  { label: "Go", value: "go" },
-  { label: "Python", value: "python" },
+  { label: "C++", value: "cpp" },
+  { label: "Rust", value: "rust" },
   { label: "Ruby", value: "ruby" },
-  { label: "PHP", value: "php" }
+  { label: "PHP", value: "php" },
 ]}>
 
-<TabItem value="cpp">
-
-```cpp
-// https://github.com/questdb/c-questdb-client
-
-#include <questdb/ilp/line_sender.hpp>
-#include <iostream>
-
-using namespace questdb::ilp::literals;
-
-int main()
-{
-    try
-    {
-        questdb::ilp::line_sender sender{"localhost", 9009};
-
-        // We prepare all our table names and colum names in advance.
-        // If we're inserting multiple rows, this allows us to avoid
-        // re-validating the same strings over and over again.
-        auto table_name = "trades"_name;
-        auto name_name = "name"_name;
-        auto value_name = "value"_name;
-
-        sender
-            .table(trades_name)
-            .symbol(name_name, "test_ilp1"_utf8)
-            .column(value_name, 12.4)
-            .at_now();
-        sender
-            .table(trades_name)
-            .symbol(name_name, "test_ilp2"_utf8)
-            .column(value_name, 11.4)
-            .at_now();
-
-        sender.flush();
-
-        return 0;
-    }
-    catch (const questdb::ilp::line_sender_error& err)
-    {
-        std::cerr
-            << "Error running example: "
-            << err.what()
-            << std::endl;
-
-        return 1;
-    }
-}
-
-```
-
-</TabItem>
-
-<TabItem value="java">
-
-```java
-/*
-    https://search.maven.org/artifact/org.questdb/questdb
-
-    Maven:
-        <dependency>
-            <groupId>org.questdb</groupId>
-            <artifactId>questdb</artifactId>
-            <version>6.4.3</version>
-        </dependency>
-
-    Gradle:
-        compile group: 'org.questdb', name: 'questdb', version: '6.4.3'
-*/
-
-import io.questdb.client.Sender;
-
-public class SenderExample {
-    public static void main(String[] args) {
-        try (Sender sender = Sender.builder().address("localhost:9009").build()) {
-            sender.table("trades")
-                    .symbol("name", "test_ilp1")
-                    .doubleColumn("value", 12.4)
-                    .atNow();
-
-            sender.table("trades")
-                    .symbol("name", "test_ilp2")
-                    .doubleColumn("value", 11.4)
-                    .atNow();
-        }
-    }
-}
-```
-
-</TabItem>
-
-<TabItem value="csharp">
-
-```csharp
-// https://github.com/questdb/net-questdb-client
-
-using QuestDB;
-
-namespace QuestDBDemo
-{
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            using var sender = await LineTcpSender.ConnectAsync("localhost", 9009, tlsMode: TlsMode.Disable);
-            sender.Table("trades")
-                .Symbol("name", "test_ilp1")
-                .Column("value", 12.4)
-                .AtNow();
-            sender.Table("trades")
-                .Symbol("name", "test_ilp2")
-                .Column("value", 11.4)
-                .AtNow();
-            await sender.SendAsync();
-        }
-    }
-}
-
-```
-
-</TabItem>
-
-<TabItem value="c">
-
-```c
-// https://github.com/questdb/c-questdb-client
-
-#include <questdb/ilp/line_sender.h>
-#include <stdio.h>
-
-int main()
-{
-    line_sender_error* err = NULL;
-    line_sender* sender = NULL;
-
-    sender = line_sender_connect(
-        "0.0.0.0",    // bind to all outbound network interfaces
-        "localhost",  // QuestDB host
-        "9009",       // QuestDB port
-        &err);
-    if (!sender)
-        goto on_error;
-
-    // We prepare all our table names and colum names in advance.
-    // If we're inserting multiple rows, this allows us to avoid
-    // re-validating the same strings over and over again.
-    line_sender_name table_name;
-    if (!line_sender_name_init(&table_name, 6, "trades", &err))
-      goto on_error;
-
-    line_sender_name name_name;
-    if (!line_sender_name_init(&name_name, 4, "name", &err))
-        goto on_error;
-
-    line_sender_name value_name;
-    if (!line_sender_name_init(&value_name, 5, "value", &err))
-        goto on_error;
-
-
-    line_sender_utf8 test_ilp3_utf8;
-    if (!line_sender_utf8_init(&test_ilp2_utf8, 9, "test_ilp2", &err))
-        goto on_error;
-
-    // Prepare the first row.
-    if (!line_sender_table(sender, table_name, &err))
-        goto on_error;
-
-    line_sender_utf8 test_ilp1_utf8;
-    if (!line_sender_utf8_init(&test_ilp1_utf8, 9, "test_ilp1", &err))
-        goto on_error;
-
-    if (!line_sender_symbol(sender, name_name, test_ilp1_utf8, &err))
-        goto on_error;
-
-    if (!line_sender_column_f64(sender, value_name, 12.4, &err))
-        goto on_error;
-
-    if (!line_sender_at_now(sender, &err))
-        goto on_error;
-
-
-    // Prepare second row.
-    if (!line_sender_table(sender, table_name, &err))
-        goto on_error;
-
-    line_sender_utf8 test_ilp2_utf8;
-    if (!line_sender_utf8_init(&test_ilp2_utf8, 9, "test_ilp2", &err))
-        goto on_error;
-
-    if (!line_sender_symbol(sender, name_name, test_ilp2_utf8, &err))
-        goto on_error;
-
-    if (!line_sender_column_f64(sender, value_name, 11.4, &err))
-        goto on_error;
-
-    if (!line_sender_at_now(sender, &err))
-        goto on_error;
-
-
-    // Send.
-    if (!line_sender_flush(sender, &err))
-        goto on_error;
-
-    line_sender_close(sender);
-
-    return true;
-
-on_error: ;
-    size_t err_len = 0;
-    const char* err_msg = line_sender_error_msg(err, &err_len);
-    fprintf(stderr, "Error running example: %.*s\n", (int)err_len, err_msg);
-    line_sender_error_free(err);
-    if (sender)
-        line_sender_close(sender);
-    return 0;
-}
-```
-
-</TabItem>
-
-<TabItem value="nodejs">
-
-```javascript
-// Raw socket connection with no validation and string quoting logic.
-// Refer to protocol description:
-// http://questdb.io/docs/reference/api/ilp/overview
-
-"use strict"
-
-const net = require("net")
-
-const client = new net.Socket()
-
-const HOST = "localhost"
-const PORT = 9009
-
-function run() {
-  client.connect(PORT, HOST, () => {
-    const rows = [
-      `trades,name=test_ilp1 value=12.4 ${Date.now() * 1e6}`,
-      `trades,name=test_ilp2 value=11.4 ${Date.now() * 1e6}`,
-    ]
-
-    function write(idx) {
-      if (idx === rows.length) {
-        client.destroy()
-        return
-      }
-
-      client.write(rows[idx] + "\n", (err) => {
-        if (err) {
-          console.error(err)
-          process.exit(1)
-        }
-        write(++idx)
-      })
-    }
-
-    write(0)
-  })
-
-  client.on("error", (err) => {
-    console.error(err)
-    process.exit(1)
-  })
-
-  client.on("close", () => {
-    console.log("Connection closed")
-  })
-}
-
-run()
-```
-
+<TabItem value="python">
+  <RemoteRepoExample name="ilp" lang="python" />
 </TabItem>
 
 <TabItem value="go">
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"log"
-	"time"
-
-	qdb "github.com/questdb/go-questdb-client"
-)
-
-func main() {
-	ctx := context.TODO()
-	// Connect to QuestDB running on 127.0.0.1:9009
-	sender, err := qdb.NewLineSender(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Make sure to close the sender on exit to release resources.
-	defer sender.Close()
-	// Send a few ILP messages.
-	err = sender.
-		Table("trades").
-		Symbol("name", "test_ilp1").
-		Float64Column("value", 12.4).
-		At(ctx, time.Now().UnixNano())
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = sender.
-		Table("trades").
-		Symbol("name", "test_ilp2").
-		Float64Column("value", 11.4).
-		At(ctx, time.Now().UnixNano())
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Make sure that the messages are sent over the network.
-	err = sender.Flush(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-```
-
+  <RemoteRepoExample name="ilp" lang="go" />
 </TabItem>
 
-<TabItem value="python">
-
-```python
-# https://github.com/questdb/py-questdb-client
-
-from questdb.ingress import Sender, Buffer, IngressError, TimestampNanos, TimestampMicros
-import datetime
-import sys
-
-HOST = 'localhost'
-PORT = 9009
-
-
-def send():
-    try:
-        with Sender(HOST, PORT) as sender:            
-            # Record with provided designated timestamp (using the 'at' param)
-            # Notice the designated timestamp is expected in Nanoseconds,
-            # but timestamps in other columns are expected in Microseconds. 
-            # The API provides convenient functions
-            sender.row(
-                'trades',
-                symbols={'name': 'client_timestamp'},
-                columns={'value': 12.4, 'valid_from': TimestampMicros.from_datetime(datetime.datetime.utcnow())},
-                at=TimestampNanos.from_datetime(datetime.datetime.utcnow()))
-            # If no 'at' param is passed, the server will use its own timestamp
-            sender.row(
-                'trades',
-                symbols={'name': 'server_timestamp'},
-                columns={'value': 11.4})
-            sender.flush()
-    except IngressError as e:
-        sys.stderr.write(f'Got error: {e}')
-
-
-# See the docs at https://py-questdb-client.readthedocs.io/en/latest/examples.html#explicit-buffers
-def send_with_buffer():
-    try:
-        sender = Sender(HOST, PORT)
-        sender.connect()
-        buffer = Buffer()
-        buffer.row(
-            'trades',
-            symbols={'name': 'with_buffer_client_timestamp'},
-            columns={'value': 12.4},
-            at=TimestampNanos.from_datetime(datetime.datetime.utcnow()))
-        buffer.row(
-            'trades',
-            symbols={'name': 'with_buffer_server_timestamp'},
-            columns={'value': 11.4})
-        sender.flush(buffer)
-        sender.close()
-    except IngressError as e:
-        sys.stderr.write(f'Got error: {e}')
-
-
-if __name__ == '__main__':
-    send()
-    # If you want to send the same rows to multiple servers, 
-    # or to decouple serialization and sending,
-    # you can use explicit buffers.
-    send_with_buffer()
-```
+<TabItem value="java">
+  <RemoteRepoExample name="ilp" lang="java" />
 </TabItem>
+
+<TabItem value="nodejs">
+  <RemoteRepoExample name="ilp" lang="javascript" />
+</TabItem>
+
+<TabItem value="csharp">
+  <RemoteRepoExample name="ilp" lang="csharp" />
+</TabItem>
+
+<TabItem value="c">
+  <RemoteRepoExample name="ilp" lang="c" />
+</TabItem>
+
+<TabItem value="cpp">
+  <RemoteRepoExample name="ilp" lang="cpp" />
+</TabItem>
+
+<TabItem value="rust">
+  <RemoteRepoExample name="ilp" lang="rust" />
+</TabItem>
+
 <TabItem value="ruby">
 
 ```ruby
@@ -531,6 +158,7 @@ ensure
 end
 ```
 </TabItem>
+
 <TabItem value="php">
 
 ```php
@@ -622,8 +250,8 @@ See:
 ### Constructing well-formed messages
 
 Different library implementations will perform different degrees content
-validation upfront before sending messages out. To avoid encoutering issues
-follow these guidelines.
+validation upfront before sending messages out. To avoid encountering issues,
+follow these guidelines:
 
 - **All strings must be UTF-8 encoded.**
 
@@ -651,9 +279,6 @@ follow these guidelines.
 
 QuestDB will always log any ILP errors in its
 [server logs](/docs/concept/root-directory-structure#log-directory).
-
-From version 6.3, QuestDB will disconnect on the first error encountered on a
-given TCP ILP connection.
 
 Here is an example error from the server logs caused when a line attempted to
 insert a `STRING` into a `SYMBOL` column.
@@ -706,7 +331,7 @@ is documented [here](/docs/reference/api/ilp/authenticate).
 
 ### Third-party Library Compatibility
 
-Use our own client libraries and/or protocol documentation: Clients intended to
+Use our own [client libraries](/docs/reference/clients/overview) and/or protocol documentation: Clients intended to
 work with InfluxDB will not work with QuestDB.
 
 ## PostgreSQL wire protocol
@@ -717,6 +342,8 @@ libraries and tools.
 
 You can connect to TCP port `8812` and use both `INSERT` and `SELECT` SQL
 queries.
+
+PostgreSQL wire protocol is better suited for applications inserting via SQL programmatically as it provides parameterized queries, which avoid SQL injection issues.
 
 :::tip
 
@@ -1067,6 +694,25 @@ fn main() -> Result<(), Error> {
 </TabItem>
 
 </Tabs>
+
+## Web Console
+
+QuestDB ships with an embedded [Web Console](/docs/develop/web-console) running
+by default on port `9000`.
+
+```questdb-sql title='Creating a table and inserting some data'
+
+CREATE TABLE takeaway_order (ts TIMESTAMP, id SYMBOL, status SYMBOL)
+  TIMESTAMP(ts);
+
+INSERT INTO takeaway_order VALUES (now(), 'order1', 'placed');
+INSERT INTO takeaway_order VALUES (now(), 'order2', 'placed');
+```
+
+SQL statements can be written in the code editor and executed by clicking the
+**Run** button. Note that the web console runs a single statement at a time. 
+
+For inserting bulk data or migrating data from other databases, see [large CSV import](/docs/guides/importing-data).
 
 ## HTTP REST API
 
