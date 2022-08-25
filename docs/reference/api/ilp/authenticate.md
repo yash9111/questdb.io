@@ -128,235 +128,41 @@ disconnect and log the failure.
 
 import Tabs from "@theme/Tabs"
 import TabItem from "@theme/TabItem"
+import { RemoteRepoExample } from '@theme/RemoteRepoExample'
 
 <Tabs defaultValue="go" values={[{label: "Go", value: "go" }, 
 {label: "Python", value: "python" },
 {label: "Java", value: "java" },
-{ label: "NodeJS", value: "nodejs" }
+{ label: "NodeJS", value: "nodejs" },
+{ label: "C", value: "c" },
+{ label: "C++", value: "cpp" },
 ]}>
 
 
 <TabItem value="nodejs">
-
-
-```javascript
-const { Socket } = require("net")
-const { Crypto } = require("node-webcrypto-ossl")
-
-const crypto = new Crypto()
-
-const PORT = 9009
-const HOST = "localhost"
-
-const PRIVATE_KEY = "5UjEMuA0Pj5pjK8a-fa24dyIf-Es5mYny3oE_Wmus48"
-const PUBLIC_KEY = {
-  x: "fLKYEaoEb9lrn3nkwLDA-M_xnuFOdSt9y0Z7_vWSHLU",
-  y: "Dt5tbS1dEDMSYfym3fgMv0B99szno-dFc1rYF9t0aac",
-}
-const JWK = {
-  ...PUBLIC_KEY,
-  kid: "testUser1",
-  kty: "EC",
-  d: PRIVATE_KEY,
-  crv: "P-256",
-}
-
-const client = new Socket()
-
-async function write(data) {
-  return new Promise((resolve) => {
-    client.write(data, () => {
-      resolve()
-    })
-  })
-}
-
-async function authenticate(challenge) {
-  // Check for trailing \n which ends the challenge
-  if (challenge.slice(-1).readInt8() === 10) {
-    const apiKey = await crypto.subtle.importKey(
-      "jwk",
-      JWK,
-      { name: "ECDSA", namedCurve: "P-256" },
-      true,
-      ["sign"],
-    )
-
-    const signature = await crypto.subtle.sign(
-      { name: "ECDSA", hash: "SHA-256" },
-      apiKey,
-      challenge.slice(0, challenge.length - 1),
-    )
-
-    await write(`${Buffer.from(signature).toString("base64")}\n`)
-
-    return true
-  }
-
-  return false
-}
-
-async function sendData() {
-  const rows = [
-    `test,location=us temperature=22.4 ${Date.now() * 1e6}`,
-    `test,location=us temperature=21.4 ${Date.now() * 1e6}`,
-  ]
-
-  for (row of rows) {
-    await write(`${row}\n`)
-  }
-}
-
-async function run() {
-  let authenticated = false
-  let data
-
-  client.on("data", async function (raw) {
-    data = !data ? raw : Buffer.concat([data, raw])
-
-    if (!authenticated) {
-      authenticated = await authenticate(data)
-      await sendData()
-      setTimeout(() => {
-        client.destroy()
-      }, 0)
-    }
-  })
-
-  client.on("ready", async function () {
-    await write(`${JWK.kid}\n`)
-  })
-
-  client.connect(PORT, HOST)
-}
-
-run()
-```
-
+<RemoteRepoExample name="ilp-auth" lang="javascript" header={false} />
 </TabItem>
 
 
 <TabItem value="go">
-
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"log"
-	"time"
-
-	qdb "github.com/questdb/go-questdb-client"
-)
-
-func main() {
-	ctx := context.TODO()
-	// Connect to QuestDB running on 127.0.0.1:9009
-	sender, err := qdb.NewLineSender(
-		ctx,
-		// Specify keyId and key for authentication.
-		qdb.WithAuth("testUser1", "5UjEMuA0Pj5pjK8a-fa24dyIf-Es5mYny3oE_Wmus48"),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Make sure to close the sender on exit to release resources.
-	defer sender.Close()
-	// Send a few ILP messages.
-	err = sender.
-		Table("trades").
-		Symbol("name", "test_ilp1").
-		Float64Column("value", 12.4).
-		AtNow(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = sender.
-		Table("trades").
-		Symbol("name", "test_ilp2").
-		Float64Column("value", 11.4).
-		AtNow(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Make sure that the messages are sent over the network.
-	err = sender.Flush(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-```
-
+<RemoteRepoExample name="ilp-auth" lang="go" header={false} />
 </TabItem>
 
 <TabItem value="python">
-
-```python
-# https://github.com/questdb/py-questdb-client
-
-from questdb.ingress import Sender, IngressError, TimestampNanos, TimestampMicros
-import datetime
-import sys
-
-HOST = 'localhost'
-PORT = 9009
-
-
-def send_with_auth():
-    try:
-        auth = ("YOUR_KID", "YOUR_D_KEY", "YOUR_X_KEY", "YOUR_Y_KEY")
-        with Sender(HOST, PORT, auth=auth, tls=True) as sender:
-            buffer = sender.new_buffer()
-            buffer.row(
-                'trades',
-                symbols={'name': 'tls_client_timestamp'},
-                columns={'value': 12.4, 'valid_from': TimestampMicros.from_datetime(datetime.datetime.utcnow())},
-                at=TimestampNanos.from_datetime(datetime.datetime.utcnow()))
-            sender.flush(buffer)
-    except IngressError as e:
-        sys.stderr.write(f'Got error: {e}')
-
-
-if __name__ == '__main__':
-    send_with_auth()
+<RemoteRepoExample name="ilp-auth" lang="python" header={false} />
 ```    
 </TabItem>
 
 <TabItem value="java">
+<RemoteRepoExample name="ilp-auth" lang="java" header={false} />
+</TabItem>
 
+<TabItem value="c">
+<RemoteRepoExample name="ilp-auth" lang="c" header={false} />
+</TabItem>
 
-```java
-package com.example;
-
-import io.questdb.client.Sender;
-
-public class SenderExample {
-    public static void main(String[] args) {
-        // replace:
-        // 1. "localhost:9000" with a host and port of your QuestDB server
-        // 2. "testUser1" with KID from your JSON Web Key
-        // 3. token with the D portion of your JSON Web Key
-        try (Sender sender = Sender.builder()
-                .address("localhost:9009")
-                .enableAuth("testUser1").authToken("GwBXoGG5c6NoUTLXnzMxw_uNiVa8PKobzx5EiuylMW0")
-                .build()) {
-            sender.table("inventors")
-                    .symbol("born", "Austrian Empire")
-                    .longColumn("id", 0)
-                    .stringColumn("name", "Nicola Tesla")
-                    .atNow();
-            sender.table("inventors")
-                    .symbol("born", "USA")
-                    .longColumn("id", 1)
-                    .stringColumn("name", "Thomas Alva Edison")
-                    .atNow();
-        }
-    }
-}
-```
-
+<TabItem value="cpp">
+<RemoteRepoExample name="ilp-auth" lang="cpp" header={false} />
 </TabItem>
 
 

@@ -10,10 +10,10 @@ const yaml = require("js-yaml")
 
 // "<org>/<repo>/<branch>"
 const sources = [
-  "questdb/c-questdb-client/main",
-  "questdb/py-questdb-client/main",
-  "questdb/go-questdb-client/main",
-  "questdb/nodejs-questdb-client/main",
+  "questdb/c-questdb-client/auth-example",
+  "questdb/py-questdb-client/ilp-auth-example",
+  "questdb/go-questdb-client/auth-ilp-example",
+  "questdb/nodejs-questdb-client/ilp-auth-example",
   "questdb/net-questdb-client/main",
   "questdb/questdb/master"
 ]
