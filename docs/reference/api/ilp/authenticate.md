@@ -141,33 +141,31 @@ import { RemoteRepoExample } from '@theme/RemoteRepoExample'
 
 
 <TabItem value="nodejs">
-<RemoteRepoExample name="ilp-auth" lang="javascript" header={false} />
+<RemoteRepoExample name="ilp-auth" lang="javascript" header={true} />
 </TabItem>
 
-
 <TabItem value="go">
-<RemoteRepoExample name="ilp-auth" lang="go" header={false} />
+<RemoteRepoExample name="ilp-auth" lang="go" header={true} />
 </TabItem>
 
 <TabItem value="python">
-<RemoteRepoExample name="ilp-auth" lang="python" header={false} />
-```    
+<RemoteRepoExample name="ilp-auth" lang="python" header={true} />
 </TabItem>
 
 <TabItem value="java">
-<RemoteRepoExample name="ilp-auth" lang="java" header={false} />
+<RemoteRepoExample name="ilp-auth" lang="java" header={true} />
 </TabItem>
 
 <TabItem value="c">
-<RemoteRepoExample name="ilp-auth" lang="c" header={false} />
+<RemoteRepoExample name="ilp-auth" lang="c" header={true} />
 </TabItem>
 
 <TabItem value="cpp">
-<RemoteRepoExample name="ilp-auth" lang="cpp" header={false} />
+<RemoteRepoExample name="ilp-auth" lang="cpp" header={true} />
 </TabItem>
 
 <TabItem value="rust">
-<RemoteRepoExample name="ilp-auth" lang="rust" header={false} />
+<RemoteRepoExample name="ilp-auth" lang="rust" header={true} />
 </TabItem>
 
 
