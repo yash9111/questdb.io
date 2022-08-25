@@ -136,6 +136,7 @@ import { RemoteRepoExample } from '@theme/RemoteRepoExample'
 { label: "NodeJS", value: "nodejs" },
 { label: "C", value: "c" },
 { label: "C++", value: "cpp" },
+{ label: "Rust", value: "rust" },
 ]}>
 
 
@@ -163,6 +164,10 @@ import { RemoteRepoExample } from '@theme/RemoteRepoExample'
 
 <TabItem value="cpp">
 <RemoteRepoExample name="ilp-auth" lang="cpp" header={false} />
+</TabItem>
+
+<TabItem value="rust">
+<RemoteRepoExample name="ilp-auth" lang="rust" header={false} />
 </TabItem>
 
 
