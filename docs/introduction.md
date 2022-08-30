@@ -161,6 +161,7 @@ can be used in QuestDB.
 
 - [SQL Execution order](/docs/reference/sql/datatypes)
 - [Data types](/docs/reference/sql/datatypes)
+- [ALTER SYSTEM](/docs/reference/sql/alter-system)
 - [ALTER TABLE ADD COLUMN](/docs/reference/sql/alter-table-add-column)
 - [ALTER TABLE ALTER COLUMN ADD INDEX](/docs/reference/sql/alter-table-alter-column-add-index)
 - [ALTER TABLE RENAME COLUMN](/docs/reference/sql/alter-table-rename-column)

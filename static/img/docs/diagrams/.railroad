@@ -13,6 +13,9 @@ createTableDef
 alterTable 
   ::= 'ALTER' 'TABLE' tableName ( 'ADD' | 'ATTACH' | 'DROP' | 'RENAME' | 'SET' )
 
+alterSystem
+  ::= 'ALTER' 'SYSTEM' ( 'LOCK' | 'UNLOCK' ) 'WRITER' tableName
+
 castDef 
   ::= 'cast' '(' columnRef 'as' typeDef ')'
 

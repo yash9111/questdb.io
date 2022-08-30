@@ -187,6 +187,7 @@ module.exports = {
                 "reference/sql/alter-table-set-param",
               ],
             },
+            "reference/sql/alter-system",
             "reference/sql/backup",
             "reference/sql/case",
             "reference/sql/cast",
