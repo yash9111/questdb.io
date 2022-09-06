@@ -5,19 +5,18 @@ author_title: Guest post
 author_url: https://www.linkedin.com/in/soumi-bardhan-8539b3191/
 author_image_url: https://dl.airtable.com/.attachments/19585641a54c2ce5c41573ad78eebff1/c046ceca/soumi_img.webp
 description:
-  TBD
+  Overview of open source time series analysis tools for forecasting and prediction
 keywords:
   - timeseries
   - database
   - time series analysis
   - LSTM
- - Facebook Prophet
- - ARIMA
- - Gradient Boosting
- - XGBoost
- - Scikit-learn
- - KNIME
-
+  - Facebook Prophet
+  - ARIMA
+  - Gradient Boosting
+  - XGBoost
+  - Scikit-learn
+  - KNIME
 image: /img/blog/2022-09-09/banner.png
 tags: [forecasting, prediction, time series analysis]
 ---
