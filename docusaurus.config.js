@@ -4,7 +4,6 @@ const consts = require("./src/config/consts")
 const customFields = require("./src/config/customFields")
 const math = require("remark-math")
 const katex = require("rehype-katex")
-const admonitions = require("remark-admonitions")
 
 function variable() {
   const RE_VAR = /{@([\w-_]+)@}/g
@@ -53,13 +52,6 @@ const config = {
     require.resolve("./plugins/optimize/index"),
     require.resolve("./plugins/manifest/index"),
     require.resolve("./plugins/delay-code-block-appearance"),
-    [
-      require.resolve("./plugins/tutorial/compiled/index"),
-      {
-        remarkPlugins: [variable, math, admonitions],
-        rehypePlugins: [katex],
-      },
-    ],
     [
       "@docusaurus/plugin-pwa",
       {
@@ -331,11 +323,9 @@ const config = {
         },
 
         sitemap: {
-          // Removed: https://github.com/ekalinin/sitemap.js/blob/master/CHANGELOG.md#50-breaking-changes
-          // cacheTime: 600 * 1000, // 600 sec - cache purge period
           changefreq: "daily",
           priority: 0.7,
-          trailingSlash: false,
+          trailingSlash: true,
         },
         theme: {
           customCss: [
