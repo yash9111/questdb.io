@@ -21,7 +21,6 @@ alt="A image of many white sheep and one black sheep, with the QuestDB logo"
 height={360}
 src="/img/blog/2022-08-22/banner.png"
 width={650}
-
 ></Banner>
 
 In this article, [Fortune Adekogbe](https://www.linkedin.com/in/fortune-adekogbe-a81580176/) introduces how to use the BIRCH algorithm for visual clustering, which assists anomaly detection in QuestDB.

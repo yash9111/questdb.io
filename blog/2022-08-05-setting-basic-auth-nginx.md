@@ -23,7 +23,6 @@ alt="QuestDB log and nginx logo"
 height={467}
 src="/img/blog/2022-08-05/banner.png"
 width={650}
-
 ></Banner>
 
 This post comes from
