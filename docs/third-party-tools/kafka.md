@@ -26,7 +26,7 @@ The following binaries must be available to Kafka:
 - PostgreSQL JDBC driver
 
 To download these files, visit the
-[Kafka Connect JDBC](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc)
+[Kafka Connect JDBC](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc/)
 page which provides CLI installation and a direct download of the required
 `.jar` files. Select the ZIP file for download, unzip the contents of the
 archive and copy the required `.jar` files to the Kafka `libs` directory:

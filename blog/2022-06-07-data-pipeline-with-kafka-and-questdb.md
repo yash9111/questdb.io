@@ -20,10 +20,10 @@ tags: [tutorial, python, kafka, cryptocurrency, eth, data science, market data]
 ---
 
 _This tutorial is a guest post contributed by
-[Sooter Saalu](https://github.com/soot3), who put together a tutorial to show
+[Sooter Saalu](https://github.com/soot3/), who put together a tutorial to show
 you how to build a data pipeline using Confluent Kafka, QuestDB, and Python. If
 you like this content or have any feedback, feel free to reach out to the author
-or to us on [GitHub](https://github.com/questdb/questdb) or on
+or to us on [GitHub](https://github.com/questdb/questdb/) or on
 [Slack]({@slackUrl@})._
 
 <!--truncate-->
@@ -81,7 +81,7 @@ is a fast and scalable option for creating high-performing, low-latency data
 pipelines and building functionality for the data integration of high-volume
 streaming data from multiple sources. Kafka is a fairly popular tool used by
 thousands of
-[companies](https://kafka.apache.org/powered-by#:~:text=Today%2C%20Kafka%20is%20used%20by,strategies%20with%20event%20streaming%20architecture.).
+[companies](https://kafka.apache.org/powered-by#:~:text=Today%2C%20Kafka%20is%20used%20by,strategies%20with%20event%20streaming%20architecture/).
 
 [_QuestDB_](https://questdb.io/) is a high-performance, open source SQL database
 designed to process time series data with ease and speed. It is a relational
@@ -95,24 +95,24 @@ ways to ingest and query data in QuestDB.
 ## Preparation
 
 QuestDB can be installed using
-[Docker](https://questdb.io/docs/get-started/docker),
-[TAR files](https://questdb.io/docs/get-started/binaries), or a package manager
-such as [Homebrew](https://questdb.io/docs/get-started/homebrew). And
+[Docker](https://questdb.io/docs/get-started/docker/),
+[TAR files](https://questdb.io/docs/get-started/binaries/), or a package manager
+such as [Homebrew](https://questdb.io/docs/get-started/homebrew/). And
 [Confluent](https://www.confluent.io/) offers a Kafka distribution, Confluent
 Platform, with addons that ease your data pipeline process and can be
-[installed](https://docs.confluent.io/platform/current/quickstart/ce-docker-quickstart.html)
+[installed](https://docs.confluent.io/platform/current/quickstart/ce-docker-quickstart.html/)
 using Docker images or its downloaded TAR file.
 
 > Note: Confluent Platform is licensed separately from Apache Kafka. If you wish
 > to use this setup in production environment, make sure to read through the
-> [Confluent Platform Licenses](https://docs.confluent.io/platform/current/installation/license.html).
+> [Confluent Platform Licenses](https://docs.confluent.io/platform/current/installation/license.html/).
 
 As for market data, you can utilize the [CoinCap API](https://docs.coincap.io/)
 to collate ETH market data. But there are also other
-[streaming financial data resources](https://github.com/ColinEberhardt/awesome-public-streaming-datasets).
+[streaming financial data resources](https://github.com/ColinEberhardt/awesome-public-streaming-datasets/).
 
 All files used in the article are available in this
-[Github repository](https://github.com/Soot3/coincap_kafka_questdb). You can
+[Github repository](https://github.com/Soot3/coincap_kafka_questdb/). You can
 clone the repository to work through the steps directly:
 
 ```shell
@@ -199,20 +199,19 @@ services:
     ports:
       - "9000:9000"
       - "8812:8812"
-
 ```
 
 In sequential order, this Docker Compose file installs Confluent-managed Kafka
 tools,
-[Zookeeper](https://www.cloudkarafka.com/blog/cloudkarafka-what-is-zookeeper.html),
+[Zookeeper](https://www.cloudkarafka.com/blog/cloudkarafka-what-is-zookeeper.html/),
 and
 [Kafka broker](https://developer.confluent.io/learn-kafka/apache-kafka/brokers/),
 which manage the connections and processes in the Kafka ecosystem. Then, it
 installs a
-[JDBC Connector](https://docs.confluent.io/kafka-connect-jdbc/current/index.html)
+[JDBC Connector](https://docs.confluent.io/kafka-connect-jdbc/current/index.html/)
 that will enable the connection between Kafka and any relational database such
 as QuestDB, this particular
-[JDBC connector image](https://hub.docker.com/r/yitaekhwang/cp-kafka-connect-postgres)
+[JDBC connector image](https://hub.docker.com/r/yitaekhwang/cp-kafka-connect-postgres/)
 is a custom connector created to simplify the connection between Confluent’s
 Kafka service and your Postgres database Finally, it installs the latest version
 of QuestDB.
@@ -266,7 +265,7 @@ You can send this configuration to your installed connector using the following
 command:
 
 ```shell
-curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @postgres-sink-eth.json http://localhost:8083/connectors
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @postgres-sink-eth.json http://localhost:8083/connectors/
 ```
 
 When successfully executed, you should be able to see a response in JSON that
@@ -310,7 +309,7 @@ print('Initialized Kafka producer at {}'.format(dt.datetime.utcnow()))
 # Creating a continuous loop to process the real-time data
 while True:
     # API request
-    uri = 'http://api.coincap.io/v2/assets/ethereum'
+    uri = 'http://api.coincap.io/v2/assets/ethereum/'
     res = requests.request("GET",uri)
 
     start_time = time.time()
@@ -368,11 +367,11 @@ python producer.py
 > `requirements.txt` file, particularly if you are getting a
 > `Microsoft Visual C++` error, please check your Python version first. The
 > Confluent-Kafka-Python package supports a few
-> [Python versions](https://github.com/confluentinc/confluent-kafka-python/issues/805)
+> [Python versions](https://github.com/confluentinc/confluent-kafka-python/issues/805/)
 > on Windows at the time of writing, specifically Python 3.7, 3.8, and 3.9. If
 > you get an error that `librdkafka/rdkafka.h` is not found, you can try
 > following the steps at this
-> [GitHub Issue](https://github.com/confluentinc/confluent-kafka-python/issues/180).
+> [GitHub Issue](https://github.com/confluentinc/confluent-kafka-python/issues/180/).
 > In our particular case with an Apple M1 we solved this problem by executing
 >
 > ```
@@ -419,7 +418,7 @@ In this article, you learned how to collate data with Kafka and implement a data
 pipeline that collects real-time ETH market data and stores data to QuestDB
 through Kafka connections.
 
-[_QuestDB_](https://github.com/questdb/questdb) is an open source SQL database
+[_QuestDB_](https://github.com/questdb/questdb/) is an open source SQL database
 with a focus on fast performance and ease of use. It is an optimized storage for
 high-volume time series data, whether from your financial services or sensor
 applications, where time series data are constantly being generated. It
