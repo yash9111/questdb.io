@@ -19,7 +19,7 @@ import Banner from "@theme/Banner"
 <Banner
 alt="A image of many white sheep and one black sheep, with the QuestDB logo"
 height={360}
-src="/img/blog/2022-08-22/banner.png/"
+src="/img/blog/2022-08-22/banner.png"
 width={650}
 
 > </Banner>
