@@ -24,7 +24,7 @@ height={467}
 src="/img/blog/2022-08-05/banner.png"
 width={650}
 
-> </Banner>
+></Banner>
 
 This post comes from
 [Kovid Rathee](https://towardsdatascience.com/questdb-vs-timescaledb-38160a361c0e?sk=42d1c037a6dfc3786e11eb9d9f5af2ad),
