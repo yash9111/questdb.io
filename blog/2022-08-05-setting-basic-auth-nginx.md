@@ -26,7 +26,7 @@ width={650}
 ></Banner>
 
 This post comes from
-[Kovid Rathee](https://towardsdatascience.com/questdb-vs-timescaledb-38160a361c0e?sk=42d1c037a6dfc3786e11eb9d9f5af2ad),
+[Kovid Rathee](https://towardsdatascience.com/questdb-vs-timescaledb-38160a361c0e?sk=42d1c037a6dfc3786e11eb9d9f5af2ad/),
 who has put together a tutorial to show how to add extra security by implementing Nginx Basic Authentication for QuestDB open source.
 
 <!--truncate-->
@@ -37,17 +37,17 @@ Data privacy and security is one of the most critical areas of concern when work
 
 While QuestDB open source has already [added authentication on top of the InfluxDB line protocol](https://questdb.io/docs/reference/api/ilp/authenticate/) to secure your time-series data ingestion workloads into QuestDB, you might need more layers of security, mainly to prevent unauthorized access to your critical data from your QuestDB web console.
 
-There are several ways to achieve this, such as [SSH tunneling](https://en.wikipedia.org/wiki/Tunneling_protocol), [OAuth](https://oauth.net/), [token-based auth](https://www.okta.com/au/identity-101/what-is-token-based-authentication/), etc. However, this article will take you through the most straightforward authentication setup of them so that you can get started with basic authentication with minimal effort using Nginx.
+There are several ways to achieve this, such as [SSH tunneling](https://en.wikipedia.org/wiki/Tunneling_protocol/), [OAuth](https://oauth.net/), [token-based auth](https://www.okta.com/au/identity-101/what-is-token-based-authentication/), etc. However, this article will take you through the most straightforward authentication setup of them so that you can get started with basic authentication with minimal effort using Nginx.
 
 :::tip
 
-While you can set up authentication for QuestDB open source, [QuestDB Cloud](/cloud) offers built-in authentication that offers a hassle-free, Out-of-the-Box solution.
+While you can set up authentication for QuestDB open source, [QuestDB Cloud](/cloud/) offers built-in authentication that offers a hassle-free, Out-of-the-Box solution.
 
 :::
 
 ## How Basic Authentication Works in Nginx
 
-Nginx is a multi-purpose application that can be used as a [reverse proxy](https://microsoft.github.io/reverse-proxy/articles/authn-authz.html), a load balancer, or an HTTP cache. This means if you direct all your incoming traffic for QuestDB to Nginx, it can decide what action to take on that request.
+Nginx is a multi-purpose application that can be used as a [reverse proxy](https://microsoft.github.io/reverse-proxy/articles/authn-authz.html/), a load balancer, or an HTTP cache. This means if you direct all your incoming traffic for QuestDB to Nginx, it can decide what action to take on that request.
 
 Nginx Basic Authentication is a way to implement a fundamental authentication mechanism. In case of a successful login request, you’ll be redirected from the default HTTP port to the port on which your QuestDB server is running.
 
@@ -63,7 +63,7 @@ You can [install QuestDB open source](https://questdb.io/get-questdb/) on your l
 brew install questdb
 ```
 
-Once the installation is complete, QuestDB automatically starts and is available on [http://localhost:9000](http://localhost:9000). To ensure that the installation has gone right, please visit this address and see if you can access the QuestDB console.
+Once the installation is complete, QuestDB automatically starts and is available on [http://localhost:9000/](http://localhost:9000/). To ensure that the installation has gone right, please visit this address and see if you can access the QuestDB console.
 
 ### Step 2. Install Nginx
 
@@ -73,7 +73,7 @@ To set up Basic Authentication using Nginx, you need to install Nginx on your sy
 brew install nginx
 ```
 
-After the installation, please ensure that Nginx is up and running by visiting [http://localhost:8080](http://localhost:8080).
+After the installation, please ensure that Nginx is up and running by visiting [http://localhost:8080/](http://localhost:8080/).
 
 ### Step 3. Configure Nginx to require Basic Authentication for QuestDB open source
 
@@ -117,7 +117,7 @@ location / {
         }
 ```
 
-You'll probably be dealing with a lot of data in the web console, and you might need to download it to your local machine. For such use cases, you can modify the default value of the [`proxy_read_timeout`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) variable from 60 to 300 (or a value that makes sense for your use case). You can, similarly, set the [`proxy_send_timeout`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_send_timeout) and [`proxy_connect_timeout`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_connect_timeout).
+You'll probably be dealing with a lot of data in the web console, and you might need to download it to your local machine. For such use cases, you can modify the default value of the [`proxy_read_timeout`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout/) variable from 60 to 300 (or a value that makes sense for your use case). You can, similarly, set the [`proxy_send_timeout`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_send_timeout/) and [`proxy_connect_timeout`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_connect_timeout/).
 
 This is where you’re telling Nginx to force authentication based on your password stored in the `.htpasswd` file in your Nginx home directory. The full \`nginx.conf\` file looks something like the following:
 
@@ -162,9 +162,9 @@ http {
 
 Once you make the necessary changes to your Nginx configuration file mentioned in the previous step, you’ll be ready to reload or restart the Nginx server for the configuration changes to take effect.
 
-> Ensure that you've blocked any direct access to your QuestDB web console using a software-based firewall, such as [`iptables`](https://en.wikipedia.org/wiki/Iptables). If you configure your firewall to deny traffic on a certain port, Nginx will still be able to redirect you to that.
+> Ensure that you've blocked any direct access to your QuestDB web console using a software-based firewall, such as [`iptables`](https://en.wikipedia.org/wiki/Iptables/). If you configure your firewall to deny traffic on a certain port, Nginx will still be able to redirect you to that.
 
-Alternatively, you can set the [`http.bind.to`](https://questdb.io/docs/reference/configuration/#http-server) variable in your QuestDB `server.conf` file to `127.0.0.1` ensuring that QuestDB rejects the requests coming directly from the internet, and only allows requests that are proxied via Nginx.
+Alternatively, you can set the [`http.bind.to`](https://questdb.io/docs/reference/configuration/#http-server/) variable in your QuestDB `server.conf` file to `127.0.0.1` ensuring that QuestDB rejects the requests coming directly from the internet, and only allows requests that are proxied via Nginx.
 
 > You can find your `server.conf` file in your Homebrew QuestDB installation directory -- `/usr/local/var/questdb/conf`. This directory might differ on different OS and Homebrew versions.
 
@@ -199,7 +199,7 @@ However, if the authentication fails, you’ll see the following screen with an 
 
 ![](/img/blog/2022-08-05/step_4_4.png)
 
-If you end up getting an HTTP 401, recheck your username and password combination. If it is still not working, try creating another user or resetting the password for your current user using the [`htpasswd` command-line tool](https://httpd.apache.org/docs/2.4/programs/htpasswd.html).
+If you end up getting an HTTP 401, recheck your username and password combination. If it is still not working, try creating another user or resetting the password for your current user using the [`htpasswd` command-line tool](https://httpd.apache.org/docs/2.4/programs/htpasswd.html/).
 
 ## Conclusion
 

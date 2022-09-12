@@ -65,9 +65,9 @@ To better understand BIRCH and how it can be used with QuestDB, you will solve a
 
 ### Setting up QuestDB
 
-You have several options for installing QuestDB, including Docker and Homebrew. [Check the documentation](/docs) for details.
+You have several options for installing QuestDB, including Docker and Homebrew. [Check the documentation](/docs/) for details.
 
-Once QueestDB is installed, you can access the web console of the running service, by opening your browser and going to [localhost:9000](http://localhost:9000). You should see the below image:
+Once QueestDB is installed, you can access the web console of the running service, by opening your browser and going to [localhost:9000](http://localhost:9000/). You should see the below image:
 
 import Screenshot from "@theme/Screenshot"
 
@@ -82,7 +82,7 @@ Now that QuestDB is set up, the next step is getting data into the database.
 
 ### Importing Data
 
-The sample data that will be used is the SKAB data created by [Skoltech](https://www.skoltech.ru/en). It contains eleven attributes that refer to various physical and chemical properties of a testbed. The data can be accessed and downloaded [here](https://www.kaggle.com/datasets/caesarlupum/benckmark-anomaly-timeseries-skab).
+The sample data that will be used is the SKAB data created by [Skoltech](https://www.skoltech.ru/en/). It contains eleven attributes that refer to various physical and chemical properties of a testbed. The data can be accessed and downloaded [here](https://www.kaggle.com/datasets/caesarlupum/benckmark-anomaly-timeseries-skab/).
 
 Once it’s downloaded, navigate to the upload page on the QuestDB web console as shown below and select the dataset file.
 
@@ -93,7 +93,7 @@ Once it’s downloaded, navigate to the upload page on the QuestDB web console a
   width={770}
 />
 
-> Note: There are different ways to import CSV files into QuestDB. For more information, please see [Insert data](/docs/develop/insert-data).
+> Note: There are different ways to import CSV files into QuestDB. For more information, please see [Insert data](/docs/develop/insert-data/).
 
 Go back to the home page and refresh the table list to see the data upload reflected. On this page, you can run SQL queries to explore the data.
 
@@ -136,7 +136,7 @@ import pandas as pd
 import numpy as np
 import json
 
-HOST = 'http://localhost:9000'
+HOST = 'http://localhost:9000/'
 
 def execute_query(query_sql: str) -> pd.DataFrame:
 
@@ -317,4 +317,4 @@ You should now have a better understanding of the BIRCH algorithm, how it works,
 
 You can use this process to more efficiently analyze large datasets in order to optimize machine learning in your data-driven projects.
 
-To check your work in this tutorial, consult the [GitHub repository](https://github.com/Fortune-Adekogbe/birch-anomaly-detection).
+To check your work in this tutorial, consult the [GitHub repository](https://github.com/Fortune-Adekogbe/birch-anomaly-detection/).
