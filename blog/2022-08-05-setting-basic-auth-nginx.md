@@ -186,19 +186,19 @@ After reloading the configuration file, open a new tab in your browser to test i
 
 `localhost` points to QuestDB based on the `nginx.conf`.
 
-![](/img/blog/2022-08-05/step_4_1.png/)
+![](/img/blog/2022-08-05/step_4_1.png)
 
 If `localhost` binding is working correctly, you should see the following screen asking for your username and password to log into QuestDB:
 
-![](/img/blog/2022-08-05/step_4_2.png/)
+![](/img/blog/2022-08-05/step_4_2.png)
 
 Once you enter your username and password, Nginx will go back to `.htpasswd` to verify whether you’ve entered the correct credentials. If the authentication succeeds, you’ll be able to log onto QuestDB and carry on with your work, as shown below:
 
-![](/img/blog/2022-08-05/step_4_3.png/)
+![](/img/blog/2022-08-05/step_4_3.png)
 
 However, if the authentication fails, you’ll see the following screen with an HTTP 401 specifying that you need the authorization to access `localhost`.
 
-![](/img/blog/2022-08-05/step_4_4.png/)
+![](/img/blog/2022-08-05/step_4_4.png)
 
 If you end up getting an HTTP 401, recheck your username and password combination. If it is still not working, try creating another user or resetting the password for your current user using the [`htpasswd` command-line tool](https://httpd.apache.org/docs/2.4/programs/htpasswd.html).
 
