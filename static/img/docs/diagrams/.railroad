@@ -13,7 +13,7 @@ createTableDef
 alterTable 
   ::= 'ALTER' 'TABLE' tableName ( 'ADD' | 'ATTACH' | 'DROP' | 'RENAME' | 'SET' )
 
-alterSystem
+alterSystemLockWriter
   ::= 'ALTER' 'SYSTEM' ( 'LOCK' | 'UNLOCK' ) 'WRITER' tableName
 
 castDef 

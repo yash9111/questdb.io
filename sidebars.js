@@ -187,7 +187,13 @@ module.exports = {
                 "reference/sql/alter-table-set-param",
               ],
             },
-            "reference/sql/alter-system",
+            {
+              type: "category",
+              label: "ALTER SYSTEM",
+              items: [
+                "reference/sql/alter-system-lock-writer",
+              ],
+            },
             "reference/sql/backup",
             "reference/sql/case",
             "reference/sql/cast",
