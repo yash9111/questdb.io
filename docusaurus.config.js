@@ -4,7 +4,6 @@ const consts = require("./src/config/consts")
 const customFields = require("./src/config/customFields")
 const math = require("remark-math")
 const katex = require("rehype-katex")
-const admonitions = require("remark-admonitions")
 
 function variable() {
   const RE_VAR = /{@([\w-_]+)@}/g
@@ -53,13 +52,6 @@ const config = {
     require.resolve("./plugins/optimize/index"),
     require.resolve("./plugins/manifest/index"),
     require.resolve("./plugins/delay-code-block-appearance"),
-    [
-      require.resolve("./plugins/tutorial/compiled/index"),
-      {
-        remarkPlugins: [variable, math, admonitions],
-        rehypePlugins: [katex],
-      },
-    ],
     [
       "@docusaurus/plugin-pwa",
       {
@@ -136,7 +128,8 @@ const config = {
       darkTheme: require("./src/internals/prism-dracula"),
     },
     algolia: {
-      apiKey: "b2a69b4869a2a85284a82fb57519dcda",
+      appId: "QL9L2YL7AQ",
+      apiKey: "2f67aeacbe73ad08a49efb9214ea27f3",
       indexName: "questdb",
     },
     navbar: {
@@ -152,19 +145,19 @@ const config = {
           items: [
             {
               label: "QuestDB Cloud",
-              to: "/cloud",
+              to: "/cloud/",
             },
             {
               label: "QuestDB Enterprise",
-              to: "/enterprise",
+              to: "/enterprise/",
             },
             {
               label: "Use Cases",
-              to: "/use-cases",
+              to: "/use-cases/",
             },
             {
               label: "Customers",
-              to: "/customers",
+              to: "/customers/",
             },
             {
               label: "Roadmap",
@@ -178,7 +171,7 @@ const config = {
           items: [
             {
               label: "Blog",
-              to: "/blog",
+              to: "/blog/",
               activeBaseRegex: "/blog/?$",
             },
             {
@@ -188,7 +181,7 @@ const config = {
             },
             {
               label: "QuestDB Swag",
-              to: "/community",
+              to: "/community/",
             },
             {
               label: "Slack Community",
@@ -198,12 +191,12 @@ const config = {
         },
         {
           label: "Docs",
-          to: "/docs",
+          to: "/docs/",
           position: "left",
         },
         {
           label: "We're Hiring",
-          to: "/careers",
+          to: "/careers/",
           position: "left",
           className: "careers-link",
         },
@@ -223,19 +216,19 @@ const config = {
           items: [
             {
               label: "Cloud",
-              to: "/cloud",
+              to: "/cloud/",
             },
             {
               label: "Enterprise",
-              to: "/enterprise",
+              to: "/enterprise/",
             },
             {
               label: "Use Cases",
-              to: "/use-cases",
+              to: "/use-cases/",
             },
             {
               label: "Customers",
-              to: "/customers",
+              to: "/customers/",
             },
             {
               label: "Roadmap",
@@ -248,15 +241,15 @@ const config = {
           items: [
             {
               label: "Docs",
-              to: "/docs",
+              to: "/docs/",
             },
             {
               label: "Tutorials",
-              to: "/tutorial",
+              to: "/blog/tags/tutorial/",
             },
             {
               label: "Blog",
-              to: "/blog",
+              to: "/blog/",
             },
             {
               label: "Discussions",
@@ -268,7 +261,7 @@ const config = {
             },
             {
               label: "Swag",
-              to: "/community",
+              to: "/community/",
             },
           ],
         },
@@ -277,11 +270,11 @@ const config = {
           items: [
             {
               label: "About us",
-              to: "/about-us",
+              to: "/about-us/",
             },
             {
               label: "Careers",
-              to: "/careers",
+              to: "/careers/",
             },
           ],
         },
@@ -331,11 +324,9 @@ const config = {
         },
 
         sitemap: {
-          // Removed: https://github.com/ekalinin/sitemap.js/blob/master/CHANGELOG.md#50-breaking-changes
-          // cacheTime: 600 * 1000, // 600 sec - cache purge period
           changefreq: "daily",
           priority: 0.7,
-          trailingSlash: false,
+          trailingSlash: true,
         },
         theme: {
           customCss: [
