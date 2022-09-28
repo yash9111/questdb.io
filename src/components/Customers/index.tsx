@@ -7,7 +7,10 @@ import Marquee from "react-fast-marquee"
 import useThemeContext from "@theme/hooks/useThemeContext"
 import clsx from "clsx"
 
-const logosOverrides: Record<keyof typeof logos, Partial<CustomerLogo>> = {
+const logosOverrides: Partial<Record<
+  keyof typeof logos,
+  Partial<CustomerLogo>
+>> = {
   yahoo: {
     width: 120,
   },

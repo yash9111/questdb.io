@@ -233,6 +233,12 @@ const marketDataCustomers: Customer[] = [
     key: "aquis-exchange",
     logoWidth: 90,
   },
+  {
+    key: "haruko",
+  },
+  {
+    key: "second-foundation",
+  },
 ]
 
 const MarketData = () => (
