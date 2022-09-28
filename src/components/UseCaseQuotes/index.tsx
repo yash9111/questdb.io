@@ -7,7 +7,7 @@ import { CustomerLogo } from "../../assets/types"
 import clsx from "clsx"
 
 export type Customer = {
-  key: string
+  key: keyof typeof logos
   quote?: string
   caseStudyLink?: string
   logoWidth?: number

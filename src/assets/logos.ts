@@ -1,6 +1,9 @@
 import { CustomerLogo } from "./types"
 
-export const logos: Record<string, CustomerLogo> = {
+// this function is a helper to ensure use-sites of `logos` use type-safe keys
+const typed = <T>(obj: { [K in keyof T]: CustomerLogo }) => obj
+
+export const logos = typed({
   yahoo: {
     src: "/img/pages/customers/logos/yahoo.svg",
     alt: "Yahoo logo",
@@ -112,7 +115,7 @@ export const logos: Record<string, CustomerLogo> = {
   },
   "second-foundation": {
     alt: "Second Foundation",
-    src: "/img/pages/customers/logos/second_foundation.svg",
+    src: "/img/logos/second-foundation.grayscale.svg",
     height: 29,
     width: 234,
   },
@@ -161,7 +164,7 @@ export const logos: Record<string, CustomerLogo> = {
   },
   python: {
     src: "/img/logos/python.svg",
-    srcGrayscale: "/img/logos/python_grayscale.svg",
+    srcGrayscale: "/img/logos/python.grayscale.svg",
     alt: "Python logo",
   },
   pandas: {
@@ -190,9 +193,15 @@ export const logos: Record<string, CustomerLogo> = {
   },
   redpanda: {
     src: "/img/logos/redpanda.svg",
-    srcGrayscale: "/img/logos/redpanda_grayscale.svg",
+    srcGrayscale: "/img/logos/redpanda.grayscale.svg",
     alt: "Redpanda logo",
     width: 100,
     height: 30,
   },
-}
+  haruko: {
+    src: "/img/logos/haruko.svg",
+    alt: "Haruko logo",
+    width: 100,
+    height: 23,
+  },
+})
