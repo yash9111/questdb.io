@@ -146,4 +146,59 @@ export const logos: Record<string, CustomerLogo> = {
     width: 120,
     height: 50,
   },
+
+  postgres: {
+    src: "/img/logos/pg.svg",
+    alt: "Postgres logo",
+  },
+  grafana: {
+    src: "/img/logos/grafana.svg",
+    alt: "Grafana logo",
+  },
+  kafka: {
+    src: "/img/logos/kafka.svg",
+    alt: "Kafka logo",
+  },
+  python: {
+    src: "/img/logos/python.svg",
+    srcGrayscale: "/img/logos/python_grayscale.svg",
+    alt: "Python logo",
+  },
+  pandas: {
+    src: "/img/logos/pandas.svg",
+    alt: "Pandas logo",
+  },
+  telegraf: {
+    src: "/img/logos/influxdata.svg",
+    alt: "Telegraf logo",
+  },
+  tableau: {
+    src: "/img/logos/tableau.svg",
+    alt: "Tableau logo",
+  },
+  mindsDB: {
+    src: "/img/logos/mindsdb.svg",
+    alt: "MindsDB logo",
+  },
+  cube: {
+    src: "/img/logos/cube.svg",
+    alt: "Cube logo",
+  },
+  plotly: {
+    src: "/img/logos/plotly.svg",
+    alt: "PlotlyLogo logo",
+  },
+  redpanda: {
+    src: "/img/logos/redpanda.svg",
+    srcGrayscale: "/img/logos/redpanda_grayscale.svg",
+    alt: "Redpanda logo",
+    width: 100,
+    height: 30,
+  },
+  invezo: {
+    src: "/img/logos/invezo.svg",
+    alt: "Invezo logo",
+    width: 100,
+    height: 30,
+  },
 }
