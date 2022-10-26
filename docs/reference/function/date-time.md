@@ -991,6 +991,7 @@ text. These letters are case-sensitive and are used as they are, without any pre
 | `Z`    | Time zone                                                             | RFC 822 time zone  | -0800                                 |
 | `X`    | Time zone                                                             | ISO 8601 time zone | -08; -0800; -08:00                    |
 | `U`    | Microsecond                                                           | Number             | 698                                   |
+| `U+`   | 6-digit microsecond parsed lazily                                     | Number             | 698000                                |
 | `N`    | Nanosecond                                                            | Number             | 125                                   |
 
 ### Examples for greedy year format `y`
