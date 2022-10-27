@@ -990,8 +990,8 @@ text. These letters are case-sensitive and are used as they are, without any pre
 | `z`    | Time zone                                                             | General time zone  | Pacific Standard Time; PST; GMT-08:00 |
 | `Z`    | Time zone                                                             | RFC 822 time zone  | -0800                                 |
 | `X`    | Time zone                                                             | ISO 8601 time zone | -08; -0800; -08:00                    |
-| `U`    | Microsecond                                                           | Number             | 698                                   |
-| `U+`   | 6-digit microsecond parsed lazily                                     | Number             | 698000                                |
+| `U`    | Microsecond (3 digits)                                                | Number             | 698                                   |
+| `U+`   | Microsecond (6 digits)                                                | Number             | 698000                                |
 | `N`    | Nanosecond                                                            | Number             | 125                                   |
 
 ### Examples for greedy year format `y`
