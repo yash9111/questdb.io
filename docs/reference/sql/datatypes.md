@@ -7,7 +7,7 @@ description: Data types reference documentation.
 The type system is derived from Java types.
 
 | Type Name         | Storage bits | Nullable | Description                                                                                                                                                                                                                                                         |
-| ----------------- | ------------ |----------| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ----------------- | ------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `boolean`         | `1`          | No       | Boolean `true` or `false`.                                                                                                                                                                                                                                          |
 | `byte`            | `8`          | No       | Signed integer `-128` to `127`.                                                                                                                                                                                                                                     |
 | `short`           | `16`         | No       | Signed integer `-32768` to `32767`.                                                                                                                                                                                                                                 |
@@ -22,7 +22,8 @@ The type system is derived from Java types.
 | `double`          | `64`         | Yes      | Double precision IEEE 754 floating point value.                                                                                                                                                                                                                     |
 | `binary`          | `64+n*8`     | Yes      | Length-prefixed sequence of bytes whose length is stored as signed 64-bit integer with maximum value of `0x7fffffffffffffffL`.                                                                                                                                      |
 | `long256`         | `256`        | Yes      | Unsigned 256-bit integer. Does not support arbitrary arithmetic operations, but only equality checks. Suitable for storing hash code, such as crypto public addresses.                                                                                              |
-| `geohash(<size>)` | `8`-`64`     | Yes      | Geohash with precision specified as a number followed by `b` for bits, `c` for chars. See [the geohashes documentation](/docs/concept/geohashes) for details on use and storage.                                                                                   |
+| `geohash(<size>)` | `8`-`64`     | Yes      | Geohash with precision specified as a number followed by `b` for bits, `c` for chars. See [the geohashes documentation](/docs/concept/geohashes) for details on use and storage.                                                                                    |
+| `literal`         | `64`         | Yes      | Treated as `long`.                                                                                                                                                                                                                                         |
 
 ## Variable-sized type limitations
 
@@ -34,13 +35,13 @@ characters) or disk size, whichever is smaller.
 
 ## Type nullability
 
-Nullable types use a specific value to mark `NULL` values: 
+Nullable types use a specific value to mark `NULL` values:
 
 | Type Name        | Null value            | Description                                                                                                            |
-|------------------|-----------------------|------------------------------------------------------------------------------------------------------------------------|
-| `float`          | `NaN`                 | As defined by IEEE 754 (`java.lang.Float.NaN`).                                                                        |                                                                                             |
+| ---------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `float`          | `NaN`                 | As defined by IEEE 754 (`java.lang.Float.NaN`).                                                                        |  |
 | `double`         | `NaN`                 | As defined by IEEE 754 (`java.lang.Double.NaN`).                                                                       |
-| `long256`        | `0x8000000000000000L` | **x4**, *four consecutive long null values*.                                                                           |
+| `long256`        | `0x8000000000000000L` | **x4**, _four consecutive long null values_.                                                                           |
 | `long`           | `0x8000000000000000L` | Minimum possible value a `long` can take -2^63.                                                                        |
 | `date`           | `0x8000000000000000L` | Minimum possible value a `long` can take -2^63.                                                                        |
 | `timestamp`      | `0x8000000000000000L` | Minimum possible value a `long` can take -2^63.                                                                        |
@@ -54,21 +55,19 @@ Nullable types use a specific value to mark `NULL` values:
 | `string`         | `0xffffffff`          | Strings are length prefixed, the length is an `int` and `-1` marks it `NULL` (no further storage is used).             |
 | `binary`         | `0xffffffffffffffff`  | Binary columns are also length prefixed, the length is a `long` and `-1` marks it `NULL` (no further storage is used). |
 
-
-To filter columns that contain, or don't contain, `NULL` values use a filter like:
+To filter columns that contain, or don't contain, `NULL` values use a filter
+like:
 
 ```questdb-sql
 SELECT * FROM <table> WHERE <column> = NULL;
 SELECT * FROM <table> WHERE <column> != NULL;
 ```
 
-Alternatively, from version 6.3 use the NULL equality operator aliases: 
+Alternatively, from version 6.3 use the NULL equality operator aliases:
 
 ```questdb-sql
 SELECT * FROM <table> WHERE <column> IS NULL;
 SELECT * FROM <table> WHERE <column> IS NOT NULL;
 ```
 
-:::note
-`NULL` values still occupy disk space.
-:::
+:::note `NULL` values still occupy disk space. :::
