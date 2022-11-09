@@ -27,10 +27,10 @@ Two parameters may be provided to optimize `INSERT AS SELECT` or
 dataset:
 
 - `batch` expects a `batchCount` (integer) value defining how many records to
-  process at any one time
-- `commitLag` expects a `lagAmount` with a modifier to specify the unit of time
-  for the value (i.e. `20s` for 20 seconds). The following table describes the
-  units that may be passed:
+  process at any one time.
+- `commitLag` expects a `lagAmount` with a modifier to specify the time unit for
+  the value (i.e. `20s` for 20 seconds). The following table describes the units
+  that may be used:
 
   | unit | description  |
   | ---- | ------------ |
