@@ -37,7 +37,7 @@ indexDef
 insertInto
   ::= 'INSERT' ('batch' batchCount 'commitLag' n ( 'us' | 's' | 'm' | 'h' | 'd' ))?
   'INTO' tableName ( ( '(' columnName (',' columnName)*) ')')?
-  ( 'VALUES' ( ( '(' value ( ',' value)* ')' ) (',' '(' value ( ',' value)* ')' )* ) | 'SELECT' queryDef )
+  ( 'VALUES' ( ( '(' value ( ',' value)* ')' ) (',' '(' value ( ',' value)* ')' )* ) | 'SELECT' queryDef | 'WITH' ( subQueryName 'AS' '(' subQuery ')' ( ',' subQueryName 'AS' '(' subQuery ')' )*) mainQuery )
   ';'
 
 Backup
