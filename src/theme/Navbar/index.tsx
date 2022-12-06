@@ -86,15 +86,9 @@ function Navbar(): JSX.Element {
 
   return (
     <nav
-      className={clsx(
-        "navbar",
-        styles.navbar,
-        "navbar--light",
-        "navbar--fixed-top",
-        {
-          "navbar-sidebar--show": sidebarShown,
-        },
-      )}
+      className={clsx("navbar", styles.navbar, "navbar--light", {
+        "navbar-sidebar--show": sidebarShown,
+      })}
     >
       <div className={clsx("navbar__inner", styles.inner)}>
         <div className="navbar__items">
@@ -156,9 +150,9 @@ function Navbar(): JSX.Element {
           <Button
             className={clsx(styles.ctaButton, styles.benchmarkButton)}
             size="xsmall"
-            to="/time-series-benchmark-suite/"
+            to="/blog/tags/benchmark/"
           >
-            Benchmark
+            Benchmarks
           </Button>
         </div>
       </div>

@@ -39,7 +39,7 @@ SAMPLE BY n{units}
 Where the unit for sampled groups may be one of the following:
 
 | unit | description |
-|------|-------------|
+| ---- | ----------- |
 | `U`  | microsecond |
 | `T`  | millisecond |
 | `s`  | second      |
@@ -230,7 +230,14 @@ This query will return two rows:
 The timestamp value for the 24 hour groups start at the first-observed
 timestamp.
 
-### ALIGN TO CALENDAR TIME ZONE
+## ALIGN TO CALENDAR
+
+The option aligns data to calendar dates, with two optional parameters:
+
+- [TIME ZONE](#time-zone)
+- [WITH OFFSET](#with-offset)
+
+### TIME ZONE
 
 A time zone may be provided for sampling with calendar alignment. Details on the
 options for specifying time zones with available formats are provided in the
@@ -327,7 +334,7 @@ Similarly, given one data point per hour on this table, running `SAMPLE BY 1d`
 will have a count of `25` for this day when aligned to calendar time zone
 'Europe/London'.
 
-### ALIGN TO CALENDAR WITH OFFSET
+### WITH OFFSET
 
 Aligning sampling calculation can be provided an arbitrary offset in the format
 `'+/-HH:mm'`, for example:
@@ -335,6 +342,8 @@ Aligning sampling calculation can be provided an arbitrary offset in the format
 - `'00:30'` plus thirty minutes
 - `'+00:30'` plus thirty minutes
 - `'-00:15'` minus 15 minutes
+
+The query uses the default offset '00:00' if the parameter is not set.
 
 ```questdb-sql
 SELECT ts, count() FROM sensors
@@ -411,3 +420,10 @@ SELECT ts, avg(quantity*price) FROM trades SAMPLE BY 1d ALIGN TO CALENDAR;
 | --------------------------- | ------ |
 | 2021-05-31T00:00:00.000000Z | 1000.5 |
 | 2021-06-01T00:00:00.000000Z | 8007.2 |
+
+## See also
+
+This section includes links to additional information such as tutorials.
+
+- [`SAMPLE BY`](/blog/2022/11/23/sql-extensions-time-series-data-questdb-part-ii):
+  Blog post focusing on the data analysis ability of `SAMPLE BY`

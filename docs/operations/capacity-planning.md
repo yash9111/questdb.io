@@ -24,17 +24,33 @@ To monitor various metrics of the QuestDB instances, refer to the
 ## Storage and filesystem
 
 The following sections describe aspects to consider regarding the storage of
-data and filesystem.
+data and file systems.
 
 ### Supported filesystem
 
-QuestDB officially supports **EXT4** or any filesystem that supports
-[mmap](https://man7.org/linux/man-pages/man2/mmap.2.html). 
+QuestDB officially supports the following filesystems:
+
+- EXT4
+- APFS
+- NTFS
+- OVERLAYFS (used by Docker)
+
+Other file systems supporting
+[mmap](https://man7.org/linux/man-pages/man2/mmap.2.html) feature may work with
+QuestDB but they should not be used in production, as QuestDB does not run tests
+on them.
+
+When an unsupported file system is used, QuestDB logs show the following
+warning:
+
+```
+-> UNSUPPORTED (SYSTEM COULD BE UNSTABLE)"
+```
 
 :::caution
 
-Users **can't use NFS
-or a similar distributed filesystem** directly with a QuestDB database.
+Users **can't use NFS or similar distributed filesystems** directly with a
+QuestDB database.
 
 :::
 
@@ -42,11 +58,6 @@ or a similar distributed filesystem** directly with a QuestDB database.
 
 When ingesting out-of-order data, high disk write rate combined with high write
 amplification may slow down the performance.
-
-For data ingestion over InfluxDB Line Protocol (ILP), the first step to resolve
-this start from adjusting the
-[commit lag](/docs/guides/out-of-order-commit-lag/) value and the
-`cairo.max.uncommitted.rows` value.
 
 For data ingestion over PGWire, or as a further step for ILP ingestion, smaller
 table [partitions](/docs/concept/partitions/) maybe reduce the write
@@ -56,8 +67,6 @@ partition by month to by day, and so on.
 
 :::note
 
-- For more information on commit lag, please refer to the
-  [ILP commit strategy page](/docs/reference/api/ilp/tcp-receiver/#commit-strategy).
 - In QuestDB the write amplification is calculated by the
   [metrics](/docs/third-party-tools/prometheus#scraping-prometheus-metrics-from-questdb):
   `questdb_physically_written_rows_total` / `questdb_committed_rows_total`.

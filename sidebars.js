@@ -56,11 +56,11 @@ module.exports = {
       label: "Guides",
       type: "category",
       items: [
-        "guides/out-of-order-commit-lag",
         "guides/importing-data",
         "guides/importing-data-rest",
         "guides/modifying-data",
         "guides/working-with-timestamps-timezones",
+        "guides/out-of-order-commit-lag",
       ],
     },
     {
@@ -91,7 +91,15 @@ module.exports = {
       items: [
         "third-party-tools/prometheus",
         "third-party-tools/grafana",
-        "third-party-tools/kafka",
+        {
+          label: "Kafka",
+          type: "category",
+          items: [
+            "third-party-tools/kafka/overview",
+            "third-party-tools/kafka/questdb-kafka",
+            "third-party-tools/kafka/jdbc",
+          ],
+        },
         "third-party-tools/telegraf",
       ],
     },
@@ -150,6 +158,7 @@ module.exports = {
           label: "Functions",
           items: [
             "reference/function/aggregation",
+            "reference/function/analytic",
             "reference/function/binary",
             "reference/function/boolean",
             "reference/function/conditional",
@@ -161,7 +170,7 @@ module.exports = {
             "reference/function/spatial",
             "reference/function/text",
             "reference/function/timestamp-generator",
-            "reference/function/timestamp",
+            "reference/function/timestamp"
           ],
         },
         {

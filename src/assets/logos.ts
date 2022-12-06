@@ -70,7 +70,7 @@ export const logos: Record<string, CustomerLogo> = {
   },
   toggle: {
     src: "/img/pages/customers/logos/toggle.svg",
-    alt: "Toggle",
+    alt: "Toggle.ai logo",
     width: 140,
     height: 56,
   },
@@ -200,5 +200,17 @@ export const logos: Record<string, CustomerLogo> = {
     alt: "Invezo logo",
     width: 100,
     height: 30,
+  },
+  datron: {
+    src: "/img/pages/customers/cards/datron.svg",
+    alt: "Datron logo",
+    width: 144,
+    height: 56,
+  },
+  netapp: {
+    src: "/img/logos/netapp.svg",
+    alt: "NetApp Logo",
+    width: 144,
+    height: 56,
   },
 }

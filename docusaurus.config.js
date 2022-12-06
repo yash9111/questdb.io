@@ -90,6 +90,9 @@ const config = {
         },
         showReadingTime: true,
         postsPerPage: 12,
+        blogPostComponent: require.resolve(
+          "./src/theme/BlogPostPage/index.tsx",
+        ),
         blogTagsPostsComponent: require.resolve(
           "./src/theme/BlogListPage/index.tsx",
         ),
@@ -203,10 +206,9 @@ const config = {
           position: "left",
         },
         {
-          label: "We're Hiring",
-          to: "/careers/",
+          label: "Pricing",
+          to: "/pricing/",
           position: "left",
-          className: "careers-link",
         },
         {
           label: "Star us",
@@ -229,6 +231,10 @@ const config = {
             {
               label: "Enterprise",
               to: "/enterprise/",
+            },
+            {
+              label: "Pricing",
+              to: "/pricing/",
             },
             {
               label: "Use Cases",

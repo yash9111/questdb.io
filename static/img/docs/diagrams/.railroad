@@ -35,14 +35,27 @@ indexDef
   ::='INDEX' '(' columnRef ('CAPACITY' valueBlockSize)?')'
 
 insertInto
+  ::= 'INSERT' ('batch' batchCount)?
+  'INTO' tableName ( ( '(' columnName (',' columnName)*) ')')?
+  ( 'VALUES' ( ( '(' value ( ',' value)* ')' ) (',' '(' value ( ',' value)* ')' )* ) | 'SELECT' queryDef mainQuery )
+  ';'
+
+withAsInsert
+  ::= ( 'WITH' subQueryName 'AS' '(' subQuery ')' ( ',' subQueryName 'AS' '(' subQuery ')' )* )? 
+  'INSERT' ( 'batch' batchCount )? 'INTO' tableName 'SELECT' queryDef subQueryName ';'
+
+insertCommitLagInto
   ::= 'INSERT' ('batch' batchCount 'commitLag' n ( 'us' | 's' | 'm' | 'h' | 'd' ))?
   'INTO' tableName ( ( '(' columnName (',' columnName)*) ')')?
-  ( 'VALUES' ( ( '(' value ( ',' value)* ')' ) (',' '(' value ( ',' value)* ')' )* ) | 'SELECT' queryDef )
+  ( 'VALUES' ( ( '(' value ( ',' value)* ')' ) (',' '(' value ( ',' value)* ')' )* ) | 'SELECT' queryDef mainQuery )
   ';'
+
+withAsInsertCommitLag
+  ::= ( 'WITH' subQueryName 'AS' '(' subQuery ')' ( ',' subQueryName 'AS' '(' subQuery ')' )* )? 
+  'INSERT' ( 'batch' batchCount 'commitLag' n ( 'us' | 's' | 'm' | 'h' | 'd' ) )? 'INTO' tableName 'SELECT' queryDef subQueryName ';'
 
 Backup
   ::= 'BACKUP' ( 'TABLE' tableName ( ',' tableName )* | 'DATABASE' ) ';'
-
 Snapshot
   ::= 'SNAPSHOT' ( 'PREPARE' | 'COMPLETE' ) ';'
 
@@ -56,8 +69,11 @@ Copy
 CreateTableTimestamp
   ::= 'CREATE' someCreateTableStatement 'timestamp' '(' columnName ')'
 
-createTableWithParams
+
+createTableWithCommitParams
   ::= 'WITH' 'maxUncommittedRows' '=' rowCount ',' 'commitLag' '=' n ( 'us' | 's' | 'm' | 'h' | 'd' )
+createTableWithMaxRowParams
+  ::= 'WITH' 'maxUncommittedRows' '=' rowCount
 
 dynamicTimestamp
   ::= 'SELECT' someSelectStatement 'timestamp' '(' columnName ')'
@@ -66,7 +82,8 @@ sampleBy
   ::= someSelectStatement... 'SAMPLE' 'BY' n ( 'T' | 's' | 'm' | 'h' | 'd' | 'M' | )
 
 alignToCalTimeZone
-  ::= 'ALIGN' 'TO' ( 'FIRST' 'OBSERVATION' | 'CALENDAR' ( 'TIME' 'ZONE' timezone | 'WITH' 'OFFSET' offset ) )
+  ::= 'ALIGN' 'TO' ( 'FIRST' 'OBSERVATION' | 'CALENDAR' ( 'TIME' 'ZONE' timezone | 'WITH' 'OFFSET' offset )? )
+
 
 distinct
   ::= 'SELECT' 'DISTINCT' ( columnName (',' columnName)* ) 'FROM' tableName
@@ -84,13 +101,13 @@ fill
   ::= someSampleBySelectQuery 'FILL' ( ( 'NONE' | 'NULL' | 'PREV' | 'LINEAR' | 'x' ) ',' )*
 
 orderBy
-  ::= someSelectQuery 'ORDER' 'BY' ( columnName (asc | desc) ? (',' columnName (asc | desc) ?)* )
+  ::= someSelectQuery 'ORDER' 'BY' ( columnName (ASC | DESC) ? (',' columnName (asc | desc) ?)* )
 
 timestampSearch
   ::= 'WHERE' timestampColumn ( '=' | '>' | '<' | '>=' | '<=' ) "'" timestamp "'"
 
 timestampIntervalSearch
-  ::= 'WHERE' timestampColumn 'IN' "'" timestamp ';' interval (s | m | h | d | M | y) "'"
+  ::= 'WHERE' timestampColumn 'IN' "'" timestamp ';' multiplier ( s | m | h | d | M | y ) ';' ( occurrence ( s | m | h | d | M | y ) ';' repetition )? "'"
 
 timestampInSearch
   ::= 'WHERE' timestampColumn 'IN' '(' "'timestamp1'" ';' "'timestamp2'" ')'
@@ -167,8 +184,8 @@ dropPartition
 reindexTable
   ::= 'REINDEX' 'TABLE' tableName ('COLUMN' columnName)* ('PARTITION' partitionName)* 'LOCK' 'EXCLUSIVE'
 
-renameColumn  
-  ::= 'RENAME' columnName 'TO' columnName
+renameColumn
+  ::= 'RENAME' 'COLUMN' columnName 'TO' newColumnName
 
 attachPartition
  ::= 'ALTER' 'TABLE' tableName 'ATTACH' 'PARTITION' 'LIST' partitionName (',' partitionName)*
@@ -179,6 +196,9 @@ detachPartition
    | 'ALTER' 'TABLE' tableName 'DETACH' 'PARTITION' 'WHERE' timestampColumn 'IN' '(' timestamp (',' timestamp)* ')'
 
 setParam
+ ::= 'SET' 'PARAM' ( 'maxUncommittedRows' '=' n)
+
+setParamCommitLag
  ::= 'SET' 'PARAM' ( 'maxUncommittedRows' '=' n | 'commitLag' '=' n ( 'us' | 's' | 'm' | 'h' | 'd' ))
 
 VacuumTable
@@ -190,3 +210,6 @@ Update
 
 TruncateTable
 ::= 'TRUNCATE TABLE' tableName
+
+analyticFunction
+::= functionName 'OVER' '(' ( 'PARTITION' 'BY' ( columnName? (',' columnName?)* ))?  ('ORDER' 'BY' ( columnName (ASC | DESC) ? (',' columnName (ASC | DESC) ?)* ))? ')'

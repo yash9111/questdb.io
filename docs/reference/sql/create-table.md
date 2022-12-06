@@ -200,9 +200,9 @@ created.
 ## Partitioning
 
 `PARTITION BY` allows for specifying the
-[partitioning strategy](/docs/concept/partitions) for the table. The default
-partitioning strategy is `NONE` and tables can be partitioned by one of the
-following:
+[partitioning strategy](/docs/concept/partitions) for the table. Tables created
+via SQL are not partitioned by default and tables can be partitioned by one of
+the following:
 
 - `YEAR`
 - `MONTH`
@@ -216,15 +216,45 @@ created.
 
 :::
 
-## WITH table parameters
+## WITH table parameter
+
+![Flow chart showing the syntax of keyword to specify WITH table parameter](/img/docs/diagrams/createTableWithMaxRowParam.svg)
+
+The parameter influences how often commits of out-of-order data occur. It may be
+set during table creation using the `WITH` keyword.
+
+`maxUncommittedRows` - defines the maximum number of uncommitted rows per-table
+to keep in memory before triggering a commit for a specific table.
+
+The purpose of specifying maximum uncommitted rows per table is to reduce the
+occurrences of resource-intensive commits when ingesting out-of-order data.
+
+The global setting for the same parameter is `cairo.max.uncommitted.rows`.
+
+```questdb-sql title="Setting out-of-order table parameters via SQL"
+CREATE TABLE my_table (timestamp TIMESTAMP) TIMESTAMP(timestamp)
+PARTITION BY DAY WITH maxUncommittedRows=250000;
+```
+
+Checking the values per-table may be done using the `tables()` function:
+
+```questdb-sql title="List all tables"
+SELECT id, name, maxUncommittedRows FROM tables();
+```
+
+| id  | name        | maxUncommittedRows |
+| :-- | :---------- | :----------------- |
+| 1   | my_table    | 250000             |
+| 2   | device_data | 10000              |
+
+### QuestDB 6.5.5 and earlier versions
 
 ![Flow chart showing the syntax of keyword to specify WITH table commit parameters](/img/docs/diagrams/createTableWithCommitParam.svg)
 
-Table parameters which influence how often commits of out-of-order data occur
-may be set during table creation using the `WITH` keyword. The following two
-parameters may be applied:
+From [QuestDB 6.6](https://github.com/questdb/questdb/releases/tag/6.6) onwards,
+the database adjusts relevant settings automatically and provides optimal
+ingestion speed.
 
-- `maxUncommittedRows` - equivalent to `cairo.max.uncommitted.rows`
 - `commitLag` - equivalent to `cairo.commit.lag` expects a value with a modifier
   to specify the unit of time for the value:
 
@@ -236,31 +266,15 @@ parameters may be applied:
   | h    | hours        |
   | d    | days         |
 
-```questdb-sql title="Setting out-of-order table parameters via SQL"
-CREATE TABLE my_table (timestamp TIMESTAMP) TIMESTAMP(timestamp)
-PARTITION BY DAY WITH maxUncommittedRows=250000, commitLag=240s;
-```
-
-Checking the values per-table may be done using the `tables()` function:
-
-```questdb-sql title="List all tables"
-SELECT id, name, maxUncommittedRows, commitLag FROM tables();
-```
-
-| id  | name        | maxUncommittedRows | commitLag |
-| :-- | :---------- | :----------------- | :-------- |
-| 1   | my_table    | 250000             | 240000000 |
-| 2   | device_data | 10000              | 30000000  |
-
 For more information on commit lag and the maximum uncommitted rows, see the
 guide for [out-of-order commits](/docs/guides/out-of-order-commit-lag) and
 [ILP commit strategy](/docs/reference/api/ilp/tcp-receiver#commit-strategy).
 
 ## CREATE TABLE LIKE
 
-The `LIKE` keyword clones the table schema of an existing table without copying the data. Table settings
-and parameters such as designated timestamp, symbol column indexes, commit lag,
-and index capacity will be cloned, too.
+The `LIKE` keyword clones the table schema of an existing table without copying
+the data. Table settings and parameters such as designated timestamp, symbol
+column indexes, and index capacity will be cloned, too.
 
 ```questdb-sql title="Create table like"
 CREATE TABLE new_table (LIKE my_table);
@@ -285,11 +299,7 @@ have a partitioning strategy applied.
 CREATE TABLE my_table(symb SYMBOL, price DOUBLE, ts TIMESTAMP, s STRING);
 ```
 
-The same table can be created and a designated timestamp may be specified. New
-records with timestamps which are out-of-order (O3) chronologically will be
-ordered at the point of ingestion. Configuring how the system handles ingestion
-of out-of-order records is done via
-[commit lag](/docs/guides/out-of-order-commit-lag) configuration.
+The same table can be created and a designated timestamp may be specified.
 
 ```questdb-sql title="Adding a designated timestamp"
 CREATE TABLE my_table(symb SYMBOL, price DOUBLE, ts TIMESTAMP, s STRING)
