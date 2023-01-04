@@ -88,3 +88,14 @@ We have an open
 inserted with identical fields. Until then, you need to
 [modify the data](/docs/guides/modifying-data) after it's inserted and use a
 `GROUP BY` query to identify duplicates.
+
+## I am configuring QuestDB using a Hikari Connection Pool with Spring Boot, why does My HikariCP keeps dropping?
+
+[HikariCP](https://github.com/brettwooldridge/HikariCP) validates connection
+with a default validation timeout of 5000ms. This may cause the connection to
+drop. To fix this, change the connection timeout configuration via the
+`application.properties` file, inside `application.yml`:
+
+```
+spring.datasource.hikari.validation-timeout: 300000
+```
