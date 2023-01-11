@@ -78,7 +78,7 @@ const config = {
           {
             tagName: "meta",
             name: "theme-color",
-            content: "#d14671",
+            content: "#21222c",
           },
           {
             tagName: "meta",
