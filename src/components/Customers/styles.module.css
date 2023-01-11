@@ -1,3 +1,7 @@
+.section {
+  height: 56px;
+}
+
 .logos {
   display: flex;
   align-content: center;
