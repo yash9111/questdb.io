@@ -37,7 +37,7 @@
 
 @media screen and (max-width: 550px) {
   .inner {
-    padding: 0 calc(var(--theme-navbar-inner-padding) - 1.2rem);
+    padding: 0;
   }
 }
 
@@ -46,7 +46,6 @@
   top: 0;
   z-index: var(--z-index-navbar);
   --ifm-navbar-padding-vertical: 0;
-  --ifm-navbar-padding-horizontal: 0;
 }
 
 :global(.navbar__items--right .navbar__item.header-github-link) {
@@ -62,8 +61,7 @@
 
 @media screen and (max-width: 550px) {
   :global(.navbar__items--right .navbar__item.header-github-link) {
-    font-size: 0;
-    padding: 0.2rem 0 0.2rem 1.25rem;
+    display: none;
   }
 }
 

@@ -164,6 +164,7 @@ const config = {
         {
           label: "Product",
           position: "left",
+          href: "#",
           items: [
             {
               label: "QuestDB Cloud",
@@ -194,6 +195,7 @@ const config = {
         {
           label: "Learn",
           position: "left",
+          href: "#",
           items: [
             {
               label: "Blog",

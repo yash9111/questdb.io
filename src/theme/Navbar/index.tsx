@@ -92,6 +92,41 @@ function Navbar(): JSX.Element {
     >
       <div className={clsx("navbar__inner", styles.inner)}>
         <div className="navbar__items">
+          <a className={clsx("navbar__brand", styles.brand)} href="/">
+            QuestDB
+          </a>
+          {leftItems.map((item, i) => (
+            <NavbarItem {...item} key={i} />
+          ))}
+        </div>
+        <div className="navbar__items navbar__items--right">
+          {rightItems.map((item, i) => (
+            <NavbarItem {...item} key={i} />
+          ))}
+          {!colorModeToggle.disabled && (
+            <Toggle
+              className={styles.themeToggleInHeading}
+              checked={colorModeToggle.isDarkTheme}
+              onChange={colorModeToggle.toggle}
+            />
+          )}
+          {windowSize === windowSizes.desktop && (
+            <React.Fragment>
+              <SearchBar
+                handleSearchBarToggle={setIsSearchBarExpanded}
+                isSearchBarExpanded={isSearchBarExpanded}
+              />
+              <Button
+                className={clsx(styles.ctaButton, styles.getQuestdb)}
+                size="xsmall"
+                variant="secondary"
+                to="/cloud/"
+              >
+                Get QuestDB
+              </Button>
+            </React.Fragment>
+          )}
+
           <div
             aria-label="Navigation bar toggle"
             className="navbar__toggle"
@@ -118,36 +153,6 @@ function Navbar(): JSX.Element {
               />
             </svg>
           </div>
-          <a className={clsx("navbar__brand", styles.brand)} href="/">
-            QuestDB
-          </a>
-          {leftItems.map((item, i) => (
-            <NavbarItem {...item} key={i} />
-          ))}
-        </div>
-        <div className="navbar__items navbar__items--right">
-          {rightItems.map((item, i) => (
-            <NavbarItem {...item} key={i} />
-          ))}
-          {!colorModeToggle.disabled && (
-            <Toggle
-              className={styles.themeToggleInHeading}
-              checked={colorModeToggle.isDarkTheme}
-              onChange={colorModeToggle.toggle}
-            />
-          )}
-          <SearchBar
-            handleSearchBarToggle={setIsSearchBarExpanded}
-            isSearchBarExpanded={isSearchBarExpanded}
-          />
-          <Button
-            className={clsx(styles.ctaButton, styles.getQuestdb)}
-            size="xsmall"
-            variant="secondary"
-            to="/cloud/"
-          >
-            Get QuestDB
-          </Button>
         </div>
       </div>
       <div
