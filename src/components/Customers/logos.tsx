@@ -63,8 +63,6 @@ const svgs = [
   {
     ...logosManifest.prediko,
     svg: prediko,
-    width: 120,
-    height: 30,
   },
 
   {
@@ -93,7 +91,7 @@ const svgs = [
   {
     ...logosManifest.apacheNifi,
     svg: apache_nifi,
-    height: 45,
+    height: 40,
   },
 
   {

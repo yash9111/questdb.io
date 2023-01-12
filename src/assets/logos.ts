@@ -16,8 +16,8 @@ export const logos: Record<string, CustomerLogo> = {
   airbus: {
     src: "/img/pages/customers/logos/airbus.svg",
     alt: "Airbus logo",
-    width: 140,
-    height: 56,
+    width: 110,
+    height: 44,
   },
   yc: {
     src: "/img/pages/customers/logos/yc.svg",
@@ -65,8 +65,8 @@ export const logos: Record<string, CustomerLogo> = {
   liveaction: {
     src: "/img/pages/customers/logos/liveaction.svg",
     alt: "LiveAction logo",
-    width: 140,
-    height: 56,
+    width: 110,
+    height: 44,
   },
   toggle: {
     src: "/img/pages/customers/logos/toggle.svg",
@@ -125,8 +125,8 @@ export const logos: Record<string, CustomerLogo> = {
   prediko: {
     alt: "Prediko logo",
     src: "/img/pages/customers/logos/prediko.svg",
-    height: 44,
-    width: 145,
+    height: 32,
+    width: 105,
   },
   synology: {
     alt: "Synology logo",
