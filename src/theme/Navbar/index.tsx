@@ -110,22 +110,20 @@ function Navbar(): JSX.Element {
               onChange={colorModeToggle.toggle}
             />
           )}
-          {windowSize === windowSizes.desktop && (
-            <React.Fragment>
-              <SearchBar
-                handleSearchBarToggle={setIsSearchBarExpanded}
-                isSearchBarExpanded={isSearchBarExpanded}
-              />
-              <Button
-                className={clsx(styles.ctaButton, styles.getQuestdb)}
-                size="xsmall"
-                variant="secondary"
-                to="/cloud/"
-              >
-                Get QuestDB
-              </Button>
-            </React.Fragment>
-          )}
+          <div className={styles.searchBar}>
+            <SearchBar
+              handleSearchBarToggle={setIsSearchBarExpanded}
+              isSearchBarExpanded={isSearchBarExpanded}
+            />
+          </div>
+          <Button
+            className={clsx(styles.ctaButton, styles.getQuestdb)}
+            size="xsmall"
+            variant="secondary"
+            to="/cloud/"
+          >
+            Get QuestDB
+          </Button>
 
           <div
             aria-label="Navigation bar toggle"
