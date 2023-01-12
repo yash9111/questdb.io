@@ -57,6 +57,7 @@ const config = {
   customFields: customFields,
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "throw",
+
   plugins: [
     require.resolve("./plugins/fetch-latest-release/index"),
     require.resolve("./plugins/fetch-repo/index"),
@@ -117,7 +118,14 @@ const config = {
         ? require.resolve("posthog-docusaurus/src/index.js")
         : null,
     ],
+
+    ...[
+      process.env.NODE_ENV === "development"
+        ? require.resolve("./plugins/click-through-debug-iframe")
+        : null,
+    ],
   ].filter(Boolean),
+
   themeConfig: {
     posthog: {
       apiKey: process.env.POSTHOG_API_KEY,
