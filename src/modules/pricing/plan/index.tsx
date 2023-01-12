@@ -51,7 +51,9 @@ export const Plan = (plan: PricingPlan) => (
     <div className={style.cta}>
       <Dialog>
         <Dialog.Trigger>
-          <Button size="small">Get Access</Button>
+          <Button size="small" dataHook={`get-access-button-plan-${plan.type}`}>
+            Get Access
+          </Button>
         </Dialog.Trigger>
         <StyledDialogContent>
           <ContactForm interestedIn={plan.type} modal />

@@ -110,6 +110,7 @@ export const ContactForm = ({
                     disabled={loading}
                     variant="primary"
                     type="submit"
+                    dataHook="contact-form-submit"
                   >
                     {loading ? "Sending..." : "Sign up for early access"}
                   </Button>

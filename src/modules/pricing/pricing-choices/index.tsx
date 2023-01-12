@@ -79,7 +79,12 @@ export const PricingChoices = () => {
       <div className={style.footer}>
         <Dialog>
           <Dialog.Trigger>
-            <Button uppercase={false}>Contact Us</Button>
+            <Button
+              uppercase={false}
+              dataHook="pricing-table-contact-us-button"
+            >
+              Contact Us
+            </Button>
           </Dialog.Trigger>
           <Dialog.Content>
             <ContactForm interestedIn="custom" modal />

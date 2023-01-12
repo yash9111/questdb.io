@@ -16,6 +16,7 @@ export type Props = Readonly<{
   uppercase: boolean
   variant: "primary" | "secondary" | "tertiary" | "plain"
   disabled?: boolean
+  dataHook?: string
 }>
 
 const Button = ({
@@ -31,6 +32,7 @@ const Button = ({
   uppercase,
   variant,
   disabled,
+  dataHook,
 }: Props) => {
   const classes = clsx(className, styles.button, {
     [styles["button--icon"]]: icon != null,
@@ -48,6 +50,7 @@ const Button = ({
     return (
       <a
         className={classes}
+        data-hook={dataHook}
         {...(disabled ?? false
           ? {}
           : {
@@ -69,7 +72,7 @@ const Button = ({
 
   if (to != null) {
     return (
-      <a className={classes} href={to} onClick={onClick}>
+      <a data-hook={dataHook} className={classes} href={to} onClick={onClick}>
         {icon}
         {children}
       </a>
@@ -78,6 +81,7 @@ const Button = ({
 
   return (
     <button
+      data-hook={dataHook}
       disabled={disabled}
       className={classes}
       onClick={onClick}

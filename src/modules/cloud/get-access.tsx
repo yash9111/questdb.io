@@ -7,7 +7,11 @@ import { ContactForm } from "./ContactForm"
 export const GetAccess = ({ trigger }: { trigger?: React.ReactNode }) => (
   <Dialog>
     <Dialog.Trigger>
-      {trigger ?? <Button variant="primary">Join private preview</Button>}
+      {trigger ?? (
+        <Button variant="primary" dataHook="join-private-preview-button">
+          Join private preview
+        </Button>
+      )}
     </Dialog.Trigger>
     <Dialog.Content>
       <ContactForm interestedIn="cloud" modal />
