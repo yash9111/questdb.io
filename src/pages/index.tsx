@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import React from "react"
-import Customers from "../components/Customers"
+// import Customers from "../components/Customers"
 import customFields from "../config/customFields"
 import { QueryScroller } from "../components/QueryScroller"
 
