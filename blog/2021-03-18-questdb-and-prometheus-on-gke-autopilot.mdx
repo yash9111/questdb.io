@@ -246,7 +246,7 @@ export POD_NAME=$(kubectl get pods --namespace default -l \ "app=prometheus,comp
 kubectl --namespace default port-forward $POD_NAME 9090
 ```
 
-Once port-forwarding is active, visit [localhost:9090](localhost:9090) and check
+Once port-forwarding is active, visit `localhost:9090` and check
 that we're able to scrape `pg_up`:
 
 <Screenshot

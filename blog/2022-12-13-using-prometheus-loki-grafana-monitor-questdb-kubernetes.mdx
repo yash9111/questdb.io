@@ -315,7 +315,7 @@ export QUESTDB_POD_NAME=$(kubectl get pods --namespace default -l "app.kubernete
 kubectl --namespace default port-forward $QUESTDB_POD_NAME 9000:9000
 ```
 
-Now navigate to [http://localhost:9000](http://localhost:9000), which should point to the QuestDB HTTP frontend.  Your browser should make a request
+Now navigate to `http://localhost:9000`, which should point to the QuestDB HTTP frontend.  Your browser should make a request
 that causes QuestDB to emit a few INFO-level logs.
 
 You can query Loki to check if Promtail picked up and shipped those logs. Like the other components, we need to set up a port forward to access the
@@ -394,7 +394,7 @@ kubectl port-forward --namespace default service/loki-grafana 3000:80
 
 ### Configuration
 
-First navigate to [http://localhost:3000](http://localhost:3000) in your browser. You can log in using
+First navigate to `http://localhost:3000` in your browser. You can log in using
 the username `admin` and the password that you obtained in the previous step.
 
 ![Grafana login](/img/blog/2022-12-13/grafana-login.png)

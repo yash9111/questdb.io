@@ -1,49 +1,7 @@
-const visit = require("unist-util-visit")
 const ssrTemplate = require("./src/internals/ssr.template")
 const consts = require("./src/config/consts")
 const customFields = require("./src/config/customFields")
-const math = require("remark-math")
-const katex = require("rehype-katex")
-
-function variable() {
-  const RE_VAR = /{@([\w-_]+)@}/g
-  const getVariable = (full, partial) =>
-    partial ? customFields[partial] : full
-
-  function textVisitor(node) {
-    node.value = node.value.replace(RE_VAR, getVariable)
-  }
-
-  function linkVisitor(node, vFile) {
-    if (/^(https?:\/\/)?(localhost|127\.0\.0\.1)(:\d+)?/.test(node.url)) {
-      console.log(
-        `Linking to ${node.url} is forbidden, changed URL text in ${vFile.path}`,
-      )
-      const { type, value, position } = node.children[0]
-      delete node.title
-      delete node.url
-      delete node.children
-      node.type = type
-      node.value = value
-      node.position = position
-      return
-    }
-
-    node.url = node.url.replace(RE_VAR, getVariable)
-
-    if (node.title) {
-      node.title = node.title.replace(RE_VAR, getVariable)
-    }
-  }
-
-  function transformer(ast, vFile) {
-    visit(ast, "text", textVisitor)
-    visit(ast, "code", textVisitor)
-    visit(ast, "link", (node) => linkVisitor(node, vFile))
-  }
-
-  return transformer
-}
+const markdownPlugins = require("./plugins/markdown-plugins")
 
 const config = {
   title: "QuestDB: the database for time series",
@@ -97,8 +55,7 @@ const config = {
     [
       require.resolve("./plugins/blog"),
       {
-        remarkPlugins: [variable, math],
-        rehypePlugins: [katex],
+        ...markdownPlugins,
         feedOptions: {
           type: "all",
           copyright: customFields.copyright,
@@ -353,12 +310,11 @@ const config = {
     [
       "@docusaurus/preset-classic",
       {
-        // blog is enabled through a custom plugin
+        // blog is enabled through a custom plugin, so we disable it from preset
         // ./plugins/blog/index.js
         blog: false,
         docs: {
-          remarkPlugins: [variable, math],
-          rehypePlugins: [katex],
+          ...markdownPlugins,
           sidebarPath: require.resolve("./sidebars.js"),
         },
 

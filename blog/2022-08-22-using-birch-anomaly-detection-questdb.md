@@ -68,7 +68,7 @@ To better understand BIRCH and how it can be used with QuestDB, you will solve a
 
 You have several options for installing QuestDB, including Docker and Homebrew. [Check the documentation](/docs) for details.
 
-Once QueestDB is installed, you can access the web console of the running service, by opening your browser and going to [localhost:9000](http://localhost:9000). You should see the below image:
+Once QueestDB is installed, you can access the web console of the running service, by opening your browser and going to `http://localhost:9000`. You should see the below image:
 
 import Screenshot from "@theme/Screenshot"
 

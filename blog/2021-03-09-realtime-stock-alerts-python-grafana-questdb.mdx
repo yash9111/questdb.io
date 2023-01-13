@@ -14,7 +14,6 @@ keywords:
   - python
 tags: [tutorial, python, grafana, marketdata, alerting]
 image: /img/blog/shared/og-grafana.png
-
 ---
 
 import Banner from "@theme/Banner"
@@ -84,9 +83,9 @@ docker-compose up
 
 Running `docker-compose up` brings up two networked containers:
 
-- Grafana on [localhost:3000](http://localhost:3000)
-- QuestDB on [localhost:9000](http://localhost:9000) as well as a port open on
-  `8812`, which accepts Postgres wire protocol
+- Grafana on `http://localhost:3000`
+- QuestDB on `http://localhost:9000` as well as a port open on `8812`, which
+  accepts Postgres wire protocol
 
 Running `docker-compose up` will also
 [provision Grafana](https://github.com/bsmth/questdb-slack-grafana-alerts/tree/main/grafana)
@@ -143,7 +142,7 @@ type can be found on the QuestDB
 
 To verify if data is arriving in QuestDB:
 
-1. Navigate to [localhost:9000](http://localhost:9000)
+1. Navigate to `http://localhost:9000`
 2. Run the following query:
 
 ```questdb-sql
@@ -225,17 +224,15 @@ https://hooks.slack.com/services/T123/B0123/2Fb...
 The final step in connecting Slack and Grafana is to create a notification
 channel. To configure a Slack notification channel to send alerts to:
 
-1. Log in to Grafana at [localhost:3000](http://localhost:3000) using the
-   default credentials:
+1. Log in to Grafana at `http://localhost:3000` using the default credentials:
 
 ```txt
 user:admin
 pass:admin
 ```
 
-2. Navigate to
-   [notification channels](http://localhost:3000/alerting/notifications) and
-   click **Add channel**
+2. Navigate to http://localhost:3000/alerting/notifications and click **Add
+   channel**
 3. Give it the name **Stock Price Alert** and choose the `Slack` type
 4. Paste the webhook URL in the **Url** field
 5. In the **Notification settings** dropdown, enable the **Include image**
@@ -257,8 +254,7 @@ Your Slack workspace should display a test notification coming from Grafana:
 Next up, we can create a new panel on Grafana and configure alerts based on
 queries we're interested in:
 
-1. Navigate to [Create new Dashboard](http://localhost:3000/dashboard/new) and
-   click **+ Add new panel**
+1. Navigate to `http://localhost:3000/dashboard/new` and click **+ Add new panel**
 2. In the **Query** panel, click the pencil icon or click **Edit SQL**
 3. Paste the following example query
 

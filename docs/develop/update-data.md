@@ -348,7 +348,7 @@ run_query("UPDATE trades SET value = 9876 WHERE name = 'abc'")
 
 By default, QuestDB has an embedded Web Console running at
 http://[server-address]:9000. When running locally, this is accessible at
-[http://localhost:9000](http://localhost:9000). The Web Console can be used to
+`http://localhost:9000`. The Web Console can be used to
 explore table schemas, visualizing query results as tables or graphs, and
 importing datasets from CSV files. For details on these components, refer to the
 [Web Console reference](/docs/develop/web-console/) page.

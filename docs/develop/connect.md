@@ -26,7 +26,7 @@ interface.
 It's great for quickly trying things out. You can also chart your query results.
 
 Connect your web browser to http://[server-address]:9000/. When running locally,
-this will be [http://localhost:9000/](http://localhost:9000/).
+this will be `http://localhost:9000/`.
 
 import Screenshot from "@theme/Screenshot"
 

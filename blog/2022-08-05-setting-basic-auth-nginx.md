@@ -66,7 +66,7 @@ You can [install QuestDB open source](https://questdb.io/get-questdb/) on your l
 brew install questdb
 ```
 
-Once the installation is complete, QuestDB automatically starts and is available on [http://localhost:9000](http://localhost:9000). To ensure that the installation has gone right, please visit this address and see if you can access the QuestDB console.
+Once the installation is complete, QuestDB automatically starts and is available on `http://localhost:9000`. To ensure that the installation has gone right, please visit this address and see if you can access the QuestDB console.
 
 ### Step 2. Install Nginx
 
@@ -76,7 +76,7 @@ To set up Basic Authentication using Nginx, you need to install Nginx on your sy
 brew install nginx
 ```
 
-After the installation, please ensure that Nginx is up and running by visiting [http://localhost:8080](http://localhost:8080).
+After the installation, please ensure that Nginx is up and running by visiting `http://localhost:8080`.
 
 ### Step 3. Configure Nginx to require Basic Authentication for QuestDB open source
 
