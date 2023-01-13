@@ -408,3 +408,7 @@ issues. If you do, please report them to us.
 </p>
 </details>
 
+## See also
+
+- [Change Data Capture with QuestDB and Debezium](/blog/2023/01/03/change-data-capture-with-questdb-and-debezium)
+- [Realtime crypto tracker with QuestDB Kafka Connector](/blog/realtime-crypto-tracker-with-questdb-kafka-connector)
