@@ -56,6 +56,7 @@ const config = {
       require.resolve("./plugins/blog"),
       {
         ...markdownPlugins,
+        blogSidebarCount: 10,
         feedOptions: {
           type: "all",
           copyright: customFields.copyright,
