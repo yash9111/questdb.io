@@ -112,7 +112,7 @@ const Home = () => (
     replaceTitle
   >
     <Header />
-    <Customers />
+    {/* <Customers /> */}
     <Section fullWidth center>
       <UseCases />
     </Section>
