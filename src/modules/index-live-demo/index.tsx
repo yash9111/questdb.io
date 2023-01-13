@@ -5,7 +5,6 @@ import Highlight from "../../components/Highlight"
 import { Section } from "../../components/Section"
 import styles from "./styles.module.css"
 import Button from "@theme/Button"
-import TypeIt from "typeit-react"
 
 const exampleQueries = exampleQueriesRaw.map(({ comment, query }) => ({
   url: `${customFields.demoUrl}?query=${encodeURIComponent(
@@ -45,18 +44,7 @@ const LiveDemo = () => {
 
         <div className={styles.editor}>
           <div className={styles.code}>
-            {typeof query === "number" && (
-              <TypeIt
-                options={{
-                  startDelay: 1000,
-                  speed: 2,
-                  waitUntilVisible: true,
-                  cursor: false,
-                }}
-              >
-                {exampleQueries[query].view()}
-              </TypeIt>
-            )}
+            {typeof query === "number" && exampleQueries[query].view()}
           </div>
         </div>
       </div>
