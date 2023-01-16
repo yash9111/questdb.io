@@ -1,81 +1,54 @@
+/**
+ * This script should be executed by `lint-staged` before commiting
+ * Therefore script assumes that file path exists in `process.argv`
+ */
+
 const path = require("path")
-const glob = require("glob")
 const fs = require("fs")
 const imagemin = require("imagemin")
 const imageminGifsicle = require("imagemin-gifsicle")
 const imageminSvgo = require("imagemin-svgo")
-const rimraf = require("rimraf")
 const sharp = require("sharp")
 
+const filePath = process.argv[2]
 const src = "static/img"
 const dist = src
+const log = (msg) => process.stdout.write(msg)
 
-const optimiseImages = async () => {
-  const doByExt = async (ext) => {
-    let successList = []
-    const files = glob.sync(`${src}/**/*.${ext}`)
+const optimiseWithSharp = async (file, ext) => {
+  log(`Optimising ${file} with \`sharp()\`... `)
 
-    console.log(`### sharp() for .${ext} images ###\n`)
+  // `sharp` cannot overwrite the original file, so we need to create a temporary one
+  const tmpFilePath = `${file}.tmp`
 
-    for (const file of files) {
-      await sharp(file)
-        .resize({
-          height: 1440,
-          fit: sharp.fit.inside,
-          width: 1920,
-          withoutEnlargement: true,
-        })
-        .toFormat(ext === "jpg" ? "jpeg" : ext, {
-          progressive: true,
-          quality: 75,
-        })
-        .toFile(
-          file.replace(
-            new RegExp(`\/([\\w\\d-_]{0,255})\.${ext}$`),
-            `/_$1.${ext}`,
-          ),
-        )
-        .then(function () {
-          successList.push(file)
-          console.log(`Optimising:  ${file}`)
-        })
-        .catch(function (err) {
-          console.log(`Fail: ${file}`, "\n", err)
-        })
-    }
+  await sharp(file)
+    .resize({
+      height: 1440,
+      fit: sharp.fit.inside,
+      width: 1920,
+      withoutEnlargement: true,
+    })
+    .toFormat(ext === "jpg" ? "jpeg" : ext, {
+      progressive: true,
+      quality: 75,
+    })
+    .toFile(tmpFilePath)
+    .then(() => {
+      log("OK!\n")
 
-    console.log("\n------------------------------")
-    console.log("TOTAL:", successList.length)
+      // Move the temporary file to the original file path
+      fs.renameSync(tmpFilePath, file)
+    })
+    .catch((err) => {
+      log("ERROR!\n")
+      console.error(err)
+    })
+}
 
-    successList = []
+const optimiseWithImagemin = async (file) => {
+  log(`Optimising ${file} with \`imagemin()\`... `)
 
-    console.log(`\n### rename() for .${ext} images ###\n`)
-
-    const rename = glob.sync(`${src}/**/_*.${ext}`)
-
-    for (const file of rename) {
-      fs.renameSync(
-        file,
-        file.replace(
-          new RegExp(`\/_([\\w-\\d]{0,255})\.${ext}$`),
-          `/$1.${ext}`,
-        ),
-      )
-      console.log(`Renaming:  ${file}`)
-      successList.push(file)
-    }
-
-    console.log("\n------------------------------")
-    console.log("TOTAL:", successList.length)
-    console.log("\n")
-  }
-
-  await doByExt("jpg")
-  await doByExt("png")
-
-  console.log(`### Optimise gif and svg images ###\n`)
-
-  imagemin([`${src}/**/*.{gif,svg}`], {
+  imagemin([file], {
     plugins: [
       imageminGifsicle({
         interlaced: true,
@@ -83,35 +56,32 @@ const optimiseImages = async () => {
       }),
       imageminSvgo({
         plugins: [
-          {
-            removeViewBox: false,
-          },
-          {
-            cleanupIDs: false,
-          },
-          {
-            removeUnknownsAndDefaults: false,
-          },
-          {
-            convertShapeToPath: false,
-          },
+          { removeViewBox: false },
+          { cleanupIDs: false },
+          { removeUnknownsAndDefaults: false },
+          { convertShapeToPath: false },
         ],
       }),
     ],
   }).then((files) =>
     files.forEach(async (file) => {
-      let source = path.parse(file.sourcePath)
-      console.log(`Optimised:  ${file.sourcePath}`)
-
-      file.destinationPath = `${source.dir.replace(src, dist)}/${source.name}${source.ext}`
-
-      fs.mkdirSync(path.dirname(file.destinationPath), {recursive: true})
+      let { dir, name, ext } = path.parse(file.sourcePath)
+      log("OK!\n")
+      file.destinationPath = `${dir.replace(src, dist)}/${name}${ext}`
+      fs.mkdirSync(path.dirname(file.destinationPath), { recursive: true })
       fs.writeFileSync(file.destinationPath, file.data)
     }),
   )
 }
 
-if (process.env.NETLIFY === "true" || process.env.FORCE === "true") {
-  optimiseImages()
-  rimraf.sync("docs/__guidelines")
+const optimiseImages = async () => {
+  const fileExtension = path.extname(filePath).toLowerCase().replace(".", "")
+
+  if (["jpg", "jpeg", "png"].includes(fileExtension)) {
+    await optimiseWithSharp(filePath, fileExtension)
+  } else {
+    await optimiseWithImagemin(filePath)
+  }
 }
+
+optimiseImages()
