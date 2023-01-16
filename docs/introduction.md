@@ -77,12 +77,13 @@ pages for the following topics:
 This section describes how to integrate QuestDB with third-party tools and
 utilities for collecting metrics and visualizing data:
 
-- [Prometheus](/docs/third-party-tools/prometheus) monitoring and alerting.
-- [Grafana](/docs/third-party-tools/grafana) instructions for connecting QuestDB
+- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting QuestDB
   as a datasource for building visualizations and dashboards
-- [Kafka](/docs/third-party-tools/kafka/overview) guide for ingesting data from
+- [Kafka](/docs/third-party-tools/kafka/overview/) guide for ingesting data from
   Kafka topics into QuestDB
-- [Telegraf](/docs/third-party-tools/telegraf) guide for collecting system
+- [Pandas](/docs/third-party-tools/pandas/) for ingesting Pandas dataframes via ILP
+- [Prometheus](/docs/third-party-tools/prometheus/) monitoring and alerting
+- [Telegraf](/docs/third-party-tools/telegraf/) guide for collecting system
   metrics, specifying QuestDB as an output and visualizing the results
 
 ## Concepts

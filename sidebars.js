@@ -89,7 +89,6 @@ module.exports = {
       label: "Third-party Tools",
       type: "category",
       items: [
-        "third-party-tools/prometheus",
         "third-party-tools/grafana",
         {
           label: "Kafka",
@@ -100,6 +99,8 @@ module.exports = {
             "third-party-tools/kafka/jdbc",
           ],
         },
+        "third-party-tools/pandas",
+        "third-party-tools/prometheus",
         "third-party-tools/telegraf",
       ],
     },
