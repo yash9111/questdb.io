@@ -4,6 +4,9 @@ sidebar_label: Root directory
 description: Contents of the <root_directory> folder explained.
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
 QuestDB creates the following file structure in its `root_directory`:
 
 ```filestructure
