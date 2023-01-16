@@ -14,11 +14,10 @@ export const Header = () => {
 
         <p
           style={{
-            color: "var(--palette-pale-blue)",
+            color: "#b1b5d3",
             textAlign: "center",
             marginBottom: "2rem",
-            fontSize: "var(--font-size-big-2)",
-            fontWeight: "var(--ifm-font-weight-normal)",
+            fontSize: "24px",
             maxWidth: "52.5rem",
           }}
         >
