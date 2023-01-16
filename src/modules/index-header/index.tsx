@@ -12,11 +12,20 @@ export const Header = () => {
           Fast SQL for time-series
         </Section.Title>
 
-        <Section.Subtitle className={styles.subheader} center>
+        <p
+          style={{
+            color: "var(--palette-pale-blue)",
+            textAlign: "center",
+            marginBottom: "2rem",
+            fontSize: "var(--font-size-big-2)",
+            fontWeight: "var(--ifm-font-weight-normal)",
+            maxWidth: "52.5rem",
+          }}
+        >
           Columnar time-series database with high performance ingestion and SQL
           analytics you know and love from QuestDB open source, now on the
           cloud.
-        </Section.Subtitle>
+        </p>
 
         <div className={styles.getStartedButtons}>
           <Link to="/cloud/" className={styles.joinPublicPreviewLink}>
