@@ -326,7 +326,6 @@ const config = {
         },
         theme: {
           customCss: [
-            require.resolve("./src/css/katex.min.css"),
             require.resolve("./src/css/_global.css"),
           ],
         },

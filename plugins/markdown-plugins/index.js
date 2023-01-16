@@ -1,7 +1,5 @@
 const path = require("path")
 const visit = require("unist-util-visit")
-const math = require("remark-math")
-const katex = require("rehype-katex")
 const customFields = require("../../src/config/customFields")
 
 const cwd = process.cwd()
@@ -49,6 +47,5 @@ function variable() {
 }
 
 module.exports = {
-  remarkPlugins: [variable, math],
-  rehypePlugins: [katex],
+  remarkPlugins: [variable],
 }

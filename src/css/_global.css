@@ -410,8 +410,6 @@ html[data-theme='light'] .pagination-nav__sublabel {
   color: var(--palette-dark-80);
 }
 
-.katex { font-size: 1.2em; }
-
 /**
  *
  * Hide the "See all ## results" link at the bottom of the search widget.

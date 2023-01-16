@@ -296,9 +296,9 @@ In the plot above, red and blue circles represent the detected anomalous data po
 
 A confusion matrix method is also used to assess the performance of the model. It is able to identify 39.9 percent of the anomalies:
 
-$$
+```
 5248/(7917+5248) = 0.39857
-$$
+```
 
 To visualize this as the image shown above, run the following lines of code:
 

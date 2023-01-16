@@ -242,9 +242,12 @@ concept of returns arrives.
 
 The return over each period is the percentage change
 
-$$
-r_t = \frac{p_{t} - p_{t-1}}{p_{t-1}},
-$$
+<Screenshot
+  alt="An equation showing the return over a period"
+  height={37}
+  src="/img/blog/2021-11-22/percentage_equation.png"
+  width={114}
+/>
 
 which we translate into Julia code as:
 
@@ -269,9 +272,12 @@ The average is around zero and with periods of positive and negative returns.
 Now it is more conventional to work in _log-returns_ which is the logarithm of
 the above formula, which we write as a simple equation:
 
-$$
-\log r_t = \log (p_t) - \log({p_{t-1}}),
-$$
+<Screenshot
+  alt="An equation showing the log return over a period"
+  height={29}
+  src="/img/blog/2021-11-22/log_equation.png"
+  width={220}
+/>
 
 Again, when translated to Julia code is even simpler:
 
@@ -305,7 +311,7 @@ We can immediately pull out some key features.
 This is the **fat tail** phenomenon where the tails of a probability
 distribution is larger than you expect and thus extreme values happen more
 regularly than typical probability distributions would describe. Most of the
-values are between $$\pm$$ 0.0005, but values of 0.001 (so twice as large) did
+values are between ±0.0005, but values of 0.001 (so twice as large) did
 happen.
 
 These large tails are a defining feature of finance and not restricted to
@@ -329,9 +335,9 @@ returns. In Julia, we use the `mean`, `std`, and `kurtosis` function from the
 
 | Statistic          | Value                 |
 | ------------------ | --------------------- |
-| Mean               | $$7 \times 10 ^{-8}$$ |
-| Standard Deviation | $$7 \times 10 ^{-5}$$ |
-| Excess Kurtosis    | $$15$$                |
+| Mean               | `7 x 10^-8`            |
+| Standard Deviation | `7 x 10^-5`            |
+| Excess Kurtosis    | `15`                   |
 
 With a large excess kurtosis of 15, as we expected, this is proof that these
 log-returns are heavy-tailed. Large events are more likely to happen than we
@@ -421,9 +427,12 @@ When we take logs of both the axis we see the following straight line
 which indicates that the autocorrelation of the absolute returns follows a power
 law;
 
-$$
-\text{Autocorrelation} \propto \frac{1}{\text{Lag} ^\gamma},
-$$
+<Screenshot
+  alt="Equation of correlation and confidence over log of lag."
+  height={51}
+  src="/img/blog/2021-11-22/autocorrelation_equation.png"
+  width={204}
+/>
 
 and power-law distributions are fat-tailed. So what we discovered about the
 distribution of the returns is also true for the autocorrelation, outliers are
@@ -471,7 +480,7 @@ you want to make sure you get the best possible price.
 This is quite an open-ended problem that is fraught with difficulty in deciding
 what means 'best'. A simple method of judging though is comparing the price you
 paid with the price of the next trade. But why stop at the next trade, you can
-look at the next $$l$$ trades to understand how the price evolved after each
+look at the next `l` trades to understand how the price evolved after each
 trade.
 
 This leads us to calculate the **empirical price impact** function, which
@@ -479,9 +488,12 @@ averages the impact at each lag to build up an empirical picture of price
 evolution over time. As an equation, we are taking an average over the different
 lags of the trades data frame.
 
-$$
-R(l) = - \frac{1}{n} \sum _{k=1} ^n \epsilon _k (p_{k+l} - p_k)
-$$
+<Screenshot
+  alt="An equation for the empirical price impact function."
+  height={61}
+  src="/img/blog/2021-11-22/average_equation.png"
+  width={227}
+/>
 
 As this is an empirical measure, we are also going to classify the size of the
 trades into **small**, **medium**, and **large** using the quantiles of the
@@ -560,7 +572,7 @@ lags we can see this price impact effect even clearer:
 />
 
 The first price difference is similar for all three trade types, around
-$$1 \times 10^{-5}$$, but 5 trades later, the price difference is starkly
+`1 x 10^-5`, but 5 trades later, the price difference is starkly
 different, the large trade has had much more market impact. The large trades
 have caused the price to move that much more.
 
