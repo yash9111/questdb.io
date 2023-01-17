@@ -85,7 +85,7 @@ function Navbar(): JSX.Element {
   const { leftItems, rightItems } = splitNavItemsByPosition(items)
 
   return (
-    <nav
+    <header
       className={clsx("navbar", styles.navbar, "navbar--light", {
         "navbar-sidebar--show": sidebarShown,
       })}
@@ -191,7 +191,7 @@ function Navbar(): JSX.Element {
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   )
 }
 
