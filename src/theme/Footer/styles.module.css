@@ -37,17 +37,20 @@
 
 .tagline {
   grid-area: tagline;
+  display: grid;
+  gap: 3rem;
 }
 
-.tagline p {
+.taglineText {
   max-width: 380px;
   font-size: var(--font-size-large);
   color: #979aaf;
+  margin: 0;
 }
 
 .githubButton {
-  grid-area: tagline;
   justify-self: flex-start;
+  align-self: flex-end;
   background-color: var(--palette-white);
 }
 
@@ -84,6 +87,33 @@
 .link {
   color: var(--palette-white);
   font-size: var(--font-size-normal);
+}
+
+.subscribe {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.subscribeInputs {
+  grid-template-columns: 5fr minmax(max-content, 1fr);
+  max-width: 500px;
+}
+
+.subscribeInputs input {
+  padding: 0.6rem 1rem;
+  height: auto;
+}
+
+.subscribeText {
+  font-size: 1rem;
+  color: #979aaf;
+  margin: 0;
+}
+
+.subscribeSubmit {
+  height: auto;
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
 }
 
 .items {

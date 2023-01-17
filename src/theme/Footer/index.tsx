@@ -3,6 +3,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
 import Button from "@theme/Button"
 import clsx from "clsx"
 import React from "react"
+import Subscribe from "../../components/Subscribe"
 import customFields from "../../config/customFields"
 import styles from "./styles.module.css"
 
@@ -54,7 +55,29 @@ const Footer = () => {
         />
 
         <div className={styles.tagline}>
-          <p>{siteConfig.tagline}</p>
+          <p className={styles.taglineText}>{siteConfig.tagline}</p>
+
+          <div className={styles.subscribe}>
+            <p className={styles.subscribeText}>
+              Subscribe to our newsletter. Stay up to date with all things
+              QuestDB.
+            </p>
+
+            <Subscribe
+              classNameInputs={styles.subscribeInputs}
+              submitButtonVariant="tertiary"
+              provider="newsletter"
+              renderSubmitButton={({ loading, defaultLoader }) => (
+                <Button
+                  variant="tertiary"
+                  type="submit"
+                  className={styles.subscribeSubmit}
+                >
+                  {loading ? defaultLoader : "Subscribe"}
+                </Button>
+              )}
+            />
+          </div>
 
           <Button
             className={styles.githubButton}
@@ -75,6 +98,7 @@ const Footer = () => {
             Star us on GitHub
           </Button>
         </div>
+
         <div className={styles.links}>
           {links.map((linkItem, i) => (
             <div key={i} className={styles.category}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { ReactNode, useState } from "react"
 import type { FormEvent } from "react"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 
@@ -18,6 +18,10 @@ type Props = {
   submitButtonVariant?: ButtonProps["variant"]
   className?: string
   classNameInputs?: string
+  renderSubmitButton?: (props: {
+    loading: boolean
+    defaultLoader: ReactNode
+  }) => ReactNode
 }
 
 const providers: { [key in Provider]: string } = {
@@ -27,14 +31,17 @@ const providers: { [key in Provider]: string } = {
     "https://questdb.us7.list-manage.com/subscribe/post?u=f692ae4038a31e8ae997a0f29&id=bdd4ec2744",
 }
 
-const Subscribe: React.FunctionComponent<Props> = ({
+const Spinner = () => <span className={style.loader} />
+
+const Subscribe = ({
   placeholder = "Email address",
   provider = "enterprise",
   submitButtonText = "SUBMIT",
   submitButtonVariant,
   className,
   classNameInputs,
-}) => {
+  renderSubmitButton,
+}: Props) => {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
 
@@ -88,13 +95,17 @@ const Subscribe: React.FunctionComponent<Props> = ({
                 pattern={emailPattern}
               />
 
-              <Button
-                className={style.submit}
-                variant={submitButtonVariant}
-                type="submit"
-              >
-                {loading ? <span className={style.loader} /> : submitButtonText}
-              </Button>
+              {typeof renderSubmitButton === "function" ? (
+                renderSubmitButton({ loading, defaultLoader: Spinner })
+              ) : (
+                <Button
+                  className={style.submit}
+                  variant={submitButtonVariant}
+                  type="submit"
+                >
+                  {loading ? <Spinner /> : submitButtonText}
+                </Button>
+              )}
             </div>
           )}
         </CSSTransition>
