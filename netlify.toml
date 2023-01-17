@@ -278,6 +278,10 @@
   from = "/docs/third-party-tools/kafka/"
   to = "/docs/third-party-tools/kafka/overview/"
 
+[[redirects]]
+  from = "/blog/2020/11/26/why-timeseries-data/"
+  to = "/blog/time-series-data/"
+
 [[headers]]
   for = "/*"
   [headers.values]
