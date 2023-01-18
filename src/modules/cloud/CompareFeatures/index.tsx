@@ -92,6 +92,11 @@ const SecurityFeaturesItems: Feature[] = [
     inOpenSource: "not-applicable",
     inCloud: "coming-soon",
   },
+  {
+    title: "IP whitelisting",
+    inOpenSource: "not-applicable",
+    inCloud: "available-new",
+  },
 ]
 
 const HighAvailabilityFeaturesItems: Feature[] = [
