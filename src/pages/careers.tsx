@@ -17,8 +17,8 @@ type Opening = {
 
 const currentOpenings: Opening[] = [
   {
-    href: "/careers/developer-relations-growth-engineer/",
-    title: "Developer Relations - Growth Engineer",
+    href: "/careers/growth-engineer-open-source/",
+    title: "Growth Engineer (open source)",
     location: "Remote",
   },
   {
