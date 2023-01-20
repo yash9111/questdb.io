@@ -10,6 +10,30 @@ import juCss from "../../css/case-study/jumbotron.module.css"
 import ouCss from "../../css/case-study/outcome.module.css"
 import seCss from "../../css/section.module.css"
 
+const values = [
+  {
+    description: "Use case: Sensor data and IoT",
+    icon: {
+      alt: "Briefcase icon",
+      src: "/img/pages/case-study/icons/briefcase.svg",
+    },
+  },
+  {
+    description: "Industry: Engineering, manufactoring",
+    icon: {
+      alt: "Globe icon",
+      src: "/img/pages/case-study/icons/globe.svg",
+    },
+  },
+  {
+    description: "Deployment: QuestDB Open Source",
+    icon: {
+      alt: "Flag icon",
+      src: "/img/pages/case-study/icons/flag.svg",
+    },
+  },
+]
+
 const DATRON = () => {
   const title = "DATRON - high-volume time series for industrial sensor data"
   const description =
@@ -68,69 +92,17 @@ const DATRON = () => {
 
       <section className={clsx(seCss.section, seCss["section--odd"])}>
         <div className={clsx(seCss["section--inner"], ouCss.outcome__wrapper)}>
-          <p className={ouCss.outcome}>
-            <img
-              alt="Dollar icon"
-              className={ouCss.outcome__icon}
-              src="/img/pages/case-study/icons/dollar.svg"
-            />
-            Low integration costs
-          </p>
-          <p className={ouCss.outcome}>
-            <img
-              alt="Workflow icon"
-              className={ouCss.outcome__icon}
-              src="/img/pages/case-study/icons/workflow.svg"
-            />
-            Wide compatibility and simple configuration
-          </p>
-          <p className={ouCss.outcome}>
-            <img
-              alt="Leaf icon"
-              className={ouCss.outcome__icon}
-              src="/img/pages/case-study/icons/leaf.svg"
-            />
-            Vibrant developer community
-          </p>
-          <p className={ouCss.outcome}>
-            <img
-              alt="Gauge icon"
-              className={ouCss.outcome__icon}
-              src="/img/pages/case-study/icons/gauge.svg"
-            />
-            High ingestion rates - billions of measurements per day
-          </p>
-          <p className={ouCss.outcome}>
-            <img
-              alt="Voice icon"
-              className={ouCss.outcome__icon}
-              src="/img/pages/case-study/icons/voice.svg"
-            />
-            Proactive support from the QuestDB team
-          </p>
-          <p className={ouCss.outcome}>
-            <img
-              alt="Time icon"
-              className={ouCss.outcome__icon}
-              src="/img/pages/case-study/icons/time.svg"
-            />
-            Quick migration from InfluxDB
-          </p>
+          {values.map(({ icon, description }, index) => (
+            <p key={index} className={ouCss.outcome}>
+              <img
+                alt={icon.alt}
+                className={ouCss.outcome__icon}
+                src={icon.src}
+              />
+              {description}
+            </p>
+          ))}
         </div>
-      </section>
-
-      <section className={clsx(seCss.section, caCss.card)}>
-        <p className={caCss.card__title}>
-          DATRON builds high-speed industrial CNC machines which output
-          high-frequency sensor data requiring massive ingestion rates at the
-          data layer.
-        </p>
-
-        <p className={caCss.card__subtitle}>
-          In this case study, we summarize the experience of DATRON evaluating a
-          database that can handle high-ingestion rates for operational
-          integrity and showcase the improvements they saw.
-        </p>
       </section>
 
       <section className={seCss.section}>
@@ -141,6 +113,18 @@ const DATRON = () => {
             seCss["section--column"],
           )}
         >
+          <h3>About the team</h3>
+          <p className="font-size--large">
+            DATRON builds high-speed industrial CNC machines which output
+            high-frequency sensor data requiring massive ingestion rates at the
+            data layer.
+          </p>
+          <p className="font-size--large">
+            In this case study, we summarize the experience of DATRON evaluating
+            a database that can handle high-ingestion rates for operational
+            integrity and showcase the improvements they saw.
+          </p>
+
           <h3>Why DATRON migrated from InfluxDB to QuestDB</h3>
           <p className="font-size--large">
             The CNC milling machines that DATRON builds must function reliably
@@ -172,7 +156,7 @@ const DATRON = () => {
 
           <h3>Simplifying the integration</h3>
           <p className="font-size--large">
-            DATRON use the QuestDB Docker image, which is a turnkey,
+            DATRON uses the QuestDB Docker image, which is a turnkey,
             out-of-the-box solution. Using ILP (InfluxDB line protocol), the
             data is inserted and read out via REST API to other software for
             analysis. Inserting and reading the information is possible with
@@ -189,10 +173,10 @@ const DATRON = () => {
 
           <h3>Feedback from a thriving community</h3>
           <p className="font-size--large">
-            The developer and community support means that questions get
-            answered quicker, leading to faster integration and troubleshooting
-            through shorter feedback loops. Using Slack as a communication tool
-            is an additional convenience that bridges the gap between ideas and
+            The developer and community support mean that questions get answered
+            quicker, leading to faster integration and troubleshooting through
+            shorter feedback loops. Using Slack as a communication tool is an
+            additional convenience that bridges the gap between ideas and
             implementation and adds to the agility of the project to deliver a
             feature addition or bug fix.
           </p>
