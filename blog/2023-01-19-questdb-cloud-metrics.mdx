@@ -169,7 +169,7 @@ config:
         data_format: prometheusremotewrite
 ```
 
-#### Output configuration
+### Output configuration
 
 We recommend that you use the
 [InfluxDB Line Protocol](https://questdb.io/docs/develop/insert-data/#influxdb-line-protocol)
@@ -215,7 +215,7 @@ each metric's fieldset. Over ILP, QuestDB
 for new metrics. It also adds new columns for fields that it hasn't seen before,
 and `INSERT`s `null`s for any missing fields.
 
-##### Helm configuration
+### Helm configuration
 
 I've found that the easiest way to configure the `values.yaml` file is to mount
 the starlark script as a volume, and add a reference to it in the config. This
