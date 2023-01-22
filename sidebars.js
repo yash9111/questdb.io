@@ -171,7 +171,8 @@ module.exports = {
             "reference/function/spatial",
             "reference/function/text",
             "reference/function/timestamp-generator",
-            "reference/function/timestamp"
+            "reference/function/timestamp",
+            "reference/function/trigonometric"
           ],
         },
         {

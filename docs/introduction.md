@@ -157,6 +157,7 @@ can be used in QuestDB.
 - [Text](/docs/reference/function/text)
 - [Timestamp generator](/docs/reference/function/timestamp-generator)
 - [Timestamp](/docs/reference/function/timestamp)
+- [Trigonometric](/docs/reference/function/trigonometric)
 
 ### Operators
 
