@@ -211,5 +211,8 @@ Update
 TruncateTable
 ::= 'TRUNCATE TABLE' tableName
 
+Explain
+::= 'EXPLAIN' statement 
+
 analyticFunction
 ::= functionName 'OVER' '(' ( 'PARTITION' 'BY' ( columnName? (',' columnName?)* ))?  ('ORDER' 'BY' ( columnName (ASC | DESC) ? (',' columnName (ASC | DESC) ?)* ))? ')'
