@@ -5,18 +5,39 @@ description: JOIN SQL keyword reference documentation.
 ---
 
 QuestDB supports the following types of joins: `INNER`, `LEFT (OUTER)`, `CROSS`,
-`ASOF` and `SPLICE`. `FULL` joins are not yet implemented and are on our
+`ASOF`, and `SPLICE`. `FULL` joins are not yet implemented and are on our
 roadmap. All supported join types can be combined in a single SQL statement;
 QuestDB SQL's optimizer determines the best execution order and algorithms.
 
-There are no known limitations on size of tables or sub-queries used in joins
-and there are no limitations on number of joins either.
+There are no known limitations on the size of tables or sub-queries used in
+joins and there are no limitations on the number of joins, either.
 
 ## Syntax
 
-![Flow chart showing the syntax of the JOIN keyword](/img/docs/diagrams/join.svg)
+High-level overview:
 
-Columns from joined tables are combined in single row. Columns with the same
+![Flow chart showing the syntax of the high-level syntax of the JOIN keyword](/img/docs/diagrams/joinOverview.svg)
+
+- `selectClause` - see [SELECT](/docs/reference/sql/select/) for more
+  information.
+- `whereClause` - see [WHERE](/docs/reference/sql/where/) for more information.
+- The specific syntax for `joinClause` depends on the type of `JOIN`:
+
+  - `INNER` and `LEFT` `JOIN` allow arbitrary `JOIN` predicates, `operator`, in
+    the mandatory `ON` clause:
+
+  ![Flow chart showing the syntax of the INNER, LEFT JOIN keyword](/img/docs/diagrams/InnerLeftJoin.svg)
+
+  - `ASOF`, `LT`, and `SPLICE` `JOIN` only allow `=` as the `JOIN` predicate in
+    the optional `ON` clause:
+
+  ![Flow chart showing the syntax of the ASOF, LT, and SPLICE JOIN keyword](/img/docs/diagrams/AsofLtSpliceJoin.svg)
+
+  - `CROSS JOIN` does not allow the `ON` clause:
+
+  ![Flow chart showing the syntax of the CROSS JOIN keyword](/img/docs/diagrams/crossJoin.svg)
+
+Columns from joined tables are combined in a single row. Columns with the same
 name originating from different tables will be automatically aliased to create a
 unique column namespace of the resulting set.
 
@@ -26,7 +47,7 @@ transient join conditions where necessary.
 
 :::tip
 
-When tables are joined on column that has the same name in both tables you can
+When tables are joined on a column that has the same name in both tables you can
 use the `ON (column)` shorthand.
 
 :::
@@ -78,9 +99,9 @@ compared column have matching values in both tables. `JOIN` is interpreted as
 `INNER JOIN` by default, making the `INNER` keyword implicit.
 
 The following query will return the `movieId` and the average rating from table
-`ratings`. It will also add a column for the `title` from table `movies`. The
-corresponding title will be identified based on the `movieId` in the `ratings`
-table matching an `id` in the `movies` table.
+`ratings`. It will also add a column for the `title` from the table `movies`.
+The corresponding title will be identified based on the `movieId` in the
+`ratings` table matching an `id` in the `movies` table.
 
 ```questdb-sql title="INNER JOIN ON"
 SELECT movieId a, title, avg(rating)
@@ -116,8 +137,8 @@ LEFT JOIN table2 tab2
 ON tab1.colA = tab2.colB;
 ```
 
-An `OUTER JOIN` query can also be used to select all rows in the left table that
-do not exist in the right table.
+A `LEFT OUTER JOIN` query can also be used to select all rows in the left table
+that do not exist in the right table.
 
 ```questdb-sql
 SELECT tab1.colA, tab2.colB
@@ -156,7 +177,7 @@ return the corresponding record in the other table at the closest timestamp
 :::note
 
 To be able to leverage `ASOF JOIN`, both joined tables must have a
-[designated timestamp](/docs/concept/designated-timestamp/) column. 
+[designated timestamp](/docs/concept/designated-timestamp/) column.
 
 :::
 
