@@ -17,9 +17,9 @@ sure you have created [backups](/docs/reference/sql/backup) of your data.
 
 ![Flow chart showing the syntax of the DROP TABLE keyword](/img/docs/diagrams/dropTable.svg)
 
-### IF EXIST
+### IF EXISTS
 
-An optional `IF NOT EXISTS` clause may be added directly after the `DROP TABLE`
+An optional `IF EXISTS` clause may be added directly after the `DROP TABLE`
 keywords to indicate that the selected table should be dropped if it exists.
 
 ## Example
