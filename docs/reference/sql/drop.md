@@ -15,9 +15,12 @@ sure you have created [backups](/docs/reference/sql/backup) of your data.
 
 ## Syntax
 
-```questdb-sql
-DROP TABLE 'TABLE_NAME';
-```
+![Flow chart showing the syntax of the DROP TABLE keyword](/img/docs/diagrams/dropTable.svg)
+
+### IF EXIST
+
+An optional `IF NOT EXISTS` clause may be added directly after the `DROP TABLE`
+keywords to indicate that the selected table should be dropped if it exists.
 
 ## Example
 
@@ -28,6 +31,6 @@ DROP TABLE ratings;
 :::tip
 
 To delete the data inside a table but keep the table and its structure, use
-[TRUNCATE](/docs/reference/sql/truncate).
+[TRUNCATE](/docs/reference/sql/truncate/).
 
 :::
