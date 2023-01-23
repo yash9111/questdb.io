@@ -21,8 +21,8 @@ const quotes: Quote[] = [
     logo: {
       alt: "Airbus logo",
       src: "/img/pages/customers/cards/airbus.svg",
-      height: 56,
-      width: 140,
+      height: 44,
+      width: 110,
     },
     text:
       "QuestDB is used at Airbus for real-time applications involving hundreds of millions of data points per day. For us, QuestDB is an outstanding solution that meets (and exceeds) our performance requirements.",

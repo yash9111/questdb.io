@@ -38,22 +38,31 @@
   font-size: 16px;
 }
 
-.price {
+.hourlyPrice {
   text-align: center;
   padding: 1rem 0;
 }
 
+.monthlyPrice {
+  text-align: center;
+}
+
 @media screen and (min-width: 1000px) {
-  .price {
-    padding: 2rem 0;
+  .hourlyPrice {
+    padding: 2rem 0 0 0;
   }
 }
 
-
-.priceValue {
+.priceHourlyValue {
   font-size: 36px;
   font-weight: 700;
 }
+
+.priceMonthlyValue {
+  font-size: 18px;
+  font-weight: 700;
+}
+
 .pricePeriod {
   color: var(--color-price-period);
   font-size: 12px;

@@ -7,12 +7,13 @@ import clsx from "clsx"
 import { Dialog } from "../../../components/Dialog"
 import { ContactForm } from "../../cloud/ContactForm"
 import styled from "styled-components"
+import { formatPrice } from "../../../utils"
 
 export type PricingPlan = {
   type: "entry" | "performant" | "high-performance"
   title: string
   description: string
-  price: string
+  price: number
   specs: Array<{ label: string; value: string }>
   subtext: string
   highlighted?: boolean
@@ -34,9 +35,16 @@ export const Plan = (plan: PricingPlan) => (
       <span className={style.description}>{plan.description}</span>
     </header>
 
-    <div className={style.price}>
-      <span className={style.priceValue}>${plan.price}</span>
+    <div className={style.hourlyPrice}>
+      <span className={style.priceHourlyValue}>${plan.price.toFixed(3)}</span>
       <span className={style.pricePeriod}>per hour</span>
+    </div>
+
+    <div className={style.monthlyPrice}>
+      <span className={style.priceMonthlyValue}>
+        ${formatPrice(((plan.price * 730).toFixed(0) as unknown) as number)}
+      </span>
+      <span className={style.pricePeriod}>per month (est)</span>
     </div>
 
     <div className={style.specs}>

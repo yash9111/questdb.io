@@ -6,6 +6,8 @@ import { Section } from "../components/Section"
 import { Plans } from "../modules/pricing/plans"
 import { OtherUseCases } from "../modules/pricing/other-use-cases"
 import { PricingChoices } from "../modules/pricing/pricing-choices"
+import { HighPerformer } from "../modules/pricing/high-performer"
+import { Quotes } from "../modules/pricing/quotes"
 
 const CloudPage = () => (
   <Layout
@@ -27,6 +29,14 @@ const CloudPage = () => (
 
     <Section center noGap>
       <Plans />
+    </Section>
+
+    <Section center>
+      <Quotes />
+    </Section>
+
+    <Section center odd fullWidth>
+      <HighPerformer />
     </Section>
 
     <Section center>

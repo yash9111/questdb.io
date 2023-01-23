@@ -5,7 +5,7 @@ export const plans: PricingPlan[] = [
     type: "entry",
     title: "Entry Level",
     description: "Perfect to get started quickly",
-    price: "0.366",
+    price: 0.3458,
     specs: [
       { label: "CPU", value: "2 Cores" },
       { label: "RAM", value: "8 GB" },
@@ -16,7 +16,7 @@ export const plans: PricingPlan[] = [
     type: "performant",
     title: "Performant",
     description: "Offers better performance for demanding applications",
-    price: "0.686",
+    price: 0.6915,
     specs: [
       { label: "CPU", value: "4 Cores" },
       { label: "RAM", value: "16 GB" },
@@ -28,7 +28,7 @@ export const plans: PricingPlan[] = [
     type: "high-performance",
     title: "High Performance",
     description: "Handle heavy duty writes and reads",
-    price: "1.893",
+    price: 2.0269,
     specs: [
       { label: "CPU", value: "16 Cores" },
       { label: "RAM", value: "64 GB" },

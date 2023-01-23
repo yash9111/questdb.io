@@ -3,6 +3,7 @@ import style from "./styles.module.css"
 
 import type { Region } from "./specs"
 import clsx from "clsx"
+import { formatPrice } from "../../../utils"
 
 type Props = {
   className?: string
@@ -34,7 +35,9 @@ export const PricingTable = ({ className, region }: Props) => (
           </td>
           <td>
             ${spec.price}
-            <span className={style.dimmed}>/hr</span>
+            <span className={style.dimmed}>/hr (</span>$
+            {formatPrice(((spec.price * 730).toFixed(0) as unknown) as number)}
+            <span className={style.dimmed}>/mo est)</span>
           </td>
         </tr>
       ))}
