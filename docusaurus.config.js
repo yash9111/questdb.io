@@ -4,7 +4,7 @@ const customFields = require("./src/config/customFields")
 const markdownPlugins = require("./plugins/markdown-plugins")
 
 const config = {
-  title: "QuestDB: the database for time series",
+  title: "QuestDB",
   tagline: "QuestDB is the fastest open source time series database",
   url: `https://${consts.domain}`,
   baseUrl: "/",
