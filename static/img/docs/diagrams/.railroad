@@ -18,6 +18,9 @@ createTableLike
 alterTable 
   ::= 'ALTER' 'TABLE' tableName
 
+dropTable
+  ::= 'DROP' 'TABLE' tableName ('IF' 'EXISTS')? ';'
+
 castDef
   ::= 'cast' '(' columnRef 'as' typeDef ')'
 
