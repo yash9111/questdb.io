@@ -21,11 +21,15 @@ import prediko from "../../../static/img/pages/customers/logos/prediko.svg"
 import electric_era from "../../../static/img/pages/customers/logos/electric-era.svg"
 import datron from "../../../static/img/pages/customers/cards/datron.svg"
 import netapp from "../../../static/img/logos/netapp.svg"
+import okx from "../../../static/img/pages/customers/logos/okx.svg"
 
 const svgs = [
   {
     ...logosManifest["aquis-exchange"],
     svg: aquis,
+    width: 110,
+    height: 34,
+    offset: 8,
   },
 
   {
@@ -35,8 +39,13 @@ const svgs = [
   },
 
   {
-    ...logosManifest.liveaction,
-    svg: liveaction,
+    ...logosManifest.okx,
+    svg: okx,
+  },
+
+  {
+    ...logosManifest["copenhagen-atomics"],
+    svg: ca,
   },
 
   {
@@ -66,8 +75,8 @@ const svgs = [
   },
 
   {
-    ...logosManifest["copenhagen-atomics"],
-    svg: ca,
+    ...logosManifest.liveaction,
+    svg: liveaction,
   },
 
   {
@@ -113,13 +122,14 @@ const svgs = [
 
 export const Logos = ({ isDarkTheme }) => (
   <>
-    {svgs.map(({ svg, width, height, alt }, i) => (
+    {svgs.map(({ svg, width, height, alt, offset }, i) => (
       <div
         key={i}
         className={clsx(styles.logo, { [styles.logoDark]: isDarkTheme })}
+        style={{ ...(offset !== undefined ? { marginTop: offset } : {}) }}
       >
         <SvgImage
-          title={`${alt} logo`}
+          title={alt}
           key={i}
           image={React.createElement(svg, {
             alt,

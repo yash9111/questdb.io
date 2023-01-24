@@ -225,13 +225,12 @@ const marketDataCustomers: Customer[] = [
     logoWidth: 120,
   },
   {
-    key: "invezo",
-    logoWidth: 110,
-    logoHeight: 50,
+    key: "coinbase",
+    logoWidth: 120,
   },
   {
-    key: "toggle",
-    logoWidth: 100,
+    key: "okx",
+    logoWidth: 60,
   },
 ]
 
@@ -293,27 +292,12 @@ const industrialTelemetryCustomers: Customer[] = [
     logoWidth: 120,
   },
   {
-    key: "samtec",
+    key: "turk-telekom",
     logoWidth: 120,
   },
   {
     key: "copenhagen-atomics",
     logoWidth: 120,
-  },
-  {
-    key: "electric-era",
-    logoWidth: 120,
-  },
-  {
-    key: "turk-telekom",
-    logoWidth: 120,
-  },
-  {
-    key: "datron",
-    logoWidth: 90,
-  },
-  {
-    key: "razor-secure",
   },
 ]
 

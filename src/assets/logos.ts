@@ -213,4 +213,16 @@ export const logos: Record<string, CustomerLogo> = {
     width: 144,
     height: 56,
   },
+  coinbase: {
+    src: "/img/pages/customers/logos/coinbase.svg",
+    alt: "Coinbase logo",
+    width: 144,
+    height: 26,
+  },
+  okx: {
+    src: "/img/pages/customers/logos/okx.svg",
+    alt: "OKX logo",
+    width: 80,
+    height: 24,
+  }
 }
