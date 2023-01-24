@@ -29,6 +29,10 @@
   background-image: url("/img/pages/pricing/star.svg?inline");
 }
 
+html[data-theme='light'] .star {
+  filter: invert(1);
+}
+
 @media screen and (min-width: 1000px) {
   .root {
     width: 610px;
