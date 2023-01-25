@@ -52,7 +52,7 @@ metrics, it just requires a little more work on the initial setup than the
 Kubernetes tooling du jour. Despite this extra upfront time investment (which is
 fairly minimal in the grand scheme of things), I think that the benefits of
 using QuestDB for infrastructure metrics are worth it. With QuestDB, you get
-[industry-leading performance](https://questdb.io/blog/2021/06/16/high-cardinality-time-series-data-performance)
+[industry-leading performance](https://questdb.io/blog/2021/06/16/high-cardinality-time-series-data-performance/)
 and the ability to interact with the database in the most commonly-used query
 language in existence. We're even using QuestDB to display customer database
 metrics in our own [QuestDB Cloud](https://questdb.io/cloud/)!
@@ -211,7 +211,7 @@ This is what telegraf's output config looks like:
 
 As an added benefit to using ILP with QuestDB, we don't even have to worry about
 each metric's fieldset. Over ILP, QuestDB
-[automatically creates tables](https://questdb.io/docs/reference/api/ilp/overview#behavior)
+[automatically creates tables](https://questdb.io/docs/reference/api/ilp/overview/#behavior)
 for new metrics. It also adds new columns for fields that it hasn't seen before,
 and `INSERT`s `null`s for any missing fields.
 
