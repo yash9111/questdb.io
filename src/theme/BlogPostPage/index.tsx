@@ -7,11 +7,24 @@ import BlogSidebar from "@theme/BlogSidebar"
 import Layout from "@theme/Layout"
 import { Section } from "../../components/Section"
 import { ActionFooter } from "../../components/ActionFooter"
+import { ensureTrailingSlash } from "../../utils"
 
 function BlogPostPage(props: Props): JSX.Element {
   const { content: BlogPostContents, sidebar } = props
   const { frontMatter, metadata } = BlogPostContents
   const { title, description, nextItem, prevItem } = metadata
+
+  if (prevItem != null) {
+    ;((prevItem.permalink as any) as string) = ensureTrailingSlash(
+      prevItem.permalink,
+    )
+  }
+
+  if (nextItem != null) {
+    ;((nextItem.permalink as any) as string) = ensureTrailingSlash(
+      nextItem.permalink,
+    )
+  }
 
   return (
     <Layout
@@ -39,7 +52,15 @@ function BlogPostPage(props: Props): JSX.Element {
           </main>
 
           <aside className="col col--3">
-            <BlogSidebar sidebar={sidebar} />
+            <BlogSidebar
+              sidebar={{
+                ...sidebar,
+                items: sidebar.items.map((item) => {
+                  item.permalink = ensureTrailingSlash(item.permalink)
+                  return item
+                }),
+              }}
+            />
           </aside>
         </div>
       </div>

@@ -15,6 +15,7 @@ import IconMenu from "@theme/IconMenu"
 import { translate } from "@docusaurus/Translate"
 
 import styles from "./styles.module.css"
+import { ensureTrailingSlash } from "../../utils/ensureTrailingSlash"
 
 const MOBILE_TOGGLE_SIZE = 24
 
@@ -164,9 +165,6 @@ function DocSidebarItemCategory({
     </li>
   )
 }
-
-const ensureTrailingSlash = (url: string) =>
-  isInternalUrl(url) && !url.endsWith("/") ? `${url}/` : url
 
 function DocSidebarItemLink({
   item,

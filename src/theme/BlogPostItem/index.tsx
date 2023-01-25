@@ -10,6 +10,7 @@ import React from "react"
 import EditThisPage from "@theme/EditThisPage"
 import styles from "./styles.module.css"
 import customFields from "../../config/customFields"
+import { ensureTrailingSlash } from "../../utils"
 
 function useReadingTimePlural() {
   const { selectMessage } = usePluralForm()
@@ -123,7 +124,10 @@ function BlogPostItem(props: Props): JSX.Element {
                 <ul className={styles.tagsList}>
                   {tags.map(({ label, permalink: tagPermalink }) => (
                     <li key={tagPermalink}>
-                      <Link key={tagPermalink} to={tagPermalink}>
+                      <Link
+                        key={tagPermalink}
+                        to={ensureTrailingSlash(tagPermalink)}
+                      >
                         {label}
                       </Link>
                     </li>

@@ -4,6 +4,7 @@ import { Chip } from "../Chip"
 import styles from "./styles.module.css"
 import type { FrontMatter } from "../"
 import Link from "@docusaurus/Link"
+import { ensureTrailingSlash } from "../../../utils"
 
 type Props = {
   content: Omit<BlogPostItemProps, "children">
@@ -30,7 +31,7 @@ export const ListItem = ({ forcedTag, content, belowFold }: Props) => {
   const isExternal = Boolean(frontMatter.permalink)
   const postUrl = isExternal
     ? frontMatter.permalink
-    : content.metadata.permalink
+    : ensureTrailingSlash(content.metadata.permalink)
   const imageUrl = content.frontMatter.image ?? "/img/tutorial/placeholder.png"
   const author =
     typeof content.frontMatter.author_url !== "undefined" ? (

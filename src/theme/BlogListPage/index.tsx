@@ -17,6 +17,7 @@ import type { Props as ChipProps } from "./Chips"
 import Subscribe from "../../components/Subscribe"
 import ActionCard from "../../components/ActionCard"
 import SubscribeIcon from "../../components/ActionFooter/subscribeIcon.svg"
+import { ensureTrailingSlash } from "../../utils"
 
 export type FrontMatter = OriginalFrontMatter & { permalink?: string }
 
@@ -98,9 +99,10 @@ function BlogListPage(props: Props): JSX.Element {
               frontMatter={latestPost.content.frontMatter}
               metadata={{
                 ...latestPost.content.metadata,
-                permalink:
+                permalink: ensureTrailingSlash(
                   (latestPost.content.frontMatter as FrontMatter).permalink ??
-                  latestPost.content.metadata.permalink,
+                    latestPost.content.metadata.permalink,
+                ),
                 tags: [],
               }}
               truncated={latestPost.content.metadata.truncated}
@@ -138,7 +140,7 @@ function BlogListPage(props: Props): JSX.Element {
                 isTagsPage
                   ? {
                       label: ((metadata as unknown) as Tag).name,
-                      permalink: metadata.permalink,
+                      permalink: ensureTrailingSlash(metadata.permalink),
                     }
                   : undefined
               }
