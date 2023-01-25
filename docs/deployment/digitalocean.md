@@ -2,9 +2,7 @@
 title: Launch QuestDB on DigitalOcean
 sidebar_label: DigitalOcean Droplet
 description:
-  This document describes how to launch the official AWS Marketplace AMI with
-  QuestDB installed and how to access and secure the instance on Amazon Web
-  Services
+  This document describes how to launch DigitalOcean droplet with QuestDB
 ---
 
 DigitalOcean is a platform with software listings from independent vendors that
