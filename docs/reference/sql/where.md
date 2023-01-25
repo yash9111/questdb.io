@@ -165,6 +165,8 @@ SELECT * FROM users WHERE age = 23;
 SELECT * FROM users WHERE age != 23;
 ```
 
+<!-- 
+QuestDB does not support `eq()`. This section is therefore commented out and can be uncommented when we add the functionality.
 ### Proximity
 
 Evaluates whether the column value is within a range of the target value. This
@@ -183,6 +185,7 @@ constants, it may be preferable to store double values as long integers with a
 scaling factor.
 
 :::
+-->
 
 ## Boolean
 
