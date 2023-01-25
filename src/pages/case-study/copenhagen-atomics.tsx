@@ -77,7 +77,7 @@ const CopenhagenAtomics = () => {
 
   return (
     <Layout
-      canonical="/case-study/copenhagen-atomics/"
+      canonical="/case-study/copenhagen-atomics"
       description={description}
       title={title}
       image="/img/pages/case-study/copenhagen-atomics/banner.png"

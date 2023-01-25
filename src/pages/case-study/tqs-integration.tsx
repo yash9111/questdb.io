@@ -18,7 +18,7 @@ const Tqs = () => {
 
   return (
     <Layout
-      canonical="/case-study/tqs-integration/"
+      canonical="/case-study/tqs-integration"
       description={description}
       title={title}
     >

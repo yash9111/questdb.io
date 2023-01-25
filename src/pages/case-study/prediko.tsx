@@ -88,7 +88,7 @@ const Prediko = () => {
     "Prediko uses QuestDB to provide fast analytics and forecasts to their e-commerce customers."
   return (
     <Layout
-      canonical="/case-study/prediko/"
+      canonical="/case-study/prediko"
       description={description}
       title={title}
       image="/img/pages/case-study/prediko/banner.png"

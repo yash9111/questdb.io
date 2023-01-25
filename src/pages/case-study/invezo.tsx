@@ -75,7 +75,7 @@ const Invezo = () => {
 
   return (
     <Layout
-      canonical="/case-study/invezo/"
+      canonical="/case-study/invezo"
       description={description}
       title={title}
       image="/img/pages/case-study/invezo/banner.png"

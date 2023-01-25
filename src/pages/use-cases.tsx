@@ -354,8 +354,11 @@ const IndustrialTelemetry = () => (
 )
 
 const title = "Use Cases"
+const description =
+  "QuestDB offers high throughput ingestion and real-time SQL queries for applications in a wide range of use cases and industries"
+
 const UseCasesPage = () => (
-  <Layout canonical="/careers" description={title} title={title}>
+  <Layout canonical="/use-cases" description={description} title={title}>
     <Heading />
     <UseCaseHighlights />
     <Monitoring />
