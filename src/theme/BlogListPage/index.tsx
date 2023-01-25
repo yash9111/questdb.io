@@ -75,14 +75,19 @@ function BlogListPage(props: Props): JSX.Element {
   const isBlogOnlyMode = permalink === "/"
   const isTagsPage =
     typeof ((metadata as unknown) as Tag).allTagsPath !== "undefined"
-  const title = isBlogOnlyMode ? siteTitle : blogTitle
+
+  const titles: Array<[boolean, string]> = [
+    [isBlogOnlyMode, siteTitle],
+    [isTagsPage, `Posts tagged with "${((metadata as unknown) as Tag).name}"`],
+    [true, blogTitle],
+  ]
 
   const posts = [...items]
   const latestPost = metadata.page === 1 ? posts.shift() : undefined
 
   return (
     <Layout
-      title={title}
+      title={titles.find(([when]) => Boolean(when))?.[1] ?? ""}
       description={blogDescription}
       wrapperClassName={ThemeClassNames.wrapper.blogPages}
       pageClassName={ThemeClassNames.page.blogListPage}
