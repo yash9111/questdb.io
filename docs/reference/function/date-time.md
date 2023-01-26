@@ -22,6 +22,14 @@ Checking if tables contain a designated timestamp column can be done via the
 discontinuous jumps in the system time (e.g., if the system administrator
 manually changes the system time).
 
+:::warning
+
+`systimestamp()` value can change within the query execution timeframe and 
+should not be used in WHERE clause to filter designated timestamp column.
+Please use `now()` instead .  
+
+:::
+
 **Arguments:**
 
 - `systimestamp()` does not accept arguments.
@@ -49,6 +57,14 @@ VALUES(systimestamp(), 123.5);
 Calculates `UTC date` with millisecond precision using system's real time clock.
 The value is affected by discontinuous jumps in the system time (e.g., if the
 system administrator manually changes the system time).
+
+:::warning
+
+`sysdate()` value can change within the query execution timeframe and
+should not be used in WHERE clause to filter designated timestamp column.
+Please use `now()` instead .
+
+:::
 
 **Arguments:**
 
@@ -79,7 +95,7 @@ WHERE date_time > sysdate() - 60000000L;
 `now()` - offset from UTC Epoch in microseconds.
 
 Calculates `UTC timestamp` using system's real time clock. Unlike
-`sysdatetime()`, it does not change within the query execution timeframe and
+`systimestamp()`, it does not change within the query execution timeframe and
 should be used in WHERE clause to filter designated timestamp column relative to
 current time, i.e.:
 

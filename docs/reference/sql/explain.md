@@ -22,7 +22,7 @@ child nodes).
 In a plan such as:
 
 | QUERY PLAN                                                                 |
-|----------------------------------------------------------------------------|
+| -------------------------------------------------------------------------- |
 | Async JIT Filter                                                           |
 | &nbsp;&nbsp;filter: 100<l                                                  |
 | &nbsp;&nbsp;workers: 1                                                     |
@@ -54,15 +54,16 @@ The following list contains some plan node types:
 - `Interval forward` - scans one or more table data ranges based on the
   designated timestamp predicates. Scan endpoints are found via a binary search
   on timestamp column.
-- `CachedAnalytic` - container for window functions, e.g. [row_number()](/docs/reference/function/analytic/#row_number) 
+- `CachedAnalytic` - container for window functions, e.g.
+  [row_number()](/docs/reference/function/analytic/#row_number)
 - `Count` - returns the count of records in subnode.
-- `Cursor-order scan` - scans table records using row ids taken from an index, in
-  index order - first all row ids linked to index value A, then B, etc.
+- `Cursor-order scan` - scans table records using row ids taken from an index,
+  in index order - first all row ids linked to index value A, then B, etc.
 - `DataFrame` - full or partial table scan. It contains two children:
   - row cursor - which iterates over rows inside a frame (e.g.
     `Row forward scan`).
-  - frame cursor - which iterates over table partitions or partition chunks (e.g.
-    `Frame forward scan`).
+  - frame cursor - which iterates over table partitions or partition chunks
+    (e.g. `Frame forward scan`).
 - `Filter` - standalone (non-JIT-compiled, non-parallelized) filter.
 - `Frame forward/backward scan` - scans table partitions in a specified
   direction.
@@ -92,8 +93,8 @@ Other node types should be easy to link to SQL and database concepts, e.g.
 
 Many nodes, especially join and sort, have 'light' and 'heavy' variants, e.g.
 `Hash Join Light` and `Hash Join`. The former is used when child node(s) support
-efficient random access lookups (e.g. `DataFrame`) so storing row id in the buffer
-is enough; otherwise, the whole record needs to be copied and the 'heavy'
+efficient random access lookups (e.g. `DataFrame`) so storing row id in the
+buffer is enough; otherwise, the whole record needs to be copied and the 'heavy'
 factory is used.
 
 ## Examples
@@ -120,7 +121,7 @@ EXPLAIN SELECT * FROM trades ORDER BY ts DESC;
 ```
 
 | QUERY PLAN                                             |
-|--------------------------------------------------------|
+| ------------------------------------------------------ |
 | DataFrame                                              |
 | &nbsp;&nbsp;&nbsp;&nbsp;Row backward scan              |
 | &nbsp;&nbsp;&nbsp;&nbsp;Frame backward scan on: trades |
@@ -137,7 +138,7 @@ EXPLAIN SELECT * FROM trades WHERE amount > 100.0;
 ```
 
 | QUERY PLAN                                                                    |
-|-------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------- |
 | Async JIT Filter                                                              |
 | &nbsp;&nbsp;filter: 100.0<amount                                              |
 | &nbsp;&nbsp;workers: 1                                                        |
@@ -146,8 +147,8 @@ EXPLAIN SELECT * FROM trades WHERE amount > 100.0;
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: trades |
 
 In this example, the plan shows that the `trades` table undergoes a full scan
-(`DataFrame` and subnodes) and the data is processed by the parallelized JIT-compiled
-filter.
+(`DataFrame` and subnodes) and the data is processed by the parallelized
+JIT-compiled filter.
 
 ### Using `EXPLAIN` for the plan for `CREATE` and `INSERT`
 
@@ -156,26 +157,26 @@ Single-row inserts are straightforward. The examples in this section show the
 plan for more complicated `CREATE` and `INSERT` queries.
 
 ```questdb-sql
-EXPLAIN CREATE TABLE trades AS 
+EXPLAIN CREATE TABLE trades AS
 (
   SELECT
     rnd_symbol('a', 'b') symbol,
     rnd_symbol('Buy', 'Sell') side,
     rnd_double() price,
     rnd_double() amount,
-    x::timestamp timestamp 
+    x::timestamp timestamp
   FROM long_sequence(10)
 ) TIMESTAMP(timestamp) PARTITION BY DAY;
 ```
 
 | QUERY PLAN                                                                                                                       |
-|----------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------------------------------------------------------------------------------------------------------------- |
 | Create table: trades                                                                                                             |
 | &nbsp;&nbsp;&nbsp;&nbsp;VirtualRecord                                                                                            |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;functions: [rnd_symbol([a,b]),rnd_symbol([Buy,Sell]),rnd_double(),rnd_double(),x::timestamp] |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long_sequence count: 10                                                          |
 
-The plan above shows that the data is fetched from a `long_sequence` cursor, 
+The plan above shows that the data is fetched from a `long_sequence` cursor,
 with random data generating functions called in `VirtualRecord`.
 
 The same applies to the following query:
@@ -187,12 +188,12 @@ EXPLAIN INSERT INTO trades
     rnd_symbol('Buy', 'Sell') side,
     rnd_double() price,
     rnd_double() amount,
-    x::timestamp timestamp 
+    x::timestamp timestamp
   FROM long_sequence(10);
 ```
 
 | QUERY PLAN                                                                                                                       |
-|----------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------------------------------------------------------------------------------------------------------------- |
 | Insert into table: trades                                                                                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;VirtualRecord                                                                                            |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;functions: [rnd_symbol([a,b]),rnd_symbol([Buy,Sell]),rnd_double(),rnd_double(),x::timestamp] |
@@ -206,7 +207,7 @@ EXPLAIN UPDATE trades SET amount = 0 WHERE timestamp IN '2022-11-11';
 ```
 
 | QUERY PLAN                                                                                                                                 |
-|--------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Update table: trades                                                                                                                       |
 | &nbsp;&nbsp;&nbsp;&nbsp;VirtualRecord                                                                                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;functions: [0]                                                                                         |
@@ -255,3 +256,9 @@ Other classes can be identified by searching for the node name in the `toPlan()`
 methods.
 
 :::
+
+## See also
+
+This section includes links to additional information such as tutorials:
+
+- [SQL Performance Tuning: Introducing EXPLAIN](/blog/sql-performance-tuning-introducing-explain/)
