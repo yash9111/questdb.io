@@ -238,7 +238,7 @@ The first query doesn't use it due to column and argument type mismatch.
 In both cases, the `trades` table is fully scanned, which is reflected by
 `DataFrame` and the child nodes.
 
-:::warning
+:::note
 
 The QuestDB Web Console limits the number of output rows to 1k, so it is not the
 best way to measure the performance of queries that return data sets bigger than
