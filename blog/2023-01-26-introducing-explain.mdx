@@ -36,7 +36,7 @@ import Banner from "@theme/Banner"
   src="/img/blog/2023-01-26/banner.jpg"
   width={650}
 >
-  Photo by <a href="https://unsplash.com/@braydona">Braydon Anderson</a> via on{" "}
+  Photo by <a href="https://unsplash.com/@braydona">Braydon Anderson</a> via{" "}
   <a href="https://unsplash.com">Unsplash</a>
 </Banner>
 
@@ -268,10 +268,8 @@ What if we need to count the number of records with a given `id` prefix?
 SELECT count(*)
 FROM pos
 WHERE substring(id,1,21) = 'NSTTQFPKISYEGDLPJFEKP'
-678
 ```
-
-Response time - 1.2s.
+The result is `678` and it takes about 1.2s.
 
 A bit slow for just a few hundred records.
 
