@@ -17,8 +17,8 @@ slug: three-sql-keywords-for-finding-missing-data
 
 Identifying gaps in a dataset is one of the most important ways to ensure the
 quality of the data. Our guest contributor,
-[Kovid Rathee](https://kovidrathee.medium.com/), highlights three SQL keywords for
-monitoring and ensuring data completeness using QuestDB.
+[Kovid Rathee](https://kovidrathee.medium.com/), highlights three SQL keywords
+for monitoring and ensuring data completeness using QuestDB.
 
 <!--truncate-->
 
@@ -38,28 +38,33 @@ activities and reports based on existing data sets, one of the first things you
 need to consider is the quality of the data you're dealing with. Continuity is
 one of the most critical factors in gauging the quality of time-series data.
 Time-series systems usually serve use cases where data needs to be consumed,
-processed, and acted upon with urgency. Take the example of a public transport
-vehicle. For the safety of passengers and the timeliness
-of the service, vehicles need their various sensors - GPS, proximity sensors,
-pressure sensors, engine diagnostics sensors, and so on. Continuously using the
-data from these sensors helps the public transport service guarantee timeliness,
-safety, and reliability. However, a break in the data coming from these sensors
-would mean that there’s a problem. Most data access frameworks, including query
-languages and importable libraries, allow you to filter and see columns or rows
-where data is missing. The concept of data continuity and completeness isn't
-more relevant anywhere than when you're talking about time-series data. By
-definition, time-series data needs to be continuous. However, the granularity of
-the continuum might differ for different requirements. When you have to test
-your data for completeness in a relational database, you often have to write
-complex SQL queries paired with intermediate or temporary tables to find missing
-data. In some cases, these queries can be tedious and non-performant. QuestDB is
-a time-series database that lets you store and consume your data in tabular
-form, but it's not what you would call a traditional relational database. To
-cater to the time-series workloads, QuestDB extends the standard SQL
-functionalities using SQL extensions. One of these extensions is the
-[`SAMPLE BY`](/docs/reference/sql/sample-by/) extension, which allows you to
-find and deal with missing data with ease. This tutorial will take you through
-how to use
+processed, and acted upon with urgency.
+
+Take the example of a public transport vehicle. For the safety of passengers and
+the timeliness of the service, vehicles need their various sensors - GPS,
+proximity sensors, pressure sensors, engine diagnostics sensors, and so on.
+Continuously using the data from these sensors helps the public transport
+service guarantee timeliness, safety, and reliability. However, a break in the
+data coming from these sensors would mean that there’s a problem.
+
+Most data access frameworks, including query languages and importable libraries,
+allow you to filter and see columns or rows where data is missing. The concept
+of data continuity and completeness isn't more relevant anywhere than when
+you're talking about time-series data. By definition, time-series data needs to
+be continuous. However, the granularity of the continuum might differ for
+different requirements.
+
+When you have to test your data for completeness in a relational database, you
+often have to write complex SQL queries paired with intermediate or temporary
+tables to find missing data. In some cases, these queries can be tedious and
+non-performant. QuestDB is a time-series database that lets you store and
+consume your data in tabular form, but it's not what you would call a
+traditional relational database. To cater to the time-series workloads, QuestDB
+extends the standard SQL functionalities using SQL extensions. One of these
+extensions is the [`SAMPLE BY`](/docs/reference/sql/sample-by/) extension, which
+allows you to find and deal with missing data with ease.
+
+This tutorial will take you through how to use
 [QuestDB's SQL extensions](/blog/2022/11/23/sql-extensions-time-series-data-questdb-part-ii/)
 to find gaps in your data without any complex queries or overhead.
 
