@@ -60,6 +60,7 @@ const optimiseWithImagemin = async (file) => {
           { cleanupIDs: false },
           { removeUnknownsAndDefaults: false },
           { convertShapeToPath: false },
+          { inlineStyles: false },
         ],
       }),
     ],
