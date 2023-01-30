@@ -128,15 +128,18 @@ const UseCaseHighlights = () => (
 
 const monitoringCustomers: Customer[] = [
   {
+    key: "liveaction",
+    quote:
+      "QuestDB is used by LiveAction as a time series database for storing flow and encrypted traffic metadata analyzed by their real-time threat detection engine.",
+    caseStudyLink: "/case-study/liveaction/",
+    logoWidth: 120,
+  },
+  {
     key: "yahoo",
     quote:
       "See how Yahoo uses QuestDB to monitor and autoscale cloud clusters that serve a billion users",
-    caseStudyLink: "/case-study/yahoo",
+    caseStudyLink: "/case-study/yahoo/",
     logoWidth: 100,
-  },
-  {
-    key: "liveaction",
-    logoWidth: 120,
   },
   {
     key: "syndica",
@@ -281,10 +284,17 @@ const MarketData = () => (
 
 const industrialTelemetryCustomers: Customer[] = [
   {
+    key: "copenhagen-atomics",
+    quote:
+      "Copenhagen Atomics, manufacturer of next generation molten salt reactors, uses QuestDB to monitor their thorium reactors in real time.",
+    caseStudyLink: "/case-study/copenhagen-atomics/",
+    logoWidth: 120,
+  },
+  {
     key: "tqs-integration",
     quote:
       "See how TQS, a Cognizant company, uses QuestDB to store manufacturing plants metrics for real-time data visualization and anomaly detection",
-    caseStudyLink: "/case-study/tqs-integration",
+    caseStudyLink: "/case-study/tqs-integration/",
     logoWidth: 120,
   },
   {
@@ -293,10 +303,6 @@ const industrialTelemetryCustomers: Customer[] = [
   },
   {
     key: "turk-telekom",
-    logoWidth: 120,
-  },
-  {
-    key: "copenhagen-atomics",
     logoWidth: 120,
   },
 ]
