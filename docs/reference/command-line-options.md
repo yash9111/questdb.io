@@ -161,9 +161,16 @@ $HOME/.questdb
 
 <TabItem value="macos">
 
+Path on Macs with Apple Silicon (M1 or M2) chip:
 
 ```shell
 /opt/homebrew/var/questdb
+```
+
+Path on Macs with Intel chip:
+
+```shell
+/usr/local/var/questdb
 ```
 
 </TabItem>
