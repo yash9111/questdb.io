@@ -18,7 +18,7 @@ const Toggle = () => {
 
   return (
     <Layout
-      canonical="/case-study/toggl"
+      canonical="/case-study/toggle"
       description={description}
       title={title}
     >

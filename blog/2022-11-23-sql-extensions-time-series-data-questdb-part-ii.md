@@ -73,7 +73,7 @@ Alternatively, you can use
 [the import functionality in the QuestDB console](/docs/develop/web-console#import),
 as shown in the image below:
 
-![](/img/blog/2022-11-23/EWniDQq.png)
+![Screenshot of QuestDB Web Console import tab](/img/blog/2022-11-23/EWniDQq.png)
 
 ### Create an ordered timestamp column
 
@@ -83,7 +83,7 @@ further analysis. Therefore, you'll have to elect the `pickup_datetime` column
 as the designated timestamp in a new table called `taxi_trips` with the script
 below:
 
-```sql
+```questdb-sql
 CREATE TABLE taxi_trips AS (
   SELECT *
     FROM 'taxi_trips_feb_2018.csv'
@@ -99,7 +99,7 @@ designated timestamp column, QuestDB is able to index the table to run
 time-based queries more efficiently. If it all goes well, you should see the
 following data after running a `SELECT *` query on the `taxi_trips` table:
 
-![](/img/blog/2022-11-23/QwI0YVe.png)
+![Screenshot of QuestDB Web Console with query results](/img/blog/2022-11-23/QwI0YVe.png)
 
 ## Understanding the basics of `SAMPLE BY`
 
@@ -122,7 +122,7 @@ You can use the `SAMPLE BY` keyword with the
 hour-by-hour count of trips for the whole duration of the data set. Running the
 following query, you'll get results in the console:
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips
@@ -136,7 +136,7 @@ line, bar, or an area chart to
 [visualize your data](/docs/develop/web-console#visualizing-results). Here's an
 example of a bar chart drawn from the above query:
 
-![](/img/blog/2022-11-23/JHBiCI3.png)
+![Screenshot of QuestDB Web Console with a chart](/img/blog/2022-11-23/JHBiCI3.png)
 
 ### Three-hourly holistic summary of trips
 
@@ -144,7 +144,7 @@ The `SAMPLE BY` extension allows you to group data by any arbitrary number of
 sample units. In the following example, you'll see that the query is calculating
 a three-hourly summary of trips with multiple aggregate functions:
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips,
@@ -160,7 +160,7 @@ FROM
 You can view the output of the query in the following grid on the QuestDB
 console:
 
-![](/img/blog/2022-11-23/NG2sDIV.png)
+![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/NG2sDIV.png)
 
 ### Weekly summary of trips
 
@@ -169,7 +169,7 @@ a year, you can derive them simply by utilizing the built-in sample units. If
 you want to sample the data by a week, use `7d` as the sampling time, as shown
 in the query below:
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips,
@@ -184,7 +184,7 @@ WHERE
   pickup_datetime BETWEEN '2018-02-01' AND '2018-02-28' SAMPLE BY 7d;
 ```
 
-![](/img/blog/2022-11-23/f5lVlQL.png)
+![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/f5lVlQL.png)
 
 ## Dealing with missing data
 
@@ -202,7 +202,7 @@ conjunction with the `SAMPLE BY` extension, can generate a row for the hour
 starting at 4 am and fill it with data generated from linear interpolation of
 the 2 surrounding points:
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips,
@@ -217,9 +217,9 @@ WHERE
   pickup_datetime NOT BETWEEN '2018-02-01T04:00:00' AND '2018-02-01T04:59:59' SAMPLE BY 1h FILL(LINEAR);
 ```
 
-![](/img/blog/2022-11-23/8hD7Lmw.png)
+![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/8hD7Lmw.png)
 
-The [`FILL`](/docs/reference/sql/sample-by#fill-options) keyword demands a
+The [`FILL`](/docs/reference/sql/sample-by/#fill-options) keyword demands a
 `fillOption` from the following:
 
 | `fillOption` | Usage scenario                                                                                                         | Notes                                                                                 |
@@ -232,13 +232,13 @@ The [`FILL`](/docs/reference/sql/sample-by#fill-options) keyword demands a
 
 Here's another example of hardcoding values using the FILL(x) `fillOption`:
 
-![](/img/blog/2022-11-23/gN0LO6g.png)
+![Screenshot of QuestDB Web Console with results of example with FILL(x)](/img/blog/2022-11-23/gN0LO6g.png)
 
 In the example above, we've used an inline `WHERE` clause to emulate missing
 data with the help of the `NOT BETWEEN` keyword. Alternatively, you can create a
 separate table with missing trips using the same idea, as shown below:
 
-```sql
+```questdb-sql
 CREATE TABLE 'taxi_trips_missing' AS (
   SELECT *
   FROM 'taxi_trips'
@@ -256,7 +256,7 @@ geographic areas. It is important to note that, by default, QuestDB aligns its
 [sample calculation](/docs/reference/sql/sample-by#sample-calculation) based on
 the `FIRST OBSERVATION`, as shown in the example below:
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips,
@@ -271,7 +271,7 @@ WHERE
   pickup_datetime BETWEEN '2018-02-01T13:35:52' AND '2018-02-28' SAMPLE BY 1d;
 ```
 
-![](/img/blog/2022-11-23/U9m6k6s.png)
+![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/U9m6k6s.png)
 
 Note that now the `1d` sample calculation starts at `13:35:52` and ends at
 `13:35:51` the next day. Apart from the option demonstrated above, there are two
@@ -297,7 +297,7 @@ with the `SAMPLE BY` extension. In the example shown below, you can see how an
 `ALIGN TO CALENDAR TIME ZONE ('AEST')` has aligned the `pickup_datetime`, i.e.,
 the designated timestamp column to the AEST timezone for Melbourne.
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips,
@@ -310,7 +310,7 @@ FROM
   'taxi_trips' SAMPLE BY 3h ALIGN TO CALENDAR TIME ZONE ('AEST');
 ```
 
-![](/img/blog/2022-11-23/szB7CMD.png)
+![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/szB7CMD.png)
 
 ### Aligning sample calculation with offsets
 
@@ -320,7 +320,7 @@ column manually by any `hh:mm` value between -23:59 to 23:59. In the following
 example, we're offsetting the sample calculation by -5:30, i.e., negative five
 hours and thirty minutes:
 
-```sql
+```questdb-sql
 SELECT
   pickup_datetime,
   COUNT() total_trips,
@@ -333,7 +333,7 @@ FROM
   'taxi_trips' SAMPLE BY 3h ALIGN TO CALENDAR WITH OFFSET '-05:30';
 ```
 
-![](/img/blog/2022-11-23/3xyC6kt.png)
+![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/3xyC6kt.png)
 
 ## Conclusion
 

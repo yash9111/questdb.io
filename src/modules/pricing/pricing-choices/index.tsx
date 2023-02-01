@@ -38,13 +38,31 @@ export const PricingChoices = () => {
           <div className={style.option}>
             <div>Provider</div>
             <div className={style.optionContent}>
-              <Provider img={{ src: awsImg, width: 40, height: 22 }} selected />
               <Provider
-                img={{ src: gcpImg, width: 85, height: 13 }}
+                img={{
+                  src: awsImg,
+                  width: 40,
+                  height: 22,
+                  alt: "Amazon Web Services (AWS) logo",
+                }}
+                selected
+              />
+              <Provider
+                img={{
+                  src: gcpImg,
+                  width: 85,
+                  height: 13,
+                  alt: "Google Cloud Platform (GCP) logo",
+                }}
                 comingSoon
               />
               <Provider
-                img={{ src: azureImg, width: 58, height: 17 }}
+                img={{
+                  src: azureImg,
+                  width: 58,
+                  height: 17,
+                  alt: "Microsoft Azure logo.",
+                }}
                 comingSoon
               />
             </div>

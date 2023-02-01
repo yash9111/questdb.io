@@ -66,7 +66,7 @@ ship out some gifts as a token of our appreciation. As a bonus, here's
 [Michael Friedrich](https://twitter.com/dnsmichi/status/1331940833621372929)
 from GitLab showing love for his swag in this amazing selfie:
 
-![](/img/blog/2021-06-03/tweet.png)
+![Screenshot of a tweet from @dnsmichi](/img/blog/2021-06-03/tweet.png)
 
 ## QuestDB on the web
 
