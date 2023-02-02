@@ -242,7 +242,7 @@ brew install questdb`}
     <Layout canonical="/get-questdb" description={description} title={title}>
       <Section>
         <div className={seCss.section__header}>
-          <Section.Title>Get QuestDB</Section.Title>
+          <Section.Title level={1}>Get QuestDB</Section.Title>
 
           <Section.Subtitle center>
             Find links below to download the latest version of QuestDB{" "}

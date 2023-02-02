@@ -85,7 +85,7 @@ our community highlights from recent weeks:
   [DB-Engines ranking](https://db-engines.com/en/ranking/time+series+dbms) after
   our largest ever monthly growth
 - We now have over **950 developers** in
-  [our Slack community](http://slack.questdb.io)
+  [our Slack community]({@slackUrl@})
 - Gábor wrote a tutorial for
   [real-time stock dashboards with Python and Plotly](/blog/2021/11/01/plotly-finnhub-realtime-dashboard/)
 - GitHub Director of Dev Advocacy **@bdougie** highlighted
@@ -117,4 +117,4 @@ which will unlock multiple use cases across various domains.
 We are also staying informed on what our users need by gathering feedback to
 help us prioritize the product roadmap. If you'd like to provide your input,
 please add your thoughts on or reach out to our team in **#users-public** in our
-[Slack](http://slack.questdb.io).
+[Slack]({@slackUrl@}).

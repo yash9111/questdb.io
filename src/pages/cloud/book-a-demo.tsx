@@ -15,7 +15,9 @@ const BookADemo = () => {
       image="/img/pages/cloud/screens-thumb.png"
     >
       <Section>
-        <Section.Title center>{title}</Section.Title>
+        <Section.Title level={1} center>
+          {title}
+        </Section.Title>
         <div className={style["calendly-inline-widget-wrapper"]}>
           <InlineWidget
             url="https://calendly.com/questdb-nic/questdb"

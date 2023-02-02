@@ -92,7 +92,7 @@ faces in Slack and the additions of new ideas, feedback, and activity on GitHub!
 - We reached **4k GitHub stars** which is a great milestone for us!
 - Our contributors opened in the last month for feature requests and bug reports
   and we have had many more feature requests via Slack and Stack Overflow
-- We now have [645 developers on our Slack community](http://slack.questdb.io)
+- We now have [645 developers on our Slack community]({@slackUrl@})
 
 We are now testing as a way to get the conversation about QuestDB started! We
 have **16 posts** so far since we activated this feature last week, and we
@@ -119,4 +119,4 @@ vehicles, robotics, and fleet management. In parallel, we are continuing work on
 
 We're glad to see our community growing and giving us valuable feedback on
 features and functionality. If you've any questions about this update, reach out
-to us and say hi on [Slack](http://slack.questdb.io).
+to us and say hi on [Slack]({@slackUrl@}).

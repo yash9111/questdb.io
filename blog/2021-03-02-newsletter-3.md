@@ -151,4 +151,4 @@ on board. Welcome to the team, Francesco!
 
 We're excited to see our team, the users, and our community grow, and we want to
 say thanks for being a part of the journey! If you’ve any questions about this
-update, reach out to us and say hi on [Slack](http://slack.questdb.io).
+update, reach out to us and say hi on [Slack]({@slackUrl@}).

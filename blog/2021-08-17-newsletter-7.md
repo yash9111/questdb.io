@@ -92,7 +92,7 @@ Slack and have you share your ideas, feedback, and activity on GitHub!
 - We reached **4.4k GitHub stars** !
 - Our contributors opened
 - We now have
-  [over 700 developers on our Slack community](http://slack.questdb.io)
+  [over 700 developers on our Slack community]({@slackUrl@})
 
 We are happy with which is a fun and easy way to get involved on GitHub. Don't
 forget to our [Community page](/community/) for QuestDB swag if you're already a
@@ -120,4 +120,4 @@ development efforts are focused on replication alongside support for geospatial
 data.
 
 If you've any questions about this update, reach out and say hi on
-[Slack](http://slack.questdb.io).
+[Slack]({@slackUrl@}).

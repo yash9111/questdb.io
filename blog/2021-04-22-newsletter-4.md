@@ -104,4 +104,4 @@ major milestone for our project. We're happy to share the launch along with the
 benchmark results, which we think you'll be excited by.
 
 Thanks for being a part of the journey so far! If you’ve any questions about
-this update, reach out to us and say hi on [Slack](http://slack.questdb.io).
+this update, reach out to us and say hi on [Slack]({@slackUrl@}).

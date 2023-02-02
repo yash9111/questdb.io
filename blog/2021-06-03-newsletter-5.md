@@ -51,7 +51,7 @@ engaging with the project through GitHub issues and all other forms of feedback!
 - Our contributors opened in the last month for feature requests and bug reports
   and we have had many more feature requests via Slack and Stack Overflow
 - We're about to reach
-  [600 developers on our community Slack](http://slack.questdb.io)
+  [600 developers on our community Slack]({@slackUrl@})
 - Increased activity on our community Slack with a total of **5330 messages**
   last month and an average of **40 daily active users**
 - We hosted a
@@ -110,4 +110,4 @@ issues in time series data ingestion.
 
 We're glad to see our community growing and giving us valuable feedback on the
 features and functionality we can focus on. If you’ve any questions about this
-update, reach out to us and say hi on [Slack](http://slack.questdb.io).
+update, reach out to us and say hi on [Slack]({@slackUrl@}).

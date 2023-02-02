@@ -23,7 +23,7 @@ import Banner from "@theme/Banner"
 Here's the latest roundup from QuestDB HQ with our most recent updates; we have
 exciting new releases, including support for geospatial data, an official
 listing on the AWS marketplace, and our community growth shows more code
-contributions and participation on [Slack](http://slack.questdb.io) and
+contributions and participation on [Slack]({@slackUrl@}) and
 [GitHub](https://github.com/questdb)!
 
 Let's take a look at these highlights and the rest of our monthly news!
@@ -79,7 +79,7 @@ our community highlights in recent weeks:
 - We reached **4.7k GitHub stars** !
 - Our contributors opened since our last update
 - We now have
-  [over 760 developers in our Slack community](http://slack.questdb.io)
+  [over 760 developers in our Slack community]({@slackUrl@})
 - Our community was asked to participate in research about
   [security and privacy in OSS](https://research.teamusec.de/2021-interviews-oss/)
 - Tech Ninja wrote about QuestDB in their
@@ -122,4 +122,4 @@ help us build our roadmap, join in the conversation and see what else our
 community are talking about on.
 
 If you've any questions about this update, reach out and say hi on
-[Slack](http://slack.questdb.io).
+[Slack]({@slackUrl@}).

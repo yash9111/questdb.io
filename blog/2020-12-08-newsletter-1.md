@@ -140,4 +140,4 @@ Welcome to the team, Alex!
 
 We're excited to see the community expanding, and we want to say thanks for
 being a part of it! If you’ve any questions about this update, feel free to
-reach out to us in our [Slack Community](http://slack.questdb.io).
+reach out to us in our [Slack Community]({@slackUrl@}).
