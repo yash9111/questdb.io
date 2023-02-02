@@ -237,7 +237,11 @@ const Press = () => (
 )
 
 const AboutUs = () => (
-  <Layout canonical="/about-us" description="" title="About us">
+  <Layout
+    canonical="/about-us/"
+    description="Meet the team building the fastest open source time-series database"
+    title="About us"
+  >
     <Section>
       <Section.Title level={1} center>
         We are building the{" "}

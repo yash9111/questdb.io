@@ -69,26 +69,26 @@ const Layout = ({
           {permalink != null && (
             <link
               rel="canonical"
-              href={ensureTrailingSlash(`${siteUrl}${permalink}`)}
+              href={`${siteUrl}${ensureTrailingSlash(permalink)}`}
             />
           )}
           {permalink == null && canonical != null && (
             <link
               rel="canonical"
-              href={ensureTrailingSlash(`${siteUrl}${canonical}`)}
+              href={`${siteUrl}${ensureTrailingSlash(canonical)}`}
             />
           )}
           <meta property="og:image" content={metaImageUrl} />
           {permalink != null && (
             <meta
               property="og:url"
-              content={ensureTrailingSlash(`${siteUrl}${permalink}`)}
+              content={`${siteUrl}${ensureTrailingSlash(permalink)}`}
             />
           )}
           {permalink == null && canonical != null && (
             <meta
               property="og:url"
-              content={ensureTrailingSlash(`${siteUrl}${canonical}`)}
+              content={`${siteUrl}${ensureTrailingSlash(canonical)}`}
             />
           )}
           <meta property="og:title" content={metaTitle} />
