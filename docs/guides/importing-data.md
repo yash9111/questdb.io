@@ -256,7 +256,7 @@ the schema as required.
      rain6H DOUBLE,
      rain24H DOUBLE,
      snowDepth INT
-   ) TIMESTAMP (timestamp) partitioned by DAY;
+   ) TIMESTAMP (timestamp) partition by DAY;
    ```
 
 9. Ready for import: Create an empty table using the final schema.
