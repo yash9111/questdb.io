@@ -63,8 +63,8 @@ function BlogPostItem(props: Props): JSX.Element {
       "",
     )}`
 
-  const TitleHeading = isBlogPostPage ? "h1" : "h2"
   const isTruncated = typeof truncated === "boolean" ? truncated : false
+  const TitleHeading = isBlogPostPage || isTruncated ? "h1" : "h2"
 
   return (
     <>

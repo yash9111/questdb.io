@@ -2,6 +2,10 @@
   font-size: 2rem;
 }
 
+.title a {
+  color: var(--theme-text-color);
+}
+
 @media (min-width: 700px) {
   .title {
     font-size: 3rem;

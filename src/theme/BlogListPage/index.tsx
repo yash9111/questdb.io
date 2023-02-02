@@ -118,8 +118,6 @@ function BlogListPage(props: Props): JSX.Element {
                 tags: [],
               }}
               truncated={latestPost.content.metadata.truncated}
-              // this forces post title to be rendered as h1
-              isBlogPostPage
             >
               {React.createElement(latestPost.content)}
             </BlogPostItem>
