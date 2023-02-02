@@ -14,9 +14,6 @@ import { Categories } from "./Categories"
 import type { Props as CategoriesProps } from "./Categories"
 import { Chips } from "./Chips"
 import type { Props as ChipProps } from "./Chips"
-import Subscribe from "../../components/Subscribe"
-import ActionCard from "../../components/ActionCard"
-import SubscribeIcon from "../../components/ActionFooter/subscribeIcon.svg"
 import { ensureTrailingSlash } from "../../utils"
 
 export type FrontMatter = OriginalFrontMatter & { permalink?: string }
@@ -26,25 +23,25 @@ const categories: CategoriesProps["categories"] = [
     title: "Benchmarks",
     description:
       "Reproducible benchmarks of QuestDB and other databases using open source benchmarking frameworks",
-    url: "/blog/tags/benchmark",
+    url: "/blog/tags/benchmark/",
   },
   {
     title: "Demos",
     description:
       "Demos involving QuestDB and other popular open source tools for a wide range of use cases",
-    url: "/blog/tags/demo",
+    url: "/blog/tags/demo/",
   },
   {
     title: "Tutorials",
     description:
       "Step-by-step tutorials and guides for developers to build applications with QuestDB",
-    url: "/blog/tags/tutorial",
+    url: "/blog/tags/tutorial/",
   },
   {
     title: "User Stories",
     description:
       "How QuestDB powers the core infrastructure of our users for time series data and real-time analytics",
-    url: "/customers",
+    url: "/customers/",
   },
 ]
 
@@ -72,14 +69,24 @@ function BlogListPage(props: Props): JSX.Element {
     siteConfig: { title: siteTitle },
   } = useDocusaurusContext()
   const { blogDescription, blogTitle, permalink } = metadata
-  const isBlogOnlyMode = permalink === "/"
+  const isBlogOnlyMode = permalink === "/blog"
   const isTagsPage =
     typeof ((metadata as unknown) as Tag).allTagsPath !== "undefined"
 
+  const tagsPageDescription = `Articles tagged with ${
+    ((metadata as unknown) as Tag).name
+  }`
+
   const titles: Array<[boolean, string]> = [
     [isBlogOnlyMode, siteTitle],
-    [isTagsPage, `Posts tagged with "${((metadata as unknown) as Tag).name}"`],
+    [isTagsPage, tagsPageDescription],
     [true, blogTitle],
+  ]
+
+  const descriptions: Array<[boolean, string]> = [
+    [isBlogOnlyMode, blogDescription],
+    [isTagsPage, tagsPageDescription],
+    [true, "QuestDB Blog tags"],
   ]
 
   const posts = [...items]
@@ -88,7 +95,7 @@ function BlogListPage(props: Props): JSX.Element {
   return (
     <Layout
       title={titles.find(([when]) => Boolean(when))?.[1] ?? ""}
-      description={blogDescription}
+      description={descriptions.find(([when]) => Boolean(when))?.[1] ?? ""}
       wrapperClassName={ThemeClassNames.wrapper.blogPages}
       pageClassName={ThemeClassNames.page.blogListPage}
       searchMetadatas={{
@@ -111,6 +118,8 @@ function BlogListPage(props: Props): JSX.Element {
                 tags: [],
               }}
               truncated={latestPost.content.metadata.truncated}
+              // this forces post title to be rendered as h1
+              isBlogPostPage
             >
               {React.createElement(latestPost.content)}
             </BlogPostItem>
@@ -118,8 +127,8 @@ function BlogListPage(props: Props): JSX.Element {
         )}
 
         <h2>Popular topics</h2>
-        {/* BlogListPage component is used for blog and for tags.
-                When rendered for tags, then `metadata` includes tag, instead of blog data */}
+        {/* BlogListPage component is used for `blog/` and also for `blog/tags/*`.
+            When rendered for `blog/tags/*, then `metadata` includes tag, instead of blog data */}
         <Categories
           activeCategory={((metadata as unknown) as Tag).permalink}
           categories={categories}
@@ -129,11 +138,14 @@ function BlogListPage(props: Props): JSX.Element {
           items={prioritizedTags}
         />
 
-        <h2>
-          {isTagsPage
-            ? `Articles tagged with "${((metadata as unknown) as Tag).name}"`
-            : "Blog Posts"}
-        </h2>
+        {isTagsPage ? (
+          <h1 className={styles.tagsTitle}>
+            Articles tagged with &quot;{((metadata as unknown) as Tag).name}
+            &quot;
+          </h1>
+        ) : (
+          <h2>Blog Posts</h2>
+        )}
 
         <div className={styles.posts}>
           {posts.map(({ content }, i) => (
@@ -151,24 +163,6 @@ function BlogListPage(props: Props): JSX.Element {
               }
             />
           ))}
-
-          {posts.length === 11 && (
-            <ActionCard
-              title="Subscribe to our newsletter"
-              description="Stay up to date with all things QuestDB"
-              icon={<SubscribeIcon />}
-              skin="default"
-              className={styles.subscribeCard}
-            >
-              <Subscribe
-                placeholder="Email address"
-                submitButtonVariant="tertiary"
-                provider="newsletter"
-                className={styles.subscribe}
-                classNameInputs={styles.subscribeInputs}
-              />
-            </ActionCard>
-          )}
         </div>
 
         <BlogListPaginator metadata={metadata} />

@@ -67,7 +67,7 @@ story, including
 and
 [Yahoo! Finance](https://finance.yahoo.com/news/questdb-raises-12m-series-adoption-131000873.html).
 
-![](/img/pages/about-us/team.jpg)
+![Picture of QuestDB team](/img/pages/about-us/team.jpg)
 
 We'd like to extend a huge **thank you** to our fantastic users, our community,
 and our teammates whose support has delivered us this far!

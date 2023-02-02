@@ -20,6 +20,6 @@ export const Chips = ({ items, activeChip }: Props) => (
       />
     ))}
 
-    <Chip className={styles.chip} label="More..." permalink="/blog/tags" />
+    <Chip className={styles.chip} label="More..." permalink="/blog/tags/" />
   </div>
 )

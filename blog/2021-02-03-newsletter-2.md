@@ -20,7 +20,7 @@ import Banner from "@theme/Banner"
   height={200}
 />
 
-# January Update
+## January Update
 
 2021 has been a great start for us at QuestDB, and we'd like to share our
 highlights so far. We've had some exciting additional functionality added based

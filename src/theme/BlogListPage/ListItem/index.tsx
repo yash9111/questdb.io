@@ -63,9 +63,9 @@ export const ListItem = ({ forcedTag, content, belowFold }: Props) => {
           />
         </div>
 
-        <h3 className={styles.title}>
+        <h2 className={styles.title}>
           <Link to={postUrl}>{content.metadata.title}</Link>
-        </h3>
+        </h2>
         <div className={styles.author}>
           by {author} on {content.metadata.formattedDate}
         </div>

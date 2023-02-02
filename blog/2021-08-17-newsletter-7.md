@@ -84,7 +84,7 @@ how to use QuestDB with a variety of tools and technologies:
 - Yitaek Hwang compared
   [InfluxDB, TimescaleDB, and QuestDB](https://towardsdatascience.com/comparing-influxdb-timescaledb-and-questdb-timeseries-databases-c1692b9327a5)
 
-# Community
+## Community
 
 We want to give a warm welcome to new members, we're happy to see you all in
 Slack and have you share your ideas, feedback, and activity on GitHub!

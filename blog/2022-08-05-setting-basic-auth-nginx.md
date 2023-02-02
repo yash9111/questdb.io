@@ -181,7 +181,7 @@ brew services reload nginx
 
 Here’s what the output of the commands mentioned above will look like:
 
-![](/img/blog/2022-08-05/step_3c.png)
+![Screenshot terminal with output from previous command](/img/blog/2022-08-05/step_3c.png)
 
 ### Step 4. Verify if Basic Authentication is working while accessing QuestDB open source
 
