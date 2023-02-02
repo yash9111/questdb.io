@@ -317,6 +317,8 @@ const config = {
         docs: {
           ...markdownPlugins,
           sidebarPath: require.resolve("./sidebars.js"),
+          editUrl: ({ docPath }) =>
+            `${customFields.websiteGithubUrl}/edit/master/docs/${docPath}`,
         },
 
         sitemap: {
@@ -325,9 +327,7 @@ const config = {
           trailingSlash: true,
         },
         theme: {
-          customCss: [
-            require.resolve("./src/css/_global.css"),
-          ],
+          customCss: [require.resolve("./src/css/_global.css")],
         },
       },
     ],
