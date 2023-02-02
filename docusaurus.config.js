@@ -212,6 +212,10 @@ const config = {
               to: "/cloud/",
             },
             {
+              label: "Open Source",
+              to: "/get-questdb/",
+            },
+            {
               label: "Enterprise",
               to: "/enterprise/",
             },
