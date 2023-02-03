@@ -50,7 +50,7 @@ const prioritizedTags: ChipProps["items"] = [
   "engineering",
   "python",
   "grafana",
-  "crypto",
+  "time-series",
   "sql",
   "kafka",
   "prometheus",
@@ -58,6 +58,7 @@ const prioritizedTags: ChipProps["items"] = [
   "company",
   "community",
   "newsletter",
+  "crypto",
 ].map((tag) => ({
   name: tag,
   permalink: `/blog/tags/${tag.replace(/ /g, "-")}`,

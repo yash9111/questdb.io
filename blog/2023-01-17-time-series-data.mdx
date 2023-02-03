@@ -1,18 +1,20 @@
 ---
-title:
-  What Is Time-Series Data?
+title: What Is Time-Series Data?
 author: Nicolas Hourcard
 author_title: Co-founder & CEO, QuestDB
 author_url: https://github.com/tris0laris
 author_image_url: https://avatars.githubusercontent.com/tris0laris
 description:
-  An article on time-series data and time-series databases (TSDB), and why we decided to build QuestDB
+  This article introduces time-series data and its applications and shows how a
+  time-series database is best suited to process this data type.
 image: /img/blog/2023-01-17/banner.jpg
-tags: [company, startup, entrepreneurship, story, time-series, time-series data, tsdb, time-series database, community, SQL]
+tags:
+  [time-series, time-series data, tsdb, time-series database, community, SQL]
 slug: time-series-data
 ---
 
 import Banner from "@theme/Banner"
+import Screenshot from "@theme/Screenshot"
 
 <Banner
   alt="Image of a compass."
@@ -24,38 +26,26 @@ import Banner from "@theme/Banner"
   on <a href="https://unsplash.com">Unsplash</a>
 </Banner>
 
-This blog post covers the basics of time-series data and why time-series
-databases have seen such an explosion in popularity since the category emerged a
-decade ago. Additionally, we will briefly cover the origin story of QuestDB, why
-we set out to build a new database from scratch and go through the database
-design choices and trade-offs.
+This blog post covers the basics of time-series data and its most common use
+cases and applications. We introduce the time-series database category, which has
+seen an explosion in popularity since a decade ago.
+
+Additionally, we will cover the design and trade-offs for a time-series database
+and show how SQL can deal with time-series data workloads, using QuestDB's ANSI SQL syntax as an example.
 
 <!--truncate-->
 
-## Time series data and characteristics of TSDBs
+## Time-series data explained
 
-Time-series data is everywhere. Sensors, financial exchanges, servers, and
-software applications generate streams of events, which need to be analyzed on
-the fly. Time-series databases (TSDB) emerged as a category to better deal with
-a vast amount of machine data. These specialized Database Management Systems
-(DMBS) are now empowering millions of developers to collect, store, process, and
-analyze data over time. With new time-series forecasting methods and machine
-learning models, companies are now better equipped to train and refine their
-models to predict future outcomes more accurately.
-
-### Time-series data explained
-
-Time series is a succession of data points ordered by time. Time-series data is
+Time-series is a succession of data points ordered by time. Time-series data is
 often plotted on a chart where the x-axis is time and the y-axis is a metric
 that changes over time. For example, stock prices change every microsecond or
 even nanosecond, and the trend is best presented as time-series data.
 
-import Screenshot from "@theme/Screenshot"
-
 <Screenshot
   alt="AAPL stock price over the last 5 years"
   height={284}
-  src="/img/blog/2023-01-17/apple.png"
+  src="/img/blog/2023-01-17/apple-stock.png"
   title="Apple’s share price (daily) over the last 5 years: time-series data"
   width={650}
 />
@@ -97,40 +87,35 @@ database category for the past five years according to
   width={650}
 />
 
-### Time-series databases design
+## The design of a time-series database
 
-As use cases and the need for time series analysis are increasing exponentially,
-so is the amount of raw data itself. To better cope with the ever-growing amount
-of data, time-series databases emerged a decade ago. They focus on performance
-with fast ingests to process a higher number of data points. The trade-off is
-less stringent consistency guarantees, which are typically must-haves for OLTP
-workloads. It is pretty common for time-series databases not to be ACID
-compliant. Unlike traditional databases in which older data entries are
-typically updated with the most recent data point to show the latest state,
-time-series databases continuously accumulate data points over time. This way,
-one can draw insights from the evolution of metrics to conclude meaningful
-insights from the data. This is why TSDBs are optimized for write operations
-rather than updates. Once the data is stored in a database, most use cases
-require querying this data in real-time to uncover insights on the data quickly.
-DevOps teams will set real-time alerts to detect anomalies in server metrics
-such as CPU or memory. E-commerce websites need to understand buyers’ behavior
-to gather new insights and optimize their stock. A fintech company will want to
-detect fraud as transactions occur.
+As use cases and the need for time series analysis are increasing exponentially, so is the amount of raw data itself. To
+better cope with the ever-growing amount of data, time-series databases emerged a decade ago. They focus on performance
+with fast ingests to process a higher number of data points. The trade-off is less stringent consistency guarantees,
+which are typically must-haves for OLTP workloads. 
 
-### Time-series databases' most important features and trade-offs
+It is pretty common for time-series databases not to be ACID compliant. Unlike traditional databases in which older data
+entries are typically updated with the most recent data point to show the latest state, time-series databases
+continuously accumulate data points over time. This way, one can draw insights from the evolution of metrics to conclude
+meaningful insights from the data. 
 
-Time-series databases are not optimized for OLTP workloads that typically
-include lots of regular update and delete operations. Those are better handled
-by relational databases such as PostgreSQL or MySQL. In contrast, time-series
-data is mostly an append-only workload with delete operations performed in
-batches on less recent data. In time series, we are concerned the most about the
-recent data coming in that is being analyzed on the fly. To better cater to
-these needs, time-series databases pack a set of features that makes them stand
-out from relational databases and other types. We provide a list of these
-must-have features for a TSDB. Then, we show how you can do this on QuestDB, an
-open-source time-series database with fast ingests and SQL queries. You can run
-the examples on the [QuestDB demo site](https://demo.questdb.io/) to check the
-query performance.
+This is why TSDBs are optimized for write operations rather than updates. Once the data is stored in a database, most
+use cases require querying this data in real-time to uncover insights on the data quickly. DevOps teams will set
+real-time alerts to detect anomalies in server metrics such as CPU or memory. E-commerce websites need to understand
+buyers' behavior to gather new insights and optimize their stock. A fintech company will want to detect fraud as
+transactions occur.
+
+## Most important features and trade-offs for a time-series database
+
+Time-series databases are not optimized for OLTP workloads that typically include lots of regular update and delete
+operations. Those are better handled by relational databases such as PostgreSQL or MySQL. In contrast, time-series data
+is mostly an append-only workload with delete operations performed in batches on less recent data. With time-series, we
+are concerned the most about the recent data coming in that is being analyzed on the fly. 
+
+To better cater to these needs, time-series databases pack a set of features that makes them stand out from relational
+databases and other types. We provide a list of these must-have features for a TSDB. Then, we show how you can do this
+on QuestDB, an open-source time-series database with fast ingests and SQL queries. You can run the examples on the
+QuestDB demo site to check the query performance.
 
 - **Automated partitioning management**
 
@@ -147,7 +132,7 @@ query performance.
   Representing the data with a lower frequency. For example, shifting from a
   daily view to a monthly view. In order to facilitate such queries with SQL and
   make them less verbose, QuestDB built a native extension to ANSI SQL with the
-  keyword [`SAMPLE BY`](/docs/reference/sql/sample-by). This SQL statement
+  keyword [`SAMPLE BY`](/docs/reference/sql/sample-by/). This SQL statement
   slices the dataset by a time interval (15 minutes in our example below) and
   runs aggregations for that time period. We can optionally fill values for
   those periods for which we have no results (interpolation, fill with null,
@@ -213,86 +198,11 @@ query performance.
   As time-series data is mostly machine data, it is produced and streamed to a
   database in a continuous fashion. The ability to sustain streamed data rather
   than in slow batches quickly becomes a must. The
-  [InfluxDB line protocol](/blog/2020/07/22/influxdb-lp-on-tcp) is very
+  [InfluxDB line protocol](/blog/2020/07/22/influxdb-lp-on-tcp/) is very
   efficient and offers a lot of flexibility. For example, you can create new
   columns on the fly without specifying a schema ahead of time.
 
-## Why we set out to build QuestDB
-
-### Democratizing time-series data performance
-
-Our CTO worked in electronic trading and had built trading infrastructure for
-more than 10 years. In 2013, his boss would not allow him to use the only
-high-performance database suited to deal with time-series data because of its
-proprietary nature and price.
-
-QuestDB was built with the intention to democratize the performance that was
-only available for high-end enterprise applications and make the tooling
-available for every developer around the world leveraging an open-source
-distribution model. Instead of writing a new querying language from scratch, our
-CTO decided to facilitate developer adoption via SQL rather than a complex
-proprietary language.
-
-And this was the origin of QuestDB.
-
-We have heard a large number of companies complaining about the performance
-limitations of open-source time-series databases. Most of those reuse existing
-libraries or are an extension of a well-known database that was not designed to
-process time-series data efficiently in the first place.
-
-Instead, we chose an alternative route, one that took more than 7 years of R&D.
-Our vision from day 1 was to challenge the norm and build software that uses new
-approaches and leverages the techniques learned in low-latency trading floors.
-An important aspect was to study and understand the evolution of hardware to
-build database software that could extract more performance from CPUs, memory,
-and modern hard disks.
-
-### QuestDB design and performance
-
-QuestDB is built-in zero-GC Java and C++, and every single algorithm in the code
-base has been written from scratch with the goal of maximizing performance.
-
-QuestDB’s data model (time-based arrays) differs from the LSM-tree or B-tree
-based storage engines found in InfluxDB or TimescaleDB. It reduces overhead and
-data duplication while maintaining immediate consistency and persisting data on
-disk.
-
-This linear data model structure massively optimizes ingestion as it allows the
-database to slice data extremely efficiently in small chunks and process it all
-in parallel. QuestDB also saturates the network cards to process messages from
-several senders in parallel. Our ingestion is append-only, with constant
-complexity, i.e. O(1); QuestDB does not rely on computationally intense indices
-to reorder data as it hits the database. Out-of-order ingests are dealt with and
-re-ordered in memory before being persisted to disk.
-
-QuestDB’s data layout enables CPUs to access data faster. With respect to
-queries, our codebase leverages modern CPU architecture with SIMD instructions
-to enable the same operation to be performed on multiple data elements in
-parallel. We store data in columns and partition it by time in order to lift the
-minimal amount of data from the disk for a given query.
-
-<Screenshot
-  alt="Architecture of the storage model with column files and time partitions"
-  height={323}
-  src="/img/blog/2023-01-17/model.png"
-  title="Data stored in columns and partitioned by time"
-  width={650}
-/>
-
-We didn't get everything right from the start! In 2021, we shipped QuestDB 6.0
-to support
-[high performance out-of-order data](/blog/2021/05/10/questdb-release-6-0-tsbs-benchmark/).
-A few months ago, we shipped
-[dynamic commits](/blog/2022/11/25/questdb-6.6.1-dynamic-commits/) to optimize
-ingestion throughput and data freshness for reads. We also rewrote our ingestion
-layer to make it more performant — taking advantage of the latest OS kernel
-innovations — and released official clients in seven programming languages to
-improve the developer experience. We are in the middle of decoupling data
-ingestion from table writers to eliminate table locks when using the Postgres
-wire protocol. We already have some ideas to make downsampling and aggregation
-queries even faster.
-
-### Additional resources on time-series data and databases
+## Additional resources on time-series data
 
 To learn more about time-series data:
 
@@ -300,8 +210,6 @@ To learn more about time-series data:
 - [Time Series Database by Hazelcast](https://hazelcast.com/glossary/time-series-database/)
 - [DB-Engines Ranking of Time Series DBMS](https://db-engines.com/en/ranking/time+series+dbms)
 - [Code to the Moon featuring QuestDB](https://www.youtube.com/watch?v=A8uMF64rbS8&ab_channel=CodetotheMoon)
-- [Amazon Timestream - Time series is the new black](https://www.allthingsdistributed.com/2021/06/amazon-timestream-time-series-is-the-new-black.html)
-- [Time series on Wikipedia](https://en.wikipedia.org/wiki/Time_series)
 
 To learn more about relevant projects:
 
