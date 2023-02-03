@@ -1,0 +1,124 @@
+# On a Quest to the Cloud
+
+Building any cloud service from scratch can be overwhelming for even the most experienced engineer. Even moreso when
+the service just happens to be for a company obsessed with performance. Just look at some of our blog post titles:
+[Importing 300k rows/sec with io_uring](https://questdb.io/blog/2022/09/12/importing-300k-rows-with-io-uring/),
+[4Bn rows/sec query benchmark](https://questdb.io/blog/2022/05/26/query-benchmark-questdb-versus-clickhouse-timescale/),
+or [Aggregating billions of rows per second with SIMD](https://questdb.io/blog/2020/04/02/using-simd-to-aggregate-billions-of-rows-per-second/).
+Vlad even rewrote much of the Java standard library to reduce memory usage and squeak as much performance out of it as possible.
+
+So when Nic and Vlad came to the team and asked if we could build a QuestDB cloud service that lives up to all of the performance promises
+we make, while also providing a straightforward and enjoyable user experience, needless to say, we were a little nervous.
+But what engineer doesn't love building something new? You get to try out all of the cool stuff you read about on Hacker News,
+you don't have to deal with legacy code, and you can even set many of your own requirements.
+
+But with this freedom comes a problem that is especially difficult in today's environment; choice. Which language should I use?
+Which framework? Should I use a framework at all? What does the architecture look like? ow will we manage the infrastructure? Which
+cloud provider should we use? Build vs buy? The questions are endless, and there is a real danger of paralysis-by-analysis.
+
+It doesn't help that there are several completely reasonble answers to each question. Just look at the
+[CNCF Landscape](https://landscape.cncf.io/) chart. There are over 1,175 different cloud native offerings,
+and that just covers the infrastructure side. Each cloud provider has hundreds of offerings to choose from. For
+every piece of infrastructure that you can build, you can also buy something that does _almost_ the same thing. But
+even that has challenges; trying to compare the feature matrices and pricing plans of multiple vendors can
+be a nightmare. And this doesn't even take into account the programming language and library choices that you need to make.
+
+Despite these challenges, our team rose to the occasion. We made the required technology choices, built out what we thought were
+necessary features, iterated on early customer feedback, built more features, hardended the infrastructure, and are now on the brink
+of officially launching our QuestDB cloud service!
+
+It was quite a journey to get here, and this is just the beginning of our quest. We'd like to take a moment to reflect
+on what we've done so far, and hope that you can learn why we made some of the choices that we did (or at least give
+you an opportunity to discuss in the comments section of wherever this is posted).
+
+Let's start with the UI...
+
+## UI
+From the very beginning, one of our goals for QuestDB Cloud has been ease of use:
+simply let the users select a preset, spin up a QuestDB database, and start working with it as quickly as possible.
+
+We also wanted to provide a coherent, unified feel across our products: [QuestDB Web Console](https://demo.questdb.io/),
+[documentation](https://questdb.io/docs/), and, of course, the Cloud.
+
+### Initial Considerations
+All good projects start with a well-prepared plan. Before writing any code, we sat down to make some forward-facing decisions.
+
+One example is the idea to reuse our data explorer (QuestDB Web Console) in the new project. It is already a slick and
+battle-tested UI, and we know that we would want to integrate it into the Cloud at some point.
+Thus, the new Cloud project must leverage a similar stack and UI to minimize the amount of refactoring and redesign needed.
+
+Another example is that we wanted to ensure that the Cloud UI has a consistent branding experience and color palette across
+our entire web presence.
+
+Furthermore, we did not want to build the Cloud on top of a fully-fledged and heavy UI framework.  With quite a bit of
+experience bootstrapping SaaS clients with the likes of Ant Design, Material UI, or other similar libraries, we were well
+aware of how, as a project matures and complexity increases, it inevitably progresses towards phasing out those systems in
+favor of custom solutions.  We decided to opt for a headless and pluggable set of UI primitives - [Radix UI](https://www.radix-ui.com/). This in
+combination with natively supported [Styled Components](https://styled-components.com/) allows us to create a lightweight component library quickly
+and change (and extend) it as needed, without carrying over an entire boilerplate, build config, or styling.
+
+### The Tech Stack
+Gone are the days of LAMPs or MEANs. For Cloud UI, we decided to use NextJS as our main framework. Even though we
+have an amazing backend team to provide us with solid and well-thought APIs (see the next section!), leveraging some
+key NextJS features helps us builds features fast.
+
+For instance:
+
+- It's trivial to prefetch data using [React Query](React Query) within [getServerSideProps](getServerSideProps). This
+  offloads major portions of page rendering to the server side, leveraging SSR and vastly improving initial load performance.
+- Server-side API routes allow us to use third-party APIs for some features. We can easily integrate with products like
+  Airtable, ProductBoard, or Slack while keeping both performance and security intact.
+- With the support of [catch-all routes via spread operator](https://nextjs.org/docs/routing/dynamic-routes#catch-all-routes),
+  we are able to create API middlewares that can read the HTTP request, ensure security and/or augment the payload or headers (authorization being one example). Then route it further to the correct destination like Python API on the backend or even aggregate data from multiple sources.
+
+### API Middlewares
+
+We are often presented with a scenario where some backend API route is either a work in progress or doesn't exist. There
+might be a proposed schema but nothing is set in stone, or no stone yet at all.
+
+But this shouldn't stop us from iterating with features! To solve this, we wrote an API middleware. All
+requests from the browser target the server side of NextJS, specifically a request handler at `pages/api/[…backend].ts`.
+
+At first sight, this might seem just like an additional hurdle for us to process a request; it needs to go through the
+NodeJS server till it reaches the main source. However, this extra jump is tremendously worth the cost by unlocking the following benefits:
+
+- Single location to handle authorization headers
+- Trivial mocking for non-existent or incomplete backend API routes
+- Ability to integrate with other backend resources while keeping it transparent to the user
+
+This decision allows us to build [React Query](https://react-query-v3.tanstack.com/) abstractions (hooks, prefetch,
+and all the associated toolkits) before the actual backend API is ready. For example, the frontend team can start
+with mocked requests in, say, `pages/api/new-feature/endpoint.ts`. This file would take precedence over the `pages/api/[…backend].ts`
+middleware and the developer is trivially able to provide any kind of request handler.
+
+In addition, a catch-all API middleware let us hide implementation details from the client side. For example,
+in Cloud UI we have a "Feedback" button. Clicking it shows a popup with a simple text form to collect user feedback.
+Once the user clicks submit, the browser sends the request using the same API domain as it does for all other requests
+(and not some `3rd-party-feedback-collector.com`).
+
+Internally, within the NextJS API handler, we forward the request to… you guessed it, Slack! Yep, your feedback goes straight to a dedicated #cloud-user-feedback channel
+where we can take further action. We do actually read it all!
+
+[TODO: Diagram image of the proxy here]
+
+### How we stay lightweight
+In a startup environment, when building MVP (minimum viable product), there is an irresistible urge to snap on a library or a
+plugin on everything without having to deal with implementation details. Just run `npm install` and move on, right?
+
+On the surface, this shaves off days from the initial development hours, but this approach adds dependencies that inevitably
+require attention in the long run. Many popular libraries internally use more dependencies and we are unable to control this (`left-pad` anyone?).
+
+Picking dependencies blindly can really explode the cost of maintenance over time. A week spent on tech debt in six months has
+a much greater cost than a few additional hours spent researching at the initial stage.
+
+Consider our monitoring charts, which involves rendering graphs of customer database metrics. Because we use
+[Apache ECharts](https://echarts.apache.org/) to render charts in the open source QuestDB Web Console, we
+already have experience with a package that supports any kind of plot type you can imagine. This, however,
+even when shaving off as much size as possible with the help of named exports, gained us more
+than 900 KB of weight that we would need to transmit across the wire.
+
+Keeping in mind that line plots are what we really need, along with people's familiarity with Grafana, we did some
+research and found out [uPlot](https://github.com/leeoniya/uPlot), which is a fantastic and extremely lightweight
+(around 40KB) plotting library that powers the aforementioned observability powerhouse. Indeed, we struck gold with
+Leon Sorokin's creation: not only it is minuscule, but the ability to render the time axis within a set range and given
+incomplete data points is also mind-boggling. It also looks and feels familiar, which is an added bonus.
