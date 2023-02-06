@@ -4,6 +4,10 @@
   padding: 0 1rem;
 }
 
+.categories {
+  display: none;
+}
+
 .posts {
   --cols: 1;
   --gap: 4rem;
@@ -28,6 +32,10 @@
 
   .latestPost {
     padding: 0 5rem;
+  }
+
+  .categories {
+    display: block;
   }
 
   .posts {

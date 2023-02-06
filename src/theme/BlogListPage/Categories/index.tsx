@@ -9,19 +9,25 @@ export type Props = {
   activeCategory?: string
 }
 
-export const Categories = ({ activeCategory, categories }: Props) => (
+export const Categories = ({ activeCategory = "", categories }: Props) => (
   <div className={styles.root}>
-    {categories.map(({ title, description, url }) => (
-      <Link
-        to={ensureTrailingSlash(url)}
-        key={url}
-        className={clsx(styles.category, {
-          [styles.active]: activeCategory === url,
-        })}
-      >
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.description}>{description}</p>
-      </Link>
-    ))}
+    {categories.map(({ title, description, url }) => {
+      const urlWithTrailingSlash = ensureTrailingSlash(url)
+      const active =
+        ensureTrailingSlash(activeCategory) === urlWithTrailingSlash
+
+      return (
+        <Link
+          to={ensureTrailingSlash(url)}
+          key={url}
+          className={clsx(styles.category, {
+            [styles.active]: active,
+          })}
+        >
+          <h3 className={styles.title}>{title}</h3>
+          <p className={styles.description}>{description}</p>
+        </Link>
+      )
+    })}
   </div>
 )

@@ -125,17 +125,19 @@ function BlogListPage(props: Props): JSX.Element {
           </div>
         )}
 
-        <h2>Popular topics</h2>
-        {/* BlogListPage component is used for `blog/` and also for `blog/tags/*`.
+        <div className={styles.categories}>
+          <h2>Popular topics</h2>
+          {/* BlogListPage component is used for `blog/` and also for `blog/tags/*`.
             When rendered for `blog/tags/*, then `metadata` includes tag, instead of blog data */}
-        <Categories
-          activeCategory={((metadata as unknown) as Tag).permalink}
-          categories={categories}
-        />
-        <Chips
-          activeChip={((metadata as unknown) as Tag).permalink}
-          items={prioritizedTags}
-        />
+          <Categories
+            activeCategory={((metadata as unknown) as Tag).permalink}
+            categories={categories}
+          />
+          <Chips
+            activeChip={((metadata as unknown) as Tag).permalink}
+            items={prioritizedTags}
+          />
+        </div>
 
         {isTagsPage ? (
           <h1 className={styles.tagsTitle}>
