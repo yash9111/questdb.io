@@ -1,23 +1,11 @@
 .root {
   --title-color: var(--palette-pink);
-  --cols: 1;
-
-  display: grid;
-  grid-template-columns: repeat(var(--cols), 1fr);
-  gap: 1rem;
+  --gap: 1rem;
+  --col-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
   margin-bottom: 2rem;
-}
-
-@media screen and (min-width: 470px) {
-  .root {
-    --cols: 2;
-  }
-}
-
-@media screen and (min-width: 750px) {
-  .root {
-    --cols: 4;
-  }
 }
 
 .category {
@@ -25,6 +13,13 @@
   padding: 1.3rem 1.3rem 1.8rem;
   border: 1px solid var(--theme-card-border-color);
   border-radius: 15px;
+  flex: 1 0 calc(50% - var(--gap));
+}
+
+@media screen and (min-width: 900px) {
+  .category {
+    flex-basis: 100%;
+  }
 }
 
 .category:hover,

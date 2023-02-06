@@ -104,68 +104,74 @@ function BlogListPage(props: Props): JSX.Element {
         tag: "blog_posts_list",
       }}
     >
-      <main className={styles.root}>
-        {latestPost !== undefined && (
-          <div className={styles.latestPost}>
-            <BlogPostItem
-              key={latestPost.content.metadata.permalink}
-              frontMatter={latestPost.content.frontMatter}
-              metadata={{
-                ...latestPost.content.metadata,
-                permalink: ensureTrailingSlash(
-                  (latestPost.content.frontMatter as FrontMatter).permalink ??
-                    latestPost.content.metadata.permalink,
-                ),
-                tags: [],
-              }}
-              truncated={latestPost.content.metadata.truncated}
-            >
-              {React.createElement(latestPost.content)}
-            </BlogPostItem>
+      <div className={styles.root}>
+        <main>
+          {latestPost !== undefined && (
+            <div className={styles.latestPost}>
+              <BlogPostItem
+                key={latestPost.content.metadata.permalink}
+                frontMatter={latestPost.content.frontMatter}
+                metadata={{
+                  ...latestPost.content.metadata,
+                  permalink: ensureTrailingSlash(
+                    (latestPost.content.frontMatter as FrontMatter).permalink ??
+                      latestPost.content.metadata.permalink,
+                  ),
+                  tags: [],
+                }}
+                truncated={latestPost.content.metadata.truncated}
+              >
+                {React.createElement(latestPost.content)}
+              </BlogPostItem>
+            </div>
+          )}
+
+          {isTagsPage ? (
+            <h1 className={styles.title}>
+              Articles about{" "}
+              <span className={styles.tag}>
+                {((metadata as unknown) as Tag).name}
+              </span>
+            </h1>
+          ) : (
+            <h2 className={styles.title}>Earlier Posts</h2>
+          )}
+
+          <div className={styles.posts}>
+            {posts.map(({ content }, i) => (
+              <ListItem
+                key={content.metadata.permalink}
+                content={content}
+                belowFold={i > 5}
+                forcedTag={
+                  isTagsPage
+                    ? {
+                        label: ((metadata as unknown) as Tag).name,
+                        permalink: ensureTrailingSlash(metadata.permalink),
+                      }
+                    : undefined
+                }
+              />
+            ))}
           </div>
-        )}
 
-        <h2>Popular topics</h2>
-        {/* BlogListPage component is used for `blog/` and also for `blog/tags/*`.
+          <BlogListPaginator metadata={metadata} />
+        </main>
+
+        <aside className={styles.categories}>
+          <h2>Popular topics</h2>
+          {/* BlogListPage component is used for `blog/` and also for `blog/tags/*`.
             When rendered for `blog/tags/*, then `metadata` includes tag, instead of blog data */}
-        <Categories
-          activeCategory={((metadata as unknown) as Tag).permalink}
-          categories={categories}
-        />
-        <Chips
-          activeChip={((metadata as unknown) as Tag).permalink}
-          items={prioritizedTags}
-        />
-
-        {isTagsPage ? (
-          <h1 className={styles.tagsTitle}>
-            Articles tagged with &quot;{((metadata as unknown) as Tag).name}
-            &quot;
-          </h1>
-        ) : (
-          <h2>Blog Posts</h2>
-        )}
-
-        <div className={styles.posts}>
-          {posts.map(({ content }, i) => (
-            <ListItem
-              key={content.metadata.permalink}
-              content={content}
-              belowFold={i > 5}
-              forcedTag={
-                isTagsPage
-                  ? {
-                      label: ((metadata as unknown) as Tag).name,
-                      permalink: ensureTrailingSlash(metadata.permalink),
-                    }
-                  : undefined
-              }
-            />
-          ))}
-        </div>
-
-        <BlogListPaginator metadata={metadata} />
-      </main>
+          <Categories
+            activeCategory={((metadata as unknown) as Tag).permalink}
+            categories={categories}
+          />
+          <Chips
+            activeChip={((metadata as unknown) as Tag).permalink}
+            items={prioritizedTags}
+          />
+        </aside>
+      </div>
     </Layout>
   )
 }

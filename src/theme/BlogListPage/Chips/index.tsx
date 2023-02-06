@@ -16,6 +16,7 @@ export const Chips = ({ items, activeChip }: Props) => (
         key={permalink}
         className={styles.chip}
         label={name}
+        size="medium"
         permalink={ensureTrailingSlash(permalink)}
         active={activeChip === permalink}
       />
