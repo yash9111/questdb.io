@@ -28,42 +28,58 @@ This section describes the details of each method.
 
 ### Manual copy
 
-Partition folders can be manually moved from where they are stored into the table folder in
-`db`. To make the partitions available for the attach operation, the files
-need to be renamed `<partition_name>.attachable`.
+Partition folders can be manually moved from where they are stored into the
+table folder in `db`. To make the partitions available for the attach operation,
+the files need to be renamed `<partition_name>.attachable`.
 
 For example, in a table partitioned by year, given a partition folder named
-`2020.detached`, rename it as `2020.attachable`, and move it to the table folder.
+`2020.detached`, rename it as `2020.attachable`, and move it to the table
+folder.
 
 ### Symbolic links
 
-[Symbolic links](https://en.wikipedia.org/wiki/Symbolic_link) can be used to attach partition folders that
-exist potentially in a different volume as cold storage. To make detached partition folders in cold storage
-available for attaching, for each partition folder, create a symbolic link with the name
-format`<partition_name>.attachable` from the table's folder, and set the target path to the detached partition folder.
+[Symbolic links](https://en.wikipedia.org/wiki/Symbolic_link) can be used to
+attach partition folders that exist potentially in a different volume as cold
+storage. The partitions attached in this way will be **read-only**. To make
+detached partition folders in cold storage available for attaching, for each
+partition folder, create a symbolic link with the name
+format`<partition_name>.attachable` from the table's folder, and set the target
+path to the detached partition folder.
 
 :::info
 
-- SQL statements that hit partitions attached via symbolic links may have slower runtimes
-  if their volumes have a slower disk.
+- SQL statements that hit partitions attached via symbolic links may have slower
+  runtimes if their volumes have a slower disk.
 
-- In Windows, symbolic links require admin privileges, and thus this method is not recommended.
+- In Windows, symbolic links require admin privileges, and thus this method is
+  not recommended.
 
 :::
 
 #### Properties using symbolic links
 
-Partitions attached via the symbolic link approach are considered **read-only**
-by these operations:
+Partitions attached via the symbolic link approach are **read-only** for the
+following operations:
 
-- _DROP/DETACH PARTITION_: Once the partition folders are unlinked, the symbolic links are removed, but not the content
-  remains. Detaching a partition that was attached via symbolic link does not create a copy `<partition_name>.detached`;
-  in this case, the `DETACH PARTITION` operation is equal to `DROP PARTITION`.
+- [`DETACH PARTITION`](/docs/reference/sql/alter-table-detach-partition/) and
+  [`DROP PARTITION`](/docs/reference/sql/alter-table-drop-partition/): Once the
+  partition folders are unlinked, the symbolic links are removed, but the
+  content remains. Detaching a partition that was attached via symbolic link
+  does not create a copy `<partition_name>.detached`.
+- [`UPDATE`](/docs/reference/sql/update/): Attempts to update the read-only
+  partitions result in an error.
+- [`INSERT`](/docs/reference/sql/insert/): Attemps to insert data into a
+  read-only partition result in a critical-level log message being logged by the server, and the insertion is a no-op.
+  If [Prometheus monitoring](/docs/third-party-tools/prometheus/) is configured, an
+  alert will be triggered.
 
-Partitions attached via symbolic links are **read-write** for these operations:
+For read-only partitions, the following operations are supported:
 
-- _INSERT_, _UPDATE_, _ADD/DROP INDEX_, _ADD/DROP/RENAME COLUMN_: Data in the partition folders
-  are modified in place as a result of the operation.
+- [`ADD COLUMN`](/docs/reference/sql/alter-table-add-column/)
+- [`DROP COLUMN`](/docs/reference/sql/alter-table-drop-column/)
+- [`RENAME COLUMN`](/docs/reference/sql/alter-table-rename-column/)
+- [`ADD INDEX`](/docs/reference/sql/alter-table-alter-column-add-index/)
+- [`DROP INDEX`](/docs/reference/sql/alter-table-alter-column-drop-index/)
 
 ## Example
 
@@ -92,11 +108,12 @@ with AWS S3 for cold storage:
 
 ### Symbolic link
 
-The following example creates a table `tab` with some data, detaches all but the last partition, and demonstrates how to
-attach the partitions using symbolic links.
+The following example creates a table `tab` with some data, detaches all but the
+last partition, and demonstrates how to attach the partitions using symbolic
+links.
 
-These SQL statements create table `tab` partitioned by year, and insert seven rows that result in a total of
-seven partitions:
+These SQL statements create table `tab` partitioned by year, and insert seven
+rows that result in a total of seven partitions:
 
 ```sql
 CREATE TABLE tab (name STRING, age INT, dob TIMESTAMP) TIMESTAMP(dob) PARTITION BY YEAR;
@@ -116,7 +133,8 @@ This SQL statement detaches partitions 2022, 2023, 2024, 2025, 2026, and 2027:
 ALTER TABLE tab DETACH PARTITION WHERE dob < '2028';
 ```
 
-Assuming QuestDB's root directory to be `/opt/homebrew/var/questdb/db`, the content of the table folder is:
+Assuming QuestDB's root directory to be `/opt/homebrew/var/questdb/db`, the
+content of the table folder is:
 
 ```shell
 2022.detached
@@ -134,14 +152,16 @@ _txn_scoreboard
 seq
 ```
 
-You can now move those `<partition_name.detached>` folders to a different path, potentially a different volume:
+You can now move those `<partition_name.detached>` folders to a different path,
+potentially a different volume:
 
 ```shell
 mv /opt/homebrew/var/questdb/db/tab/*.detached /cold_storage/tab
 ```
 
-When you want to attach these partitions back, create a symlink for every partition to be attached
-from the table folder `/opt/homebrew/var/questdb/db/tab`:
+When you want to attach these partitions back, create a symlink for every
+partition to be attached from the table folder
+`/opt/homebrew/var/questdb/db/tab`:
 
 ```shell
 ln -s /cold_storage/tab/2022.detached 2022.attachable
@@ -170,7 +190,8 @@ _txn_scoreboard
 seq
 ```
 
-After the symbolic links have been created, the partitions can be attached with the following SQL statement:
+After the symbolic links have been created, the partitions can be attached with
+the following SQL statement:
 
 ```sql
 ALTER TABLE tab ATTACH PARTITION LIST '2022', '2023', '2024', '2025', '2026', '2027';
@@ -180,7 +201,8 @@ ALTER TABLE tab ATTACH PARTITION LIST '2022', '2023', '2024', '2025', '2026', '2
 
 - The SQL reference to the partitions does not include the suffix `.attachable`.
 - The `WHERE` clause is not supported when attaching partitions.
-- The latest partition cannot be detached. However, it can be irreversibly deleted using [DROP TABLE](/docs/reference/sql/drop/).
+- The latest partition cannot be detached. However, it can be irreversibly
+  deleted using [DROP TABLE](/docs/reference/sql/drop/).
 
 :::
 
