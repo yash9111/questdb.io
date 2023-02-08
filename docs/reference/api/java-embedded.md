@@ -89,22 +89,82 @@ import TabItem from "@theme/TabItem"
 
 ## Writing data
 
-The `TableWriter` facilitates table writes. To successfully create an instance
-of `TableWriter`, the table must:
+This section provides example codes to write data to WAL and non-WAL tables. See
+[Write Ahead Log](docs/concept/write-ahead-log) for details about the
+differences between WAL and non-WAL tables.
+
+The following writers are available for data ingestion:
+
+- `WalWriter` for WAL tables
+- `TableWriter` for non-WAL tables
+- `TableWriterAPI` for both WAL and non-WAL tables as it is an interface for
+  `WalWriter` and `Table Writer`
+
+### Writing data using `WalWriter`
+
+The `WalWriter` facilitates table writes to WAL tables. To successfully create
+an instance of `WalWriter`, the table must already exist.
+
+```java title="Example WalWriter"
+
+try (CairoEngine engine = new CairoEngine(configuration)) {
+    final SqlExecutionContext ctx = new SqlExecutionContextImpl(engine, 1);
+    try (SqlCompiler compiler = new SqlCompiler(engine)) {
+        compiler.compile("create table testTable (" +
+                "a int, b byte, c short, d long, e float, g double, h date, " +
+                "i symbol, j string, k boolean, l geohash(8c), ts timestamp" +
+                ") timestamp(ts) partition by day WAL", ctx);
+
+        // write data into WAL
+        try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), "testTable")) {
+            for (int i = 0; i < 3; i++) {
+                TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
+                row.putInt(0, 123);
+                row.putByte(1, (byte) 1111);
+                row.putShort(2, (short) 222);
+                row.putLong(3, 333);
+                row.putFloat(4, 4.44f);
+                row.putDouble(5, 5.55);
+                row.putDate(6, System.currentTimeMillis());
+                row.putSym(7, "xyz");
+                row.putStr(8, "abc");
+                row.putBool(9, true);
+                row.putGeoHash(10, GeoHashes.fromString("u33dr01d", 0, 8));
+                row.append();
+            }
+            writer.commit();
+        }
+
+        // apply WAL to the table
+        try (ApplyWal2TableJob walApplyJob = new ApplyWal2TableJob(engine, 1, 1)) {
+            while (walApplyJob.run(0));
+        }
+    }
+}
+```
+
+### Writing data using `TableWriter`
+
+Non-WAL tables do not allow concurrent writes via multiple interfaces. To
+successfully create an instance, the table must:
 
 - Already exist
 - Have no other open writers against it as the `TableWriter` constructor will
   attempt to obtain an exclusive cross-process lock on the table.
 
-```java title="Example table writer"
-final CairoConfiguration configuration = new DefaultCairoConfiguration("data_dir");
+```java title="Example TableWriter"
+
+final CairoConfiguration configuration = new DefaultCairoConfiguration("dbRoot");
 try (CairoEngine engine = new CairoEngine(configuration)) {
-    final SqlExecutionContextImpl ctx = new SqlExecutionContextImpl(engine, 1);
+    final SqlExecutionContext ctx = new SqlExecutionContextImpl(engine, 1);
     try (SqlCompiler compiler = new SqlCompiler(engine)) {
+        compiler.compile("create table testTable (" +
+                "a int, b byte, c short, d long, e float, g double, h date, " +
+                "i symbol, j string, k boolean, l geohash(8c), ts timestamp" +
+                ") timestamp(ts) partition by day", ctx);
 
-        compiler.compile("create table abc (a int, b byte, c short, d long, e float, g double, h date, i symbol, j string, k boolean, l geohash(8c), ts timestamp) timestamp(ts)", ctx);
-
-        try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "abc", "testing")) {
+        // write data directly into the table
+        try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "testTable", "test")) {
             for (int i = 0; i < 11; i++) {
                 TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
                 row.putInt(0, 123);
@@ -124,6 +184,51 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
         }
     }
 }
+
+```
+
+### Writing data using `TableWriterAPI`
+
+`TableWriterAPI` allows writing to both WAL and non-WAL tables by returning the
+suitable `Writer` based on the table configurations. The table must already
+exist:
+
+```java title="Example TableWriterAPI"
+
+try (CairoEngine engine = new CairoEngine(configuration)) {
+    final SqlExecutionContext ctx = new SqlExecutionContextImpl(engine, 1);
+    try (SqlCompiler compiler = new SqlCompiler(engine)) {
+        compiler.compile("create table testTable (" +
+                "a int, b byte, c short, d long, e float, g double, h date, " +
+                "i symbol, j string, k boolean, l geohash(8c), ts timestamp" +
+                ") timestamp(ts) partition by day WAL", ctx);
+
+        // write data into the table
+        try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), "testTable", "test")) {
+            for (int i = 0; i < 3; i++) {
+                TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
+                row.putInt(0, 123);
+                row.putByte(1, (byte) 1111);
+                row.putShort(2, (short) 222);
+                row.putLong(3, 333);
+                row.putFloat(4, 4.44f);
+                row.putDouble(5, 5.55);
+                row.putDate(6, System.currentTimeMillis());
+                row.putSym(7, "xyz");
+                row.putStr(8, "abc");
+                row.putBool(9, true);
+                row.putGeoHash(10, GeoHashes.fromString("u33dr01d", 0, 8));
+                row.append();
+            }
+            writer.commit();
+        }
+
+        // apply WAL to the table
+        try (ApplyWal2TableJob walApplyJob = new ApplyWal2TableJob(engine, 1, 1)) {
+            while (walApplyJob.run(0));
+        }
+    }
+}
 ```
 
 ### Detailed steps
@@ -131,7 +236,7 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
 #### Configure Cairo engine
 
 CairoEngine is a resource manager for the embedded QuestDB. Its main function is
-to facilitate concurrent access to pools of `TableReader` and `TableWriter`
+to facilitate concurrent access to pools of `TableReader` and suitable writer
 instances.
 
 ```java title="New CairoEngine instance"
@@ -140,9 +245,9 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
 ```
 
 A typical application will need only one instance of `CairoEngine`. This
-instance will start when application starts and shuts down when application
-closes. You will need to close `CairoEngine` gracefully when the application
-stops.
+instance will start when the application starts and shuts down when the
+application closes. You will need to close `CairoEngine` gracefully when the
+application stops.
 
 QuestDB provides a default configuration which only requires the
 `data directory` to be specified. For a more advanced usage, the whole
@@ -150,7 +255,7 @@ QuestDB provides a default configuration which only requires the
 
 #### Create an instance of SqlExecutionContext
 
-Execution context is a conduit for passing SQL execution artefacts to the
+Execution context is a conduit for passing SQL execution artifacts to the
 execution site. This instance is not thread-safe and it must not be shared
 between threads.
 
@@ -164,31 +269,58 @@ always be 1.
 
 #### New SqlCompiler instance and blank table
 
-Before we start writing data using `TableWriter`, the target table has to exist.
-There are several ways to create new table ; using `SqlCompiler` is the easiest.
+Before we start writing data using a writer, the target table has to exist.
+There are several ways to create a new table and we recommend using
+`SqlCompiler`:
 
 ```java title="Creating new table"
+
+// Create a non-WAL table:
+
 try (SqlCompiler compiler = new SqlCompiler(engine)) {
-    compiler.compile("create table abc (a int, b byte, c short, d long, e float, g double, h date, i symbol, j string, k boolean, l geohash(8c), ts timestamp) timestamp(ts)", ctx);
+    compiler.compile("create table abc (a int, b byte, c short, d long, e float, g double, h date, i symbol, j string, k boolean, l geohash(8c), ts timestamp) timestamp(ts) bypass wal", ctx);
+
+// Create a WAL table:
+
+try (SqlCompiler compiler = new SqlCompiler(engine)) {
+    compiler.compile("create table abc (a int, b byte, c short, d long, e float, g double, h date, i symbol, j string, k boolean, l geohash(8c), ts timestamp) timestamp(ts) wal", ctx);
 ```
 
 As you will be able to see below, the table field types and indexes must match
 the code that is populating the table.
 
-#### New instance of TableWriter
+#### A new writer instance
 
-We use engine to create instance of `TableWriter`. This will enable reusing this
-`TableWriter` instance later, when we use the same method of creating table
-writer again.
+We use `engine` to create an instance of the writer. This will enable reusing
+this writer instance later, when we use the same method of creating table writer
+again.
 
-```java title="New table writer instance"
+```java title="New table writer instance for a non-WAL table"
+
 try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "abc", "testing")) {
 ```
 
-The writer will hold exclusive lock on table `abc` until it is closed and
-`testing` will be used as the lock reason. This lock is both intra and
-inter-process. If you have two Java applications accessing the same table only
-one will succeed at one time.
+```java title="New table writer instance for a WAL table"
+
+try (WalWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "abc")) {
+```
+
+```java title="New table writer instance for either a WAL or non-WAL table"
+
+try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), "abc", "testing")) {
+
+```
+
+`TableWriter` - A non-WAL table uses `TableWriter`, which will hold an exclusive
+lock on table `abc` until it is closed and `testing` will be used as the lock
+reason. This lock is both intra- and inter-process. If you have two Java
+applications accessing the same table only one will succeed at one time.
+
+`WalWriter` - A WAL table uses `WalWriter` to enable concurrent data ingestion,
+data modification, and schema changes, as the table is not locked.
+
+`TableWriterAPI` - Both WAL and Non-WAL tables can use `TableWriterAPI`. It is
+an interface implemented by both writers.
 
 #### Create a new row
 
@@ -200,7 +332,7 @@ Although this operation semantically looks like a new object creation, the row
 instance is actually being re-used under the hood. A Timestamp is necessary to
 determine a partition for the new row. Its value has to be either increment or
 stay the same as the last row. When the table is not partitioned and does not
-have a designated timestamp column, timestamp value can be omitted.
+have a designated timestamp column, the timestamp value can be omitted.
 
 ```java title="Creating new table row without timestamp"
 TableWriter.Row row = writer.newRow();
@@ -215,8 +347,8 @@ index as opposed to by name.
 row.putLong(3, 333);
 ```
 
-Column update order is not important and update can be sparse. All unset columns
-will default to NULL values.
+Column update order is not important and updates can be sparse. All unset
+columns will default to NULL values.
 
 #### Append a row
 

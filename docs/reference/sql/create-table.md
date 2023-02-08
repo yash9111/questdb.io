@@ -216,6 +216,19 @@ created.
 
 :::
 
+## WAL table parameter
+
+It is possible to create a [WAL table](/docs/concept/write-ahead-log), allowing concurrent data ingestion
+and modification through multiple interfaces:
+
+- `WAL` creates a WAL table.
+- `BYPASS WAL` creates a non-WAL table.
+- When neither option is specified,
+  [the server configuration](/docs/reference/configuration#cairo-engine),
+  `cairo.wal.enabled.default`, is used:
+  - `true`: creates a WAL table.
+  - `false`: creates a non-WAL table.
+
 ## WITH table parameter
 
 ![Flow chart showing the syntax of keyword to specify WITH table parameter](/img/docs/diagrams/createTableWithMaxRowParam.svg)

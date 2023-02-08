@@ -84,24 +84,54 @@ Returns a `table`.
 tables();
 ```
 
-| id  | name        | designatedTimestamp | partitionBy | maxUncommittedRows | o3MaxLag  |
-| --- | ----------- | ------------------- | ----------- | ------------------ | --------- |
-| 1   | my_table    | ts                  | DAY         | 500000             | 300000000 |
-| 2   | device_data | null                | NONE        | 10000              | 30000000  |
+| id  | name        | designatedTimestamp | partitionBy | maxUncommittedRows | o3MaxLag  | walEnabled |
+| --- | ----------- | ------------------- | ----------- | ------------------ | --------- | ---------- |      
+| 1   | my_table    | ts                  | DAY         | 500000             | 300000000 | true       |
+| 2   | device_data | null                | NONE        | 10000              | 30000000  | false      |
 
 ```questdb-sql title="All tables in reverse alphabetical order"
 tables() ORDER BY name DESC;
 ```
 
-| id  | name        | designatedTimestamp | partitionBy | maxUncommittedRows | o3MaxLag  |
-| --- | ----------- | ------------------- | ----------- | ------------------ | --------- |
-| 2   | device_data | null                | NONE        | 10000              | 30000000  |
-| 1   | my_table    | ts                  | DAY         | 500000             | 300000000 |
+| id  | name        | designatedTimestamp | partitionBy | maxUncommittedRows | o3MaxLag  | walEnabled |
+| --- | ----------- | ------------------- | ----------- | ------------------ | --------- | ---------- |
+| 2   | device_data | null                | NONE        | 10000              | 30000000  | false      |
+| 1   | my_table    | ts                  | DAY         | 500000             | 300000000 | true       |
 
 ```questdb-sql title="All tables with a daily partitioning strategy"
 tables() WHERE partitionBy = 'DAY'
 ```
 
-| id  | name     | designatedTimestamp | partitionBy | maxUncommittedRows |
-| --- | -------- | ------------------- | ----------- | ------------------ |
-| 1   | my_table | ts                  | DAY         | 500000             |
+| id  | name     | designatedTimestamp | partitionBy | maxUncommittedRows | walEnabled |
+| --- | -------- | ------------------- | ----------- | ------------------ | ---------- |
+| 1   | my_table | ts                  | DAY         | 500000             | true       |
+
+## wal_tables
+
+`wal_tables()` returns the WAL status for all [WAL tables](/docs/concept/write-ahead-log/) in the database.
+
+**Arguments:**
+
+- `tables()` does not require arguments.
+
+**Return value:**
+
+Returns a `table` including the following information:
+
+- `name` - table name
+- `suspended` - suspended status flag
+- `writerTxn` - the last committed transaction in TableWriter
+- `sequencerTxn` - the last committed transaction in the sequencer
+
+**Examples:**
+
+```questdb-sql title="List all tables"
+wal_tables();
+```
+
+| name        | suspended | writerTxn | sequencerTxn | 
+| ----------- |-----------|-----------|--------------| 
+| sensor_wal  | false     | 2         | 4            | 
+| weather_wal | false     | 3         | 3            | 
+| test_wal    | true      | 7         | 9            | 
+

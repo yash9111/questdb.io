@@ -108,6 +108,7 @@ module.exports = {
       label: "Concepts",
       type: "category",
       items: [
+        "concept/write-ahead-log",        
         "concept/storage-model",
         "concept/designated-timestamp",
         "concept/sql-extensions",
@@ -200,6 +201,8 @@ module.exports = {
                 "reference/sql/alter-table-detach-partition",
                 "reference/sql/alter-table-drop-partition",
                 "reference/sql/alter-table-set-param",
+                "reference/sql/alter-table-set-type",
+                "reference/sql/alter-table-resume-wal",
               ],
             },
             {

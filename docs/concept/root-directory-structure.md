@@ -120,8 +120,10 @@ The table also stores metadata in `_meta` files:
 │   │   │   └── ...
 │   │   │  
 │   │   ├── _meta
-│   │   └── _txn
+│   │   ├── _txn
+│   │   └── _cv
 │   └──  table_1.lock
+
 ```
 
 If the table is not partitioned, data is stored in a directory called `default`:
@@ -139,6 +141,57 @@ If the table is not partitioned, data is stored in a directory called `default`:
 │   │   ├── _meta
 │   │   └── _txn
 │   └──  table_1.lock
+```
+
+For a [WAL table](docs/concept/write-ahead-log), the table structure contains one or more `wal` folders and a
+`seq` folder representing the Sequencer:
+
+``` wal table filestructure
+├── db
+│   ├── Table
+│   │   │  
+│   │   ├── Partition 1
+│   │   │   ├── _archive
+│   │   │   ├── column1.d
+│   │   │   ├── column2.d
+│   │   │   ├── column2.k
+│   │   │   └── ...
+│   │   ├── Partition 2
+│   │   │   ├── _archive
+│   │   │   ├── column1.d
+│   │   │   ├── column2.d
+│   │   │   ├── column2.k
+│   │   │   └── ...
+│   │   ├── txn_seq
+│   │   │   ├── _meta
+│   │   │   ├── _txnlog
+│   │   │   └── _wal_index.d
+│   │   ├── wal1
+│   │   │   └── 0
+│   │   │       ├── _meta
+│   │   │       ├── _event
+│   │   │       ├── column1.d
+│   │   │       ├── column2.d
+│   │   │       └── ...
+|   |   | 
+│   │   ├── wal2
+│   │   │   └── 0
+│   │   │   │   ├── _meta
+│   │   │   │   ├── _event
+│   │   │   │   ├── column1.d
+│   │   │   │   ├── column2.d
+│   │   │   │   └── ...
+│   │   │   └── 1
+│   │   │       ├── _meta
+│   │   │       ├── _event
+│   │   │       ├── column1.d
+│   │   │       ├── column2.d
+│   │   │       └── ...
+│   │   │ 
+│   │   ├── _meta
+│   │   ├── _txn
+│   │   └── _cv
+│   |
 ```
 
 :::caution

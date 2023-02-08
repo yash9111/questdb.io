@@ -337,6 +337,21 @@ QuestDB.
 | cairo.sql.column.purge.retry.delay.limit       | 60000000          | Delay limit (μs), upon reaching which, the re-try delay remains constant.                                                                                                                                                |
 | cairo.sql.column.purge.retry.limit.days        | 31                | Number of days purge system will continue to re-try deleting stale column files before giving up.                                                                                                                        |
 | cairo.system.table.prefix                      | sys.              | Prefix of the tables used for QuestDB internal data storage. These tables are hidden from QuestDB web console.                                                                                                           |
+| cairo.wal.enabled.default                      | false             | Setting defining whether WAL table is the default when using `CREATE TABLE`.                                                                                                                                             |
+
+### WAL table configurations
+
+The following WAL tables settings on parallel threads are configurable for applying WAL data to the table storage:
+
+| Property                 | Default                        | Description                                                                                                                                                                                          |
+| ------------------------ | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| wal.apply.worker.count   | equal to the CPU core count    | Number of dedicated worker threads assigned to handle WAL tabel data. |
+| wal.apply.worker.affinity | equal to the CPU core count    | Comma separated list of CPU core indexes.                                            |
+| wal.apply.worker.haltOnError     | false                | Flag that indicates if worker thread must shutdown on unhandled error   |
+| cairo.wal.purge.interval | 30000                       | Period in ms of how often WAL-applied files are cleaned up from the disk |
+| cairo.wal.segment.rollover.row.count | 200000           | The number of rows written to the same WAL segment before starting a new segment |
+| cairo.wal.commit.squash.row.limit | 500000                  | Maximum row count that can be squashed together from multiple transactions before applying to the table. A very low value can delay data visibility. |
+
 
 ### CSV import
 
@@ -562,7 +577,7 @@ writers=file,stdout
 #w.file.rollEvery=day
 #rollSize specifies size at which to roll a new log file: a number followed by k, m, g (KB, MB, GB respectively)
 #w.file.rollSize=128m
-#lifeDuration accepts: a number followed by s, m, h, d, w, M, y for seconds, minutes, hours, etc.  
+#lifeDuration accepts: a number followed by s, m, h, d, w, M, y for seconds, minutes, hours, etc.
 #w.file.lifeDuration=1d
 #sizeLimit is the max fileSize of the log directory. Follows same format as rollSize
 #w.file.sizeLimit=1g

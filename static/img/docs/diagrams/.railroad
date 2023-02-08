@@ -10,7 +10,8 @@ createTableDef
   )
   ) (
   ('timestamp' '(' columnRef ')' ) ('PARTITION' 'BY' ('NONE' | 'YEAR' | 'MONTH' | 'DAY' | 'HOUR' ))?
-  )?
+  )? (
+  'WAL' | 'BYPASS' 'WAL')?
 
 createTableLike
 ::= 'CREATE' 'TABLE' ('(' 'LIKE' sourceTableName ')')? 
@@ -221,6 +222,12 @@ setParamCommitLag
 
 VacuumTable
  ::= 'VACUUM' 'TABLE' tableName
+
+ResumeWal
+::= 'RESUME' 'WAL' ( 'FROM' 'TRANSACTION' sequencerTxn | 'FROM' 'TXN' sequencerTxn )?
+
+SetType
+::= 'SET' 'TYPE' ( 'BYPASS' )? 'WAL'
 
 Update
  ::= UPDATE 'tableName' SET columnName '=' 'expression' ( ',' columnName '=' 'expression' )*
