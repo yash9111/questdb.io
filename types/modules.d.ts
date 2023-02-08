@@ -31,7 +31,6 @@ declare module "@docusaurus/useDocusaurusContext" {
         domain: string
         githubOrgUrl: string
         githubUrl: string
-        helmVersion: string
         linkedInUrl: string
         oneLiner: string
         slackUrl: string

@@ -12,7 +12,6 @@ module.exports = {
   githubOrgUrl: consts.githubOrgUrl,
   githubUrl: `${consts.githubOrgUrl}/questdb`,
   websiteGithubUrl: `${consts.githubOrgUrl}/questdb.io`,
-  helmVersion: "0.11.0",
   linkedInUrl: "https://www.linkedin.com/company/questdb/",
   oneLiner: "QuestDB: the database for time series",
   slackUrl: `https://slack.${consts.domain}`,
