@@ -5,19 +5,6 @@ description:
   This document describes how to load large CSV data using COPY SQL keyword.
 ---
 
-:::caution
-
-For partitioned tables, the best `COPY` performance can be achieved only on a
-machine with a local, physically attached SSD. It is possible to use a network
-block storage, such as an AWS EBS volume to perform the operation, with the
-following impacts:
-
-- Users need to configure the maximum IOPS and throughput setting values for the
-  volume.
-- The required import time is likely to be 5-10x longer.
-
-:::
-
 The [COPY](/docs/reference/sql/copy/) SQL command is the preferred way to import
 large CSV files into partitioned tables. It should be used to migrate data from
 another database into QuestDB. This guide describes the method of migrating data
@@ -25,6 +12,19 @@ to QuestDB via CSV files. For the time being this is the only way to migrate
 data from other databases into QuestDB.
 
 This guide is applicable for QuestDB version 6.5 and higher.
+
+:::caution
+
+For partitioned tables, the best `COPY` performance can be achieved only on a
+machine with a local, physically attached SSD. It is possible to use a network
+block storage, such as an AWS EBS volume to perform the operation, with the
+following impact:
+
+- Users need to configure the maximum IOPS and throughput setting values for the
+  volume.
+- The required import time is likely to be 5-10x longer.
+
+:::
 
 ## Prepare the import
 
