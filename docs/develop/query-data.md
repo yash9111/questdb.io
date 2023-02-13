@@ -296,9 +296,7 @@ await using NpgsqlCommand command = new NpgsqlCommand(sql, connection);
 await using (var reader = await command.ExecuteReaderAsync()) {
     while (await reader.ReadAsync())
     {
-        var station = reader.GetString(0);
-        var height = double.Parse(reader.GetString(1));
-        var timestamp = reader.GetString(2);
+        var x = reader.GetInt64(0);
     }
 }
 ```
