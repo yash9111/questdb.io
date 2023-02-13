@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-prometheus-integration
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 It's been an exciting month at QuestDB HQ; we released software version 6.0.4
 with basic Prometheus support, and we had continued community growth with new

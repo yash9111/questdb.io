@@ -12,15 +12,9 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-release-out-of-order-ingestion-capacity-planning
 ---
 
-import Banner from "@theme/Banner"
 import Screenshot from "@theme/Screenshot"
 
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 We're happy to share the latest updates about QuestDB on the web while we work
 on bringing version 6.0.0 to fruition, and we hope you enjoy the latest content

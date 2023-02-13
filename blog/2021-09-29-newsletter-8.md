@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-geospatial-data-and-airbus-partnership
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 Here's the latest roundup from QuestDB HQ with our most recent updates; we have
 exciting new releases, including support for geospatial data, an official

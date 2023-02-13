@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-time-series-benchmarking-suite-postgres-conference
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="QuestDB newsletter banner"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 With the official launch of 6.0 just around the corner, we want to keep you up
 to speed on our latest updates, news and content from recent weeks.

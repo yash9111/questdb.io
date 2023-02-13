@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-yahoo-case-study-series-a
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 We're happy to bring you our roundup of updates from QuestDB HQ, including the
 latest releases with new SQL features, our community meetup with guest speakers

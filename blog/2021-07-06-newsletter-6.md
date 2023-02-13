@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-cardinality-tsbs-benchmark-timescaledb-influxdb-clickhouse
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 The last month has been exciting for the QuestDB team; we've had a lot of kudos
 sent our way including a feature as the top release for

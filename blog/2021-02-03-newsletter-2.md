@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-sql-create-table-if-not-exist
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 ## January Update
 

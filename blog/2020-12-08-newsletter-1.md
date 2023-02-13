@@ -12,14 +12,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-kafka-jdbc-connector
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="Image of QuestDB logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 2020 is quickly drawing to an end and we'd like to wrap up the month on a high
 note with you. We've been working hard making QuestDB more reliable and

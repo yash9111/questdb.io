@@ -11,14 +11,7 @@ image: /img/blog/newsletter-preview.png
 slug: newsletter-bind-variables
 ---
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="QuestDB newsletter logo"
-  src="/img/blog/newsletter.png"
-  width={692}
-  height={200}
-/>
+![QuestDB newsletter banner](/img/blog/newsletter.png)
 
 The response to our 6.0 launch from new and existing users and the developer
 community has been amazing. We're excited to see our community grow and join us
