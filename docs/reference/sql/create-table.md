@@ -304,7 +304,7 @@ to either remove or rename the table's directory in its volume.
 ### Configuration
 
 The secondary table target volume is defined by
-`cairo.create.allowed.volume.definitions` in
+`cairo.volumes` in
 [`server.conf`](/docs/reference/configuration/#cairo-engine). The default setting
 contains an empty list, which means the feature is not enabled.
 
@@ -312,7 +312,7 @@ To enable the feature, define as many volume pairs as you need, with syntax
 _alias -> volume-root-path_, and separate different pairs with a comma. For example:
 
 ```
-cairo.create.allowed.volume.definitions=SECONDARY_VOLUME -> /Users/quest/mounts/secondary, BIN -> /var/bin
+cairo.volumes=SECONDARY_VOLUME -> /Users/quest/mounts/secondary, BIN -> /var/bin
 ```
 
 Additional notes about defining the alias and volume root paths:
