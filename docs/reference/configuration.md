@@ -347,7 +347,7 @@ The following WAL tables settings on parallel threads are configurable for apply
 
 | Property                 | Default                        | Description                                                                                                                                                                                          |
 | ------------------------ | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| wal.apply.worker.count   | equal to the CPU core count    | Number of dedicated worker threads assigned to handle WAL tabel data. |
+| wal.apply.worker.count   | equal to the CPU core count    | Number of dedicated worker threads assigned to handle WAL table data. |
 | wal.apply.worker.affinity | equal to the CPU core count    | Comma separated list of CPU core indexes.                                            |
 | wal.apply.worker.haltOnError     | false                | Flag that indicates if worker thread must shutdown on unhandled error   |
 | cairo.wal.purge.interval | 30000                       | Period in ms of how often WAL-applied files are cleaned up from the disk |
