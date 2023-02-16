@@ -321,13 +321,11 @@ time range repeatedly, for a set number of times.
 ![Flow chart showing the syntax of the WHERE clause with a timestamp/modifier comparison](/img/docs/diagrams/whereTimestampIntervalSearch.svg)
 
 - `timestamp` is the original time range for the query.
-- `modifier` is an unsigned integer modifying the upper bound applying to the
-`timestamp`.
-<!--change to signed when this is merged: https://github.com/questdb/questdb/issues/2509
+- `modifier` is a signed integer modifying the upper bound applying to the
+`timestamp`:
 
   - A `positive` value extends the selected period.
   - A `negative` value reduces the selected period.
--->
 
 - `interval` is an unsigned integer indicating the desired interval period for
   the time range.
@@ -351,8 +349,6 @@ by one month.
 | ...                         | ...   |
 | 2019-01-31T23:59:59.999999Z | 115.8 |
 
-<!--
-https://github.com/questdb/questdb/issues/2509
 ```questdb-sql title="Results in a given month excluding the last 3 days"
 SELECT * FROM scores WHERE ts IN '2018-01;-3d';
 ```
@@ -365,7 +361,6 @@ Jan 2018) by 3 days.
 | 2018-01-01T00:00:00.000000Z | 123.4 |
 | ...                         | ...   |
 | 2018-01-28T23:59:59.999999Z | 113.8 |
--->
 
 
 Modifying the interval:
