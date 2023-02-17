@@ -58,6 +58,7 @@ module.exports = {
       items: [
         "guides/importing-data",
         "guides/importing-data-rest",
+        "guides/influxdb-migration",
         "guides/modifying-data",
         "guides/working-with-timestamps-timezones",
         "guides/out-of-order-commit-lag",
