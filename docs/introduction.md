@@ -77,12 +77,15 @@ pages for the following topics:
 This section describes how to integrate QuestDB with third-party tools and
 utilities for collecting metrics and visualizing data:
 
-- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting QuestDB
-  as a datasource for building visualizations and dashboards
+- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting
+  QuestDB as a datasource for building visualizations and dashboards
 - [Kafka](/docs/third-party-tools/kafka/overview/) guide for ingesting data from
   Kafka topics into QuestDB
-- [Pandas](/docs/third-party-tools/pandas/) for ingesting Pandas dataframes via ILP
+- [Pandas](/docs/third-party-tools/pandas/) for ingesting Pandas dataframes via
+  ILP
 - [Prometheus](/docs/third-party-tools/prometheus/) monitoring and alerting
+- [Redpanda](/docs/third-party-tools/redpanda/) instructions for a Kafka
+  compatible data streaming tool
 - [Telegraf](/docs/third-party-tools/telegraf/) guide for collecting system
   metrics, specifying QuestDB as an output and visualizing the results
 
@@ -98,7 +101,8 @@ data, and introduces features and capabilities unique to the system.
 - [SQL extensions](/docs/concept/sql-extensions) allow performant time series
   analysis with a concise syntax
 - [JIT compiler](/docs/concept/jit-compiler) to speed up `WHERE` clauses
-- [Partitions](/docs/concept/partitions) can be used to perform time-based queries more efficiently
+- [Partitions](/docs/concept/partitions) can be used to perform time-based
+  queries more efficiently
 - [Symbol](/docs/concept/symbol) type makes storing and retrieving repetitive
   strings efficient
 - [Indexes](/docs/concept/indexes) can be used for faster read access on
