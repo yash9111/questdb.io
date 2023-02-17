@@ -278,7 +278,8 @@ html[data-theme='light'] .markdown {
 }
 
 /* syntax railroad charts in documentation */
-html[data-theme='light'] .markdown img[src*="data:image/svg+xml"][alt*="chart"] {
+html[data-theme="light"] .markdown img[src*="data:image/svg+xml"][alt*="chart"],
+html[data-theme="light"] .markdown img[src$=".svg"][alt*="chart"] {
   filter: invert(1) hue-rotate(200deg);
 }
 
