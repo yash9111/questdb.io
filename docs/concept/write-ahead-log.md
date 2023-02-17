@@ -15,7 +15,8 @@ components and relevant functions as well as SQL keywords.
 
 ## Properties
 
-A WAL table permits the following concurrent transactions:
+A WAL table must be [partitioned](/docs/concept/partitions/). It permits the
+following concurrent transactions:
 
 - Data ingestion through different interfaces
 - Data modifications
@@ -33,8 +34,8 @@ The following configurations and keywords enable and create WAL tables:
 
   - Server-wide configuration `cairo.wal.enabled.default`: When
     `cairo.wal.enabled.default` is set to `true`,
-    [`CREATE TABLE`](/docs/reference/sql/create-table/) SQL keyword generates WAL
-    tables without `WAL` and `BYPASS WAL`.
+    [`CREATE TABLE`](/docs/reference/sql/create-table/) SQL keyword generates
+    WAL tables without `WAL` and `BYPASS WAL`.
 
 - Parallel threads to apply WAL data to the table storage can be configured, see
   [WAL table configuration](/docs/reference/configuration/#wal-table-configurations)
@@ -71,7 +72,8 @@ to a non-WAL table:
 
 - `ALTER TABLE`:
 
-  - [`ADD COLUMN`](/docs/reference/sql/alter-table-add-column/) can only add 1 column per statement
+  - [`ADD COLUMN`](/docs/reference/sql/alter-table-add-column/) can only add 1
+    column per statement
   - Non-structural operations may fail silently. These are partition-level and
     configuration operations:
 
@@ -92,8 +94,8 @@ A WAL table uses the following components to manage concurrent commit requests:
   The sequencer generates unique `txn` numbers as identifications to
   transactions and keeps a log tracking the allocation. This log is called
   `TransactionLog` and is stored in a meta file called `_txnlog`. See
-  [root directory](/docs/concept/root-directory-structure/#db-directory) for more
-  information.
+  [root directory](/docs/concept/root-directory-structure/#db-directory) for
+  more information.
 
 - WAL apply job: collects the commit requests based on the unique `txn` numbers
   and sends them to the `TableWriter` to be committed.

@@ -196,9 +196,10 @@ created.
 
 `PARTITION BY` allows for specifying the
 [partitioning strategy](/docs/concept/partitions) for the table. Tables created
-via SQL are not partitioned by default and tables can be partitioned by one of
+via SQL are not partitioned by default (`NONE`) and tables can be partitioned by one of
 the following:
 
+- `NONE`: the default when partition is not defined.
 - `YEAR`
 - `MONTH`
 - `DAY`
@@ -216,7 +217,7 @@ created.
 It is possible to create a [WAL table](/docs/concept/write-ahead-log), allowing concurrent data ingestion
 and modification through multiple interfaces:
 
-- `WAL` creates a WAL table.
+- `WAL` creates a WAL table. When a WAL table is created, the table must has a [partition](#partitioning) that is not `NONE`.
 - `BYPASS WAL` creates a non-WAL table.
 - When neither option is specified,
   [the server configuration](/docs/reference/configuration#cairo-engine),
