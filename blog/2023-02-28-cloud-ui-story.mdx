@@ -1,0 +1,182 @@
+---
+title: The Quest for a perfect UI Design
+author: Maciej Bodek
+author_title: QuestDB Team
+author_url: https://github.com/insmac
+author_image_url: https://avatars.githubusercontent.com/u/1871646?v=4
+description: The tools and design of the QuestDB Cloud UI
+keywords:
+  - ui
+  - cloud
+  - open source
+image: /img/blog/2023-02-28/questdb-cloud.png
+tags: [ui, cloud, open source]
+---
+
+import Screenshot from "@theme/Screenshot"
+import Banner from "@theme/Banner"
+
+<Banner
+  alt="A image of cloud with QuestDB theme color and the url https://questdb.io/cloud/."
+  height={467}
+  src="/img/blog/2023-02-28/questdb-cloud.png"
+  width={650}
+></Banner>
+
+TBD
+
+<!-- truncate -->
+
+## UI
+
+All good projects start with a well-prepared plan. Before writing any code, we
+sat down to make some forward-looking decisions.
+
+### Initial Considerations
+
+From the very beginning, one of our goals for QuestDB Cloud has been ease of
+use: simply let the user select a preset, spin up a QuestDB database, and start
+working with it as quickly as possible.
+
+We also wanted to provide a coherent, unified feel across our products:
+[QuestDB Web Console](https://demo.questdb.io/),
+[documentation](https://questdb.io/docs/), and of course, the Cloud. A key
+component of our user experience is our data explorer (QuestDB Web Console) that
+is the frontend for our open source database. It is already a slick and
+battle-tested UI, and we knew that we would want to integrate it into the Cloud
+at some point.
+
+Thus, we decided that the new Cloud project must leverage a similar stack and UI
+to minimize the amount of refactoring and redesign needed to incorporate the
+existing web console. This would also make it easier to ensure that the Cloud UI
+has a consistent branding experience and color palette across our entire web
+presence.
+
+Furthermore, we did not want to build the Cloud on top of a fully-fledged and
+heavy UI framework. With quite a bit of experience bootstrapping SaaS clients
+like Ant Design and Material UI, we were well aware of how, as a project matures
+and complexity increases, it inevitably progresses towards phasing out larger
+frameworks in favor of custom solutions.
+
+We decided to opt for a headless and pluggable set of UI primitives -
+[Radix UI](https://www.radix-ui.com/). This, in combination with natively
+supported [Styled Components](https://styled-components.com/), allows us to
+create a lightweight component library quickly and extend it as needed, without
+carrying over an entire boilerplate, build config, or styling.
+
+### The tech stack
+
+Gone are the days of LAMPs or MEANs. For Cloud UI, we decided to use NextJS as
+our main framework. Even though we have an amazing backend team to provide us
+with solid and well-thought APIs, leveraging some key NextJS features helps us
+to quickly build new features.
+
+For instance:
+
+- It's trivial to prefetch data using
+  [React Query](https://react-query-v3.tanstack.com/) within
+  [getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props).
+  This offloads major portions of page rendering to the server side, leveraging
+  SSR and vastly improving initial load performance.
+- Server-side API routes allow us to use third-party APIs for some features. We
+  can easily integrate with products like Airtable, ProductBoard, or Slack while
+  keeping both performance and security intact.
+- With the support of
+  [catch-all routes via spread operator](https://nextjs.org/docs/routing/dynamic-routes#catch-all-routes),
+  we are able to create API middlewares that can read the HTTP request, ensure
+  security and/or augment the payload or headers (authorization being one
+  example). We can even go a step further by routing the request to the correct
+  destination (like Python API on the backend) or even aggregate data from
+  multiple sources.
+
+### API Middlewares
+
+We are often presented with a scenario where some backend API route is either a
+work in progress or doesn't exist. There might be a proposed schema, but nothing
+is set in stone, or there is simply no stone at all.
+
+But this shouldn't stop us from iterating on features! By writing an API
+middleware, we ensure that all requests from the browser target the server side
+of NextJS, specifically a request handler at `pages/api/[…backend].ts`.
+
+At first sight, this might seem just like an additional hurdle for us to jump in
+order to process a request; now the request needs to go through the NodeJS
+server on its way to the main destination. However, this extra jump is
+tremendously worth its performance cost cost by unlocking the following
+benefits:
+
+- Single location to handle authorization headers
+- Trivial mocking for non-existent or incomplete backend API routes
+- Ability to integrate with other backend resources while keeping them all
+  transparent to the user
+
+This decision allows us to build
+[React Query](https://react-query-v3.tanstack.com/) abstractions (hooks,
+prefetch, and all the associated toolkits) before the actual backend API is
+ready. For example, the frontend team can start with mocked requests in, say,
+`pages/api/new-feature/endpoint.ts`. This file would take precedence over the
+`pages/api/[…backend].ts` middleware and the developer is trivially able to
+provide any kind of request handler once backend development is further along.
+
+In addition, a catch-all API middleware let us hide implementation details from
+the client side. For example, in Cloud UI we have a "Feedback" button. Clicking
+it shows a popup with a simple text form to collect user feedback. Once the user
+clicks submit, the browser sends the request using the same API domain as it
+does for all other requests (and not some `3rd-party-feedback-collector.com`).
+
+Internally, within the NextJS API handler, we forward the request to… you
+guessed it, Slack! Yep, your feedback goes straight to a dedicated
+#cloud-user-feedback channel where we can follow on any suggestions. We do
+actually read it all!
+
+[TODO: Diagram image of the proxy here]
+
+### How we stay lightweight
+
+In a startup environment, when building an MVP (minimum viable product), there
+is an irresistible urge to snap on a library or a plugin on everything without
+having to deal with implementation details. Just run `npm install` and move on,
+right?
+
+On the surface, this shaves off days from the initial development hours, but
+this approach adds dependencies that inevitably require more attention in the
+long run. For example, many popular libraries internally add even more more
+dependencies, and we are unable to control this (`left-pad` anyone?).
+
+Picking dependencies blindly can also explode the cost of maintenance over time.
+A week or more spent swapping out a dependency in six months has a much greater
+cost than a few additional hours spent researching at the initial stage.
+
+Consider our monitoring charts, which involve rendering graphs of customer
+database metrics. Because we use [Apache ECharts](https://echarts.apache.org/)
+to render charts in the open source QuestDB Web Console, we already have
+experience with a package that supports drawing any kind of plot type you can
+imagine. This, however, even when shaving off as much size as possible with the
+help of named exports, gained us more than 900 KB of weight that we would need
+to transmit across the wire.
+
+Keeping in mind that line plots are only what we really need, along the team's
+familiarity with Grafana, we did some research and discovered
+[uPlot](https://github.com/leeoniya/uPlot), which is a fantastic and extremely
+lightweight (around 40KB) plotting library that powers the aforementioned
+observability powerhouse. Indeed, we struck gold with Leon Sorokin's creation:
+not only it is minuscule, but the ability to render the time axis within a set
+range and given incomplete data points is also mind-boggling. It also looks and
+feels familiar, which is an added bonus.
+
+## The roadmap
+
+We are at the point of making QuestDB Cloud generally available for users.
+Having gained a lot of feedback on all fronts during our private preview
+program, we are on a path forwards, with clear main deliverables planned for
+2023, yet having enough headroom for experiments and prototyping to validate our
+technical or functional choices in real life.
+
+![Screenshot of the feedback button](/img/blog/2023-02-28/feedback.png)
+
+An integral part of the Cloud is a humble feedback button. It is a single and
+easy-to-use text field and we will encourage everyone to share anything, be it
+an issue or a note on improving the product, with us. We are reading and
+evaluating each and every message, and during the private preview phase, they
+have proven to be extremely fruitful, sparked great discussions, and resulted in
+a lot of improvements across the product.
