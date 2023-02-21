@@ -6,16 +6,22 @@ import clsx from "clsx"
 
 import { Dialog } from "../../../components/Dialog"
 import { ContactForm } from "../../cloud/ContactForm"
+import styled from "styled-components"
+import { formatPrice } from "../../../utils"
 
 export type PricingPlan = {
   type: "entry" | "performant" | "high-performance"
   title: string
   description: string
-  price: string
+  price: number
   specs: Array<{ label: string; value: string }>
   subtext: string
   highlighted?: boolean
 }
+
+const StyledDialogContent = styled(Dialog.Content)`
+  padding: 0;
+`
 
 export const Plan = (plan: PricingPlan) => (
   <article className={style.root}>
@@ -29,9 +35,16 @@ export const Plan = (plan: PricingPlan) => (
       <span className={style.description}>{plan.description}</span>
     </header>
 
-    <div className={style.price}>
-      <span className={style.priceValue}>${plan.price}</span>
+    <div className={style.hourlyPrice}>
+      <span className={style.priceHourlyValue}>${plan.price.toFixed(3)}</span>
       <span className={style.pricePeriod}>per hour</span>
+    </div>
+
+    <div className={style.monthlyPrice}>
+      <span className={style.priceMonthlyValue}>
+        ${formatPrice(((plan.price * 730).toFixed(0) as unknown) as number)}
+      </span>
+      <span className={style.pricePeriod}>per month (est)</span>
     </div>
 
     <div className={style.specs}>
@@ -46,11 +59,13 @@ export const Plan = (plan: PricingPlan) => (
     <div className={style.cta}>
       <Dialog>
         <Dialog.Trigger>
-          <Button size="small">Get Access</Button>
+          <Button size="small" dataHook={`get-access-button-plan-${plan.type}`}>
+            Get Access
+          </Button>
         </Dialog.Trigger>
-        <Dialog.Content title="Join Public Preview">
-          <ContactForm interestedIn={plan.type} />
-        </Dialog.Content>
+        <StyledDialogContent>
+          <ContactForm interestedIn={plan.type} modal />
+        </StyledDialogContent>
       </Dialog>
     </div>
   </article>

@@ -1,6 +1,8 @@
 import React from "react"
+import Link from "@docusaurus/Link"
 import { Chip } from "../Chip"
 import styles from "./styles.module.css"
+import { ensureTrailingSlash } from "../../../utils"
 
 export type Props = {
   items: Array<{ name: string; permalink: string }>
@@ -14,11 +16,13 @@ export const Chips = ({ items, activeChip }: Props) => (
         key={permalink}
         className={styles.chip}
         label={name}
-        permalink={permalink}
+        permalink={ensureTrailingSlash(permalink)}
         active={activeChip === permalink}
       />
     ))}
 
-    <Chip className={styles.chip} label="More..." permalink="/blog/tags" />
+    <Link className={styles.linkToTags} to="/blog/tags/">
+      See all topics
+    </Link>
   </div>
 )

@@ -141,7 +141,7 @@ services:
 
 Voila! When we run `docker-compose up`, QuestDB and Redis start, and we can
 access QuestDB's interactive console on
-[http://127.0.0.1:9000](http://127.0.0.1:9000).
+`http://127.0.0.1:9000`.
 
 ### Install backend dependencies
 
@@ -235,9 +235,9 @@ async def get_signals():
 
 We have now created an API endpoint that will serve the system status data of
 the monitored URL. If you open
-[http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc), you can see the
+`http://127.0.0.1:8000/redoc`, you can see the
 generated documentation for the endpoint, or you can check it working at
-[http://127.0.0.1:8000/signals](http://127.0.0.1:8000/signals), though it won't
+`http://127.0.0.1:8000/signals`, though it won't
 return any data yet.
 
 It is time to have fun, we are going to integrate QuestDB with our shiny new
@@ -255,7 +255,7 @@ implements Postgres wire protocol.
 The very first step is to create the table in QuestDB. As said before, our
 approach is simple, so that the table is simple, too. QuestDB is running from
 our docker compose script so, we open the interactive console at
-[http://127.0.0.1:9000](http://127.0.0.1:9000) and create a new table by running
+`http://127.0.0.1:9000` and create a new table by running
 the following query:
 
 ```sql
@@ -645,7 +645,7 @@ check the website's status, save it in the database, and expose the results
 through an API.
 
 The very last thing we need to address is to allow connections initiated by the
-frontend later on. As it will run on localhost:3000 and we don't use domain
+frontend later on. As it will run on `localhost:3000` and we don't use domain
 names, the port is different hence all requests will be rejected with errors
 related to
 [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
@@ -852,7 +852,7 @@ $ cd frontend
 $ yarn dev
 ```
 
-Navigate to [http://localhost:3000](http://localhost:3000) to see the backend
+Navigate to `http://localhost:3000` to see the backend
 reporting the status of the monitored URL. The first task to check the system
 status is executed when the scheduler and worker starts and the status of the
 website over time can be seen after a few minutes on the page or when you check

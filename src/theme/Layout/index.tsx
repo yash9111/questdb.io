@@ -9,6 +9,7 @@ import Footer from "@theme/Footer"
 import LayoutProviders from "@theme/LayoutProviders"
 import Navbar from "@theme/Navbar"
 import { MetadataContextProvider } from "@theme/useMetadataContext"
+import { ensureTrailingSlash } from "../../utils"
 
 import styles from "./styles.module.css"
 
@@ -66,17 +67,29 @@ const Layout = ({
         <Head>
           <title>{metaTitle}</title>
           {permalink != null && (
-            <link rel="canonical" href={`${siteUrl}${permalink}/`} />
+            <link
+              rel="canonical"
+              href={`${siteUrl}${ensureTrailingSlash(permalink)}`}
+            />
           )}
           {permalink == null && canonical != null && (
-            <link rel="canonical" href={`${siteUrl}${canonical}/`} />
+            <link
+              rel="canonical"
+              href={`${siteUrl}${ensureTrailingSlash(canonical)}`}
+            />
           )}
           <meta property="og:image" content={metaImageUrl} />
           {permalink != null && (
-            <meta property="og:url" content={`${siteUrl}${permalink}/`} />
+            <meta
+              property="og:url"
+              content={`${siteUrl}${ensureTrailingSlash(permalink)}`}
+            />
           )}
           {permalink == null && canonical != null && (
-            <meta property="og:url" content={`${siteUrl}${canonical}/`} />
+            <meta
+              property="og:url"
+              content={`${siteUrl}${ensureTrailingSlash(canonical)}`}
+            />
           )}
           <meta property="og:title" content={metaTitle} />
           <meta name="twitter:image" content={metaImageUrl} />

@@ -30,12 +30,27 @@ To install QuestDB via Homebrew, run the following command:
 brew install questdb
 ```
 
-On macOS, the root directory of QuestDB including
-[server configuration](/docs/reference/configuration) files are located in the
-following directory:
+On macOS, the location of the root directory of QuestDB and
+[server configuration](/docs/reference/configuration) files depending on the
+chip:
+
+- Path on Macs with Apple Silicon (M1 or M2) chip:
+
+  ```shell
+  /opt/homebrew/var/questdb
+  ```
+
+- Path on Macs with Intel chip:
+
+  ```shell
+  /usr/local/var/questdb
+  ```
+
+The file structure is as the following:
 
 ```bash
-/opt/homebrew/var/questdb
+
+/questdb
 ├── conf
 ├── db
 ├── log

@@ -25,6 +25,10 @@
   color: var(--theme-input-text-color);
 }
 
+html[data-theme='light'] .input {
+  background-color: var(--theme-card-secondary-bg-color);
+}
+
 .submit {
   white-space: nowrap;
 }
@@ -49,8 +53,6 @@
 }
 
 .success {
-  position: absolute;
-  --ifm-paragraph-margin-bottom: 0;
   font-size: var(--font-size-large);
   font-weight: var(--ifm-font-weight-bold);
 }

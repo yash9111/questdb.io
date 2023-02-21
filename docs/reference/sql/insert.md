@@ -18,15 +18,24 @@ Inserting using sub-query alias:
 
 ### Description
 
+:::note
+
+If the target partition is
+[attached by a symbolic link](/docs/reference/sql/alter-table-attach-partition/#symbolic-links),
+the partition is read-only. `INSERT` operation on a read-only partition triggers
+a critical-level log in the server, and the insert is a no-op.
+
+:::
+
 Inserting values directly or using sub-queries:
 
 - `VALUE`: Directly defines the values to be inserted.
 - `SELECT`: Inserts values based on the result of a
   [SELECT](/docs/reference/sql/select/) query
 
-Setting sub-qeury alias:
+Setting sub-query alias:
 
-- `WITH AS`: Inserts values based on a subu-query, to which an alias is given by
+- `WITH AS`: Inserts values based on a sub-query, to which an alias is given by
   using [WITH](/docs/reference/sql/with/).
 
 Parameter:

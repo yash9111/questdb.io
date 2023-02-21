@@ -46,7 +46,8 @@
       "@theme/useWindowWidth": ["src/theme/useWindowWidth"],
       "@theme/ILPClientsTable": ["src/theme/ILPClientsTable"],
       "@theme/BlogPostItem": ["src/theme/BlogPostItem"],
-      "@theme/BlogPostPage": ["src/theme/BlogPostPage"]
+      "@theme/BlogPostPage": ["src/theme/BlogPostPage"],
+      "@theme/DemoConsoleButton": ["src/theme/DemoConsoleButton"]
     }
   },
   "include": ["src/", "types/"]

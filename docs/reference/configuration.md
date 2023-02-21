@@ -254,11 +254,12 @@ This section describes configuration settings for the Cairo SQL engine in
 QuestDB.
 
 | Property                                       | Default           | Description                                                                                                                                                                                                              |
-| ---------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|------------------------------------------------| ----------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | query.timeout.sec                              | 60                | A global timeout (in seconds) for long-running queries.                                                                                                                                                                  |
 | cairo.max.uncommitted.rows                     | 500000            | Maximum number of uncommitted rows per table, when the number of pending rows reaches this parameter on a table, a commit will be issued.                                                                                |
-| cairo.commit.lag (QuestDB 6.5.5 and earlier)   | 10 minutes        | Expected maximum time lag for out-of-order rows in milliseconds.                                                                                                                                                         |
+| cairo.commit.lag (QuestDB 6.5.5 and earlier)   | 5 minutes         | Expected maximum time lag for out-of-order rows in milliseconds.                                                                                                                                                         |
 | cairo.o3.max.lag (QuestDB 6.6 and later)       | 10 minutes        | The maximum size of in-memory buffer in milliseconds. The buffer is allocated dynamically through analysing the shape of the incoming data, and `o3MaxLag` is the upper limit.                                           |
+| cairo.o3.min.lag (QuestDB 6.6 and later)       | 1 second          | The minimum size of in-memory buffer in milliseconds. The buffer is allocated dynamically through analysing the shape of the incoming data, and `o3MinLag` is the lower limit.                                           |
 | cairo.sql.backup.root                          | null              | Output root directory for backups.                                                                                                                                                                                       |
 | cairo.sql.backup.dir.datetime.format           | null              | Date format for backup directory.                                                                                                                                                                                        |
 | cairo.sql.backup.dir.tmp.name                  | tmp               | Name of tmp directory used during backup.                                                                                                                                                                                |
@@ -289,7 +290,7 @@ QuestDB.
 | cairo.fast.map.load.factor                     | 0.5               | Load factor for all FastMaps.                                                                                                                                                                                            |
 | cairo.sql.join.context.pool.capacity           | 64                | Size of the JoinContext pool in SqlCompiler.                                                                                                                                                                             |
 | cairo.lexer.pool.capacity                      | 2048              | Size of FloatingSequence pool in GenericLexer.                                                                                                                                                                           |
-| cairo.sql.map.key.capacity                     | 2m                | Key capacity in FastMap and CompactMap.                                                                                                                                                                                  |
+| cairo.sql.map.key.capacity                     | 2M                | Key capacity in FastMap and CompactMap.                                                                                                                                                                                  |
 | cairo.sql.map.max.resizes                      | 2^31              | Number of map resizes in FastMap and CompactMap before a resource limit exception is thrown, each resize doubles the previous size.                                                                                      |
 | cairo.sql.map.page.size                        | 4m                | Memory page size for FastMap and CompactMap.                                                                                                                                                                             |
 | cairo.sql.map.max.pages                        | 2^31              | Memory max pages for CompactMap.                                                                                                                                                                                         |
@@ -335,7 +336,23 @@ QuestDB.
 | cairo.sql.column.purge.retry.delay.multiplier  | 10.0              | Multiplier used to increases retry delay with each iteration.                                                                                                                                                            |
 | cairo.sql.column.purge.retry.delay.limit       | 60000000          | Delay limit (μs), upon reaching which, the re-try delay remains constant.                                                                                                                                                |
 | cairo.sql.column.purge.retry.limit.days        | 31                | Number of days purge system will continue to re-try deleting stale column files before giving up.                                                                                                                        |
+| cairo.system.table.prefix                      | sys.              | Prefix of the tables used for QuestDB internal data storage. These tables are hidden from QuestDB webconsole.                                                                                                            |
+| cairo.volumes                                  | -                 | A comma separated list of _alias -> root-path_ pairs defining allowed volumes to be used in [CREATE TABLE IN VOLUME](/docs/reference/sql/create-table/#table-target-volume) statements.                                  |
 | cairo.system.table.prefix                      | sys.              | Prefix of the tables used for QuestDB internal data storage. These tables are hidden from QuestDB web console.                                                                                                           |
+| cairo.wal.enabled.default                      | false             | Setting defining whether WAL table is the default when using `CREATE TABLE`.                                                                                                                                             |
+
+### WAL table configurations
+
+The following WAL tables settings on parallel threads are configurable for applying WAL data to the table storage:
+
+| Property                 | Default                        | Description                                                                                                                                                                                          |
+| ------------------------ | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| wal.apply.worker.count   | equal to the CPU core count    | Number of dedicated worker threads assigned to handle WAL table data. |
+| wal.apply.worker.affinity | equal to the CPU core count    | Comma separated list of CPU core indexes.                                            |
+| wal.apply.worker.haltOnError     | false                | Flag that indicates if worker thread must shutdown on unhandled error   |
+| cairo.wal.purge.interval | 30000                       | Period in ms of how often WAL-applied files are cleaned up from the disk |
+| cairo.wal.segment.rollover.row.count | 200000           | The number of rows written to the same WAL segment before starting a new segment |
+| cairo.wal.commit.squash.row.limit | 500000                  | Maximum row count that can be squashed together from multiple transactions before applying to the table. A very low value can delay data visibility. |
 
 ### CSV import
 
@@ -428,6 +445,9 @@ PostgresSQL wire protocol.
 | pg.connection.pool.capacity      | 64           | The maximum amount of pooled connections this interface may have.                                                                                                                                 |
 | pg.password                      | quest        | Postgres database password.                                                                                                                                                                       |
 | pg.user                          | admin        | Postgres database username.                                                                                                                                                                       |
+| pg.readonly.user.enabled         | false        | Enable or disable Postgres database read-only user account. When enabled, this additional user can be used to open read-only connections to the database.                                         |
+| pg.readonly.password             | quest        | Postgres database read-only user password.                                                                                                                                                        |
+| pg.readonly.user                 | user         | Postgres database read-only user username.                                                                                                                                                        |
 | pg.select.cache.enabled          | true         | Enable or disable the SELECT query cache. Cache capacity is `number_of_blocks * number_of_rows`.                                                                                                  |
 | pg.select.cache.block.count      | 16           | Number of blocks to cache SELECT query execution plan against text to speed up execution.                                                                                                         |
 | pg.select.cache.row.count        | 16           | Number of rows to cache for SELECT query execution plan against text to speed up execution.                                                                                                       |
@@ -556,7 +576,12 @@ writers=file,stdout
 #w.file.level=INFO,ERROR
 #rollEvery accepts: day, hour, minute, month
 #w.file.rollEvery=day
-#w.file.rollSize=1g
+#rollSize specifies size at which to roll a new log file: a number followed by k, m, g (KB, MB, GB respectively)
+#w.file.rollSize=128m
+#lifeDuration accepts: a number followed by s, m, h, d, w, M, y for seconds, minutes, hours, etc.
+#w.file.lifeDuration=1d
+#sizeLimit is the max fileSize of the log directory. Follows same format as rollSize
+#w.file.sizeLimit=1g
 
 # stdout
 w.stdout.class=io.questdb.log.LogConsoleWriter

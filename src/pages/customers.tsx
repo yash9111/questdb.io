@@ -207,8 +207,8 @@ const customers: Customer[] = [
     id: "liveaction",
     logo: {
       ...logos.liveaction,
-      width: 120,
-      height: 80,
+      width: 110,
+      height: 44,
     },
     summary:
       "“QuestDB is impressive and stands out as a superior option. We use it as the basis of our time series analytics for network threat detection.”",

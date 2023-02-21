@@ -43,11 +43,12 @@ programming languages through our various network endpoints.
 
 ## Guides
 
-- [Large CSV import (COPY SQL)](/docs/guides/importing-data)
-- [Small CSV import (REST API)](/docs/guides/importing-data-rest)
+- [Migrating from InfluxDB](/docs/guides/influxdb-migration/)
+- [Large CSV import (COPY SQL)](/docs/guides/importing-data/)
+- [Small CSV import (REST API)](/docs/guides/importing-data-rest/)
 - [Modifying Data](/docs/guides/modifying-data)
-- [Timestamps and time zones](/docs/guides/working-with-timestamps-timezones)
-- [Out-of-order commit lag](/docs/guides/out-of-order-commit-lag)
+- [Timestamps and time zones](/docs/guides/working-with-timestamps-timezones/)
+- [Out-of-order commit lag](/docs/guides/out-of-order-commit-lag/)
 
 ## Deployment
 
@@ -77,12 +78,16 @@ pages for the following topics:
 This section describes how to integrate QuestDB with third-party tools and
 utilities for collecting metrics and visualizing data:
 
-- [Prometheus](/docs/third-party-tools/prometheus) monitoring and alerting.
-- [Grafana](/docs/third-party-tools/grafana) instructions for connecting QuestDB
-  as a datasource for building visualizations and dashboards
-- [Kafka](/docs/third-party-tools/kafka/overview) guide for ingesting data from
+- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting
+  QuestDB as a datasource for building visualizations and dashboards
+- [Kafka](/docs/third-party-tools/kafka/overview/) guide for ingesting data from
   Kafka topics into QuestDB
-- [Telegraf](/docs/third-party-tools/telegraf) guide for collecting system
+- [Pandas](/docs/third-party-tools/pandas/) for ingesting Pandas dataframes via
+  ILP
+- [Prometheus](/docs/third-party-tools/prometheus/) monitoring and alerting
+- [Redpanda](/docs/third-party-tools/redpanda/) instructions for a Kafka
+  compatible data streaming tool
+- [Telegraf](/docs/third-party-tools/telegraf/) guide for collecting system
   metrics, specifying QuestDB as an output and visualizing the results
 
 ## Concepts
@@ -97,7 +102,8 @@ data, and introduces features and capabilities unique to the system.
 - [SQL extensions](/docs/concept/sql-extensions) allow performant time series
   analysis with a concise syntax
 - [JIT compiler](/docs/concept/jit-compiler) to speed up `WHERE` clauses
-- [Partitions](/docs/concept/partitions) can be used to perform time-based queries more efficiently
+- [Partitions](/docs/concept/partitions) can be used to perform time-based
+  queries more efficiently
 - [Symbol](/docs/concept/symbol) type makes storing and retrieving repetitive
   strings efficient
 - [Indexes](/docs/concept/indexes) can be used for faster read access on
@@ -156,6 +162,7 @@ can be used in QuestDB.
 - [Text](/docs/reference/function/text)
 - [Timestamp generator](/docs/reference/function/timestamp-generator)
 - [Timestamp](/docs/reference/function/timestamp)
+- [Trigonometric](/docs/reference/function/trigonometric)
 
 ### Operators
 
@@ -165,43 +172,46 @@ can be used in QuestDB.
 
 ### SQL
 
-- [SQL Execution order](/docs/reference/sql/datatypes)
-- [Data types](/docs/reference/sql/datatypes)
-- [ALTER TABLE ADD COLUMN](/docs/reference/sql/alter-table-add-column)
-- [ALTER TABLE RENAME COLUMN](/docs/reference/sql/alter-table-rename-column)
-- [ALTER TABLE DROP COLUMN](/docs/reference/sql/alter-table-drop-column)
-- [ALTER TABLE ATTACH PARTITION](/docs/reference/sql/alter-table-attach-partition)
-- [ALTER TABLE DETACH PARTITION](/docs/reference/sql/alter-table-detach-partition)
-- [ALTER TABLE DROP PARTITION](/docs/reference/sql/alter-table-drop-partition)
-- [ALTER TABLE SET PARAM](/docs/reference/sql/alter-table-set-param)
-- [ALTER TABLE ALTER COLUMN ADD INDEX](/docs/reference/sql/alter-table-alter-column-add-index)
-- [ALTER TABLE ALTER COLUMN DROP INDEX](/docs/reference/sql/alter-table-alter-column-drop-index)
-- [ALTER TABLE ALTER COLUMN CACHE | NOCACHE](/docs/reference/sql/alter-table-alter-column-cache)
-- [BACKUP](/docs/reference/sql/backup)
-- [CASE](/docs/reference/sql/case)
-- [CAST](/docs/reference/sql/cast)
-- [COPY](/docs/reference/sql/copy)
-- [CREATE TABLE](/docs/reference/sql/create-table)
-- [DISTINCT](/docs/reference/sql/distinct)
-- [FILL](/docs/reference/sql/fill)
-- [DROP TABLE](/docs/reference/sql/drop)
-- [GROUP BY](/docs/reference/sql/group-by)
-- [INSERT](/docs/reference/sql/insert)
-- [JOIN](/docs/reference/sql/join)
-- [LATEST ON](/docs/reference/sql/latest-on)
-- [LIMIT](/docs/reference/sql/limit)
-- [ORDER BY](/docs/reference/sql/order-by)
-- [REINDEX](/docs/reference/sql/reindex)
-- [RENAME TABLE](/docs/reference/sql/rename)
-- [SAMPLE BY](/docs/reference/sql/sample-by)
-- [SELECT](/docs/reference/sql/select)
-- [SHOW](/docs/reference/sql/show)
-- [SNAPSHOT](/docs/reference/sql/snapshot)
-- [TRUNCATE TABLE](/docs/reference/sql/truncate)
-- [UNION EXCEPT INTERSECT](/docs/reference/sql/union-except-intersect)
-- [VACUUM TABLE](/docs/reference/sql/vacuum-table)
-- [WHERE](/docs/reference/sql/where)
-- [WITH](/docs/reference/sql/with)
+- [SQL Execution order](/docs/reference/sql/datatypes/)
+- [Data types](/docs/reference/sql/datatypes/)
+- [ALTER TABLE ADD COLUMN](/docs/reference/sql/alter-table-add-column/)
+- [ALTER TABLE RENAME COLUMN](/docs/reference/sql/alter-table-rename-column/)
+- [ALTER TABLE DROP COLUMN](/docs/reference/sql/alter-table-drop-column/)
+- [ALTER TABLE ATTACH PARTITION](/docs/reference/sql/alter-table-attach-partition/)
+- [ALTER TABLE DETACH PARTITION](/docs/reference/sql/alter-table-detach-partition/)
+- [ALTER TABLE DROP PARTITION](/docs/reference/sql/alter-table-drop-partition/)
+- [ALTER TABLE SET PARAM](/docs/reference/sql/alter-table-set-param/)
+- [ALTER TABLE ALTER COLUMN ADD INDEX](/docs/reference/sql/alter-table-alter-column-add-index/)
+- [ALTER TABLE ALTER COLUMN DROP INDEX](/docs/reference/sql/alter-table-alter-column-drop-index/)
+- [ALTER TABLE ALTER COLUMN CACHE | NOCACHE](/docs/reference/sql/alter-table-alter-column-cache/)
+- [ALTER TABLE SET TYPE](/docs/reference/sql/alter-table-set-type/)
+- [ALTER TABLE RESUME WAL](/docs/reference/sql/alter-table-resume-wal/)
+- [BACKUP](/docs/reference/sql/backup/)
+- [CASE](/docs/reference/sql/case/)
+- [CAST](/docs/reference/sql/cast/)
+- [COPY](/docs/reference/sql/copy/)
+- [CREATE TABLE](/docs/reference/sql/create-table/)
+- [DISTINCT](/docs/reference/sql/distinct/)
+- [EXPLAIN](/docs/reference/sql/explain/)
+- [FILL](/docs/reference/sql/fill/)
+- [DROP TABLE](/docs/reference/sql/drop/)
+- [GROUP BY](/docs/reference/sql/group-by/)
+- [INSERT](/docs/reference/sql/insert/)
+- [JOIN](/docs/reference/sql/join/)
+- [LATEST ON](/docs/reference/sql/latest-on/)
+- [LIMIT](/docs/reference/sql/limit/)
+- [ORDER BY](/docs/reference/sql/order-by/)
+- [REINDEX](/docs/reference/sql/reindex/)
+- [RENAME TABLE](/docs/reference/sql/rename/)
+- [SAMPLE BY](/docs/reference/sql/sample-by/)
+- [SELECT](/docs/reference/sql/select/)
+- [SHOW](/docs/reference/sql/show/)
+- [SNAPSHOT](/docs/reference/sql/snapshot/)
+- [TRUNCATE TABLE](/docs/reference/sql/truncate/)
+- [UNION EXCEPT INTERSECT](/docs/reference/sql/union-except-intersect/)
+- [VACUUM TABLE](/docs/reference/sql/vacuum-table/)
+- [WHERE](/docs/reference/sql/where/)
+- [WITH](/docs/reference/sql/with/)
 
 ## Support
 

@@ -28,12 +28,12 @@ of a grid represented by a geohash string. This string is the Geohash and will
 determine which of the predefined regions the point belongs to.
 
 In order to be compact, [base32](https://en.wikipedia.org/wiki/Base32#Geohash)
-is used as a representation of Geohashes, and are therefore comprised of:
+is used as a representation of Geohashes, and is therefore comprised of:
 
 - all decimal digits (0-9) and
 - almost all of the alphabet (case-insensitive) **except "a", "i", "l", "o"**.
 
-The followng figure illustrates how increasing the length of a geohash results
+The following figure illustrates how increasing the length of a geohash result
 in a higher-precision grid size:
 
 import Screenshot from "@theme/Screenshot"
@@ -296,15 +296,25 @@ For more information on the use of this operator, see the
 
 ## Java embedded usage
 
-Inserting geohashes into tables via Java (embedded) QuestDB instance through the
-`TableWriter`'s `putGeoHash` method which accepts `LONG` values natively with
-the destination precision. Additionally, `GeoHashes.fromString` may be used for
-string conversion, but comes with some performance overhead as opposed to `long`
-values directly:
+Geohashes are inserted into tables via Java (embedded) QuestDB instance through
+the selected `Writer`'s `putGeoHash` method. The `putGeoHash` method accepts
+`LONG` values natively with the destination precision. Additionally,
+`GeoHashes.fromString` may be used for string conversion, but comes with some
+performance overhead as opposed to `long` values directly.
 
-```java
-try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "geohash_table")) {
-    for(int i = 0; i < 10; i++) {
+Depending on whether the table is a
+[WAL](docs/concept/write-ahead-log/) table or not, the following components may be used:
+
+- `TableWriter` is used to write data directly into a table.
+- `WalWriter` is used to write data into a WAL-enabled table via WAL.
+- `TableWriterAPI` is used for both WAL and non-WAL tables, as it requests the
+  suitable `Writer` based on the table metadata.
+
+```java title="TableWriter"
+
+// Insert data into a non-WAL table:
+try (TableWriter writer = engine.getTableWriter(ctx.getCairoSecurityContext(), "geohash_table", "test")) {
+  for(int i = 0; i < 10; i++) {
         TableWriter.Row row = writer.newRow();
         row.putSym(0, "my_device");
         // putGeoStr(columnIndex, hash)
@@ -316,6 +326,48 @@ try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "geoha
     writer.commit();
 }
 
+```
+
+```java title="WalWriter"
+// Insert data into a WAL table:
+try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), "geohash_table")) {
+    for(int i = 0; i < 10; i++) {
+        TableWriter.Row row = writer.newRow();
+        row.putSym(0, "my_device");
+        // putGeoStr(columnIndex, hash)
+        row.putGeoStr(1, "u33d8b1b");
+        // putGeoHashDeg(columnIndex, latitude, longitude)
+        row.putGeoHashDeg(2, 48.669, -4.329)
+        row.append();
+    }
+    writer.commit();
+
+    // apply WAL to the table
+    try (ApplyWal2TableJob walApplyJob = new ApplyWal2TableJob(engine, 1, 1)) {
+        while (walApplyJob.run(0));
+    }
+}
+
+```
+
+```java title="TableWriterAPI"
+//Insert table into either a WAL or a non-WAL table:
+try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), "geohash_table", "test")) {
+    for(int i = 0; i < 10; i++) {
+        TableWriter.Row row = writer.newRow();
+        row.putSym(0, "my_device");
+        // putGeoStr(columnIndex, hash)
+        row.putGeoStr(1, "u33d8b1b");
+        // putGeoHashDeg(columnIndex, latitude, longitude)
+        row.putGeoHashDeg(2, 48.669, -4.329)
+        row.append();
+    }
+    writer.commit();
+    // apply WAL to the table
+    try (ApplyWal2TableJob walApplyJob = new ApplyWal2TableJob(engine, 1, 1)) {
+    while (walApplyJob.run(0));
+    }
+}
 ```
 
 Reading geohashes via Java is done by means of the following methods:
@@ -342,18 +394,18 @@ Invoking the method above will return one of the following:
 For more information and detailed examples of using table readers and writers,
 see the [Java API documentation](/docs/reference/api/java-embedded).
 
-## InfluxDB line protocol
+## InfluxDB Line Protocol
 
-Geohashes may also be inserted via InfluxDB line protocol. In order to perform
-inserts in this way;
+Geohashes may also be inserted via InfluxDB Line Protocol (ILP) by the
+following steps:
 
-1. Create table with columns of geohash type beforehand:
+1. Create a table with columns of geohash type beforehand:
 
 ```questdb-sql
 CREATE TABLE tracking (ts timestamp, geohash geohash(8c));
 ```
 
-2. Insert via InfluxDB line protocol using the `geohash` field:
+2. Insert via ILP using the `geohash` field:
 
 ```bash
 tracking geohash="46swgj10"
@@ -361,9 +413,9 @@ tracking geohash="46swgj10"
 
 :::info
 
-The InfluxDB Line Protocol parser does not support geohash literals, only
-strings. This means that table columns of type `geohash` type with the desired
-precision must exist before inserting rows with this protocol.
+The ILP parser does not support geohash literals, only strings. This means that
+table columns of type `geohash` type with the desired precision must exist
+before inserting rows with this protocol.
 
 If a value cannot be converted or is omitted it will be set as `NULL`
 
@@ -382,10 +434,11 @@ geo_data geohash="46swgj10"
 
 ## CSV import
 
-Geohashes may also be inserted via [CSV import](/docs/guides/importing-data/).
-In order to perform inserts in this way;
+Geohashes may also be inserted via
+[REST API](/docs/guides/importing-data-rest/). In order to perform inserts in
+this way;
 
-1. Create table with columns of geohash type beforehand:
+1. Create a table with columns of geohash type beforehand:
 
 ```questdb-sql
 CREATE TABLE tracking (ts timestamp, geohash geohash(8c));
@@ -407,8 +460,8 @@ ts,geohash
 17/01/2022 01:02:21,46swgj10
 ```
 
-Just like InfluxDB line protocol, CSV import supports geohash strings only, so
-the same restrictions apply.
+Just like ILP, CSV import supports geohash strings only, so the same
+restrictions apply.
 
 ## Postgres
 

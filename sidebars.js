@@ -58,9 +58,15 @@ module.exports = {
       items: [
         "guides/importing-data",
         "guides/importing-data-rest",
+        "guides/influxdb-migration",
         "guides/modifying-data",
         "guides/working-with-timestamps-timezones",
         "guides/out-of-order-commit-lag",
+        {
+          label: "More tutorials",
+          type: "link",
+          href: "/blog/tags/tutorial/",
+        },
       ],
     },
     {
@@ -89,7 +95,6 @@ module.exports = {
       label: "Third-party Tools",
       type: "category",
       items: [
-        "third-party-tools/prometheus",
         "third-party-tools/grafana",
         {
           label: "Kafka",
@@ -100,6 +105,9 @@ module.exports = {
             "third-party-tools/kafka/jdbc",
           ],
         },
+        "third-party-tools/pandas",
+        "third-party-tools/prometheus",
+        "third-party-tools/redpanda",
         "third-party-tools/telegraf",
       ],
     },
@@ -107,6 +115,7 @@ module.exports = {
       label: "Concepts",
       type: "category",
       items: [
+        "concept/write-ahead-log",        
         "concept/storage-model",
         "concept/designated-timestamp",
         "concept/sql-extensions",
@@ -170,7 +179,8 @@ module.exports = {
             "reference/function/spatial",
             "reference/function/text",
             "reference/function/timestamp-generator",
-            "reference/function/timestamp"
+            "reference/function/timestamp",
+            "reference/function/trigonometric"
           ],
         },
         {
@@ -198,6 +208,8 @@ module.exports = {
                 "reference/sql/alter-table-detach-partition",
                 "reference/sql/alter-table-drop-partition",
                 "reference/sql/alter-table-set-param",
+                "reference/sql/alter-table-set-type",
+                "reference/sql/alter-table-resume-wal",
               ],
             },
             {
@@ -215,8 +227,9 @@ module.exports = {
             "reference/sql/copy",
             "reference/sql/create-table",
             "reference/sql/distinct",
-            "reference/sql/fill",
+            "reference/sql/explain",
             "reference/sql/drop",
+            "reference/sql/fill",
             "reference/sql/group-by",
             "reference/sql/insert",
             "reference/sql/join",

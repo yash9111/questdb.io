@@ -68,7 +68,7 @@ To better understand BIRCH and how it can be used with QuestDB, you will solve a
 
 You have several options for installing QuestDB, including Docker and Homebrew. [Check the documentation](/docs) for details.
 
-Once QueestDB is installed, you can access the web console of the running service, by opening your browser and going to [localhost:9000](http://localhost:9000). You should see the below image:
+Once QueestDB is installed, you can access the web console of the running service, by opening your browser and going to `http://localhost:9000`. You should see the below image:
 
 import Screenshot from "@theme/Screenshot"
 
@@ -296,9 +296,9 @@ In the plot above, red and blue circles represent the detected anomalous data po
 
 A confusion matrix method is also used to assess the performance of the model. It is able to identify 39.9 percent of the anomalies:
 
-$$
+```
 5248/(7917+5248) = 0.39857
-$$
+```
 
 To visualize this as the image shown above, run the following lines of code:
 

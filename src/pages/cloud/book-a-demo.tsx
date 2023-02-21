@@ -9,16 +9,18 @@ const BookADemo = () => {
 
   return (
     <Layout
-      canonical="/cloud"
+      canonical="/cloud/book-a-demo/"
       description="Book a demo for the fastest open source time series database fully managed on the cloud"
       title={title}
       image="/img/pages/cloud/screens-thumb.png"
     >
       <Section>
-        <Section.Title center>{title}</Section.Title>
+        <Section.Title level={1} center>
+          {title}
+        </Section.Title>
         <div className={style["calendly-inline-widget-wrapper"]}>
           <InlineWidget
-            url="https://calendly.com/d/dv3-8hc-2d5/questdb-cloud-demo"
+            url="https://calendly.com/questdb-nic/questdb"
             styles={{ width: "100%", height: "100%" }}
           />
         </div>

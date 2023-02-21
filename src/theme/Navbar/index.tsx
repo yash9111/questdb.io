@@ -85,38 +85,13 @@ function Navbar(): JSX.Element {
   const { leftItems, rightItems } = splitNavItemsByPosition(items)
 
   return (
-    <nav
+    <header
       className={clsx("navbar", styles.navbar, "navbar--light", {
         "navbar-sidebar--show": sidebarShown,
       })}
     >
       <div className={clsx("navbar__inner", styles.inner)}>
         <div className="navbar__items">
-          <div
-            aria-label="Navigation bar toggle"
-            className="navbar__toggle"
-            role="button"
-            tabIndex={0}
-            onClick={showSidebar}
-            onKeyDown={showSidebar}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              role="img"
-              focusable="false"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeMiterlimit="10"
-                strokeWidth="2"
-                d="M4 7h22M4 15h22M4 23h22"
-              />
-            </svg>
-          </div>
           <a className={clsx("navbar__brand", styles.brand)} href="/">
             QuestDB
           </a>
@@ -135,25 +110,47 @@ function Navbar(): JSX.Element {
               onChange={colorModeToggle.toggle}
             />
           )}
-          <SearchBar
-            handleSearchBarToggle={setIsSearchBarExpanded}
-            isSearchBarExpanded={isSearchBarExpanded}
-          />
+          <div className={styles.searchBar}>
+            <SearchBar
+              handleSearchBarToggle={setIsSearchBarExpanded}
+              isSearchBarExpanded={isSearchBarExpanded}
+            />
+          </div>
           <Button
             className={clsx(styles.ctaButton, styles.getQuestdb)}
             size="xsmall"
-            to="/get-questdb/"
             variant="secondary"
+            to="/cloud/"
           >
             Get QuestDB
           </Button>
-          <Button
-            className={clsx(styles.ctaButton, styles.benchmarkButton)}
-            size="xsmall"
-            to="/blog/tags/benchmark/"
+
+          <div
+            aria-label="Navigation bar toggle"
+            className="navbar__toggle"
+            role="button"
+            tabIndex={0}
+            onClick={showSidebar}
+            onKeyDown={showSidebar}
           >
-            Benchmarks
-          </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              role="img"
+              focusable="false"
+            >
+              <title>An icon showing a hamburger menu</title>
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="2"
+                d="M4 7h22M4 15h22M4 23h22"
+              />
+            </svg>
+          </div>
         </div>
       </div>
       <div
@@ -194,7 +191,7 @@ function Navbar(): JSX.Element {
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   )
 }
 

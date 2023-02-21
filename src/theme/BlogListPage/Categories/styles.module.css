@@ -23,12 +23,16 @@
 .category {
   background: var(--theme-card-bg-color);
   padding: 1.3rem 1.3rem 1.8rem;
-  border: 1px solid var(--theme-card-border-color);
+  border: 1px solid var(--theme-card-bg-color);
   border-radius: 15px;
 }
 
-.category:hover,
-.active {
+.category.active {
+  text-decoration: none;
+  border-color: var(--theme-button-primary-background-color);
+}
+
+.category:hover {
   text-decoration: none;
   background: var(--theme-card-bg-color-hover);
 }

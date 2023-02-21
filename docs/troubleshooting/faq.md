@@ -88,3 +88,19 @@ We have an open
 inserted with identical fields. Until then, you need to
 [modify the data](/docs/guides/modifying-data) after it's inserted and use a
 `GROUP BY` query to identify duplicates.
+
+## Can I query by time?
+
+Yes! When using the `WHERE` statement to define the time range for a query, the
+[`IN`](/docs/reference/sql/where/#time-range-with-modifier) keyword allows
+modifying the range and interval of the search. The range can be tuned to a
+second resolution.
+
+For example, the following query search for daily records between 9:15 to 16:00
+inclusively from Jan 1 2000 for 365 days. The original timestamp,
+2000-01-01T09:15, is extended for 405 minutes to cover the range. This range is
+repeated every day for 365 times:
+
+```questdb-sql
+SELECT timestamp, col1 FROM 'table1' WHERE timestamp IN `2000-01-01T09:15;405m;1d;365';
+```

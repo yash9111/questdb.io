@@ -5,8 +5,8 @@
 }
 
 .getQuestdb {
-  background: #fff;
-  color: #21222C;
+  background: var(--ifm-color-primary);
+  color: #ffffff;
 }
 
 .brand {
@@ -37,7 +37,7 @@
 
 @media screen and (max-width: 550px) {
   .inner {
-    padding: 0 calc(var(--theme-navbar-inner-padding) - 1.2rem);
+    padding: 0;
   }
 }
 
@@ -46,16 +46,6 @@
   top: 0;
   z-index: var(--z-index-navbar);
   --ifm-navbar-padding-vertical: 0;
-  --ifm-navbar-padding-horizontal: 0;
-  --ukraine-yellow: rgba(255, 215, 0, 1);
-  --ukraine-blue: rgba(0, 87, 184, 1);
-  background: linear-gradient(
-    0,
-    var(--ukraine-yellow),
-    var(--ukraine-yellow) 50%,
-    var(--ukraine-blue) 50%,
-    var(--ukraine-blue) 100%
-  );
 }
 
 :global(.navbar__items--right .navbar__item.header-github-link) {
@@ -67,13 +57,6 @@
 
   /* needed for mobile, when font-size: 0 */
   height: 32px;
-}
-
-@media screen and (max-width: 550px) {
-  :global(.navbar__items--right .navbar__item.header-github-link) {
-    font-size: 0;
-    padding: 0.2rem 0 0.2rem 1.25rem;
-  }
 }
 
 @media screen and (max-width: 405px) {
@@ -155,12 +138,6 @@
   }
 }
 
-@media (max-width: 996px) {
-  .benchmarkButton {
-    display: none;
-  }
-}
-
 /* prevent navbar right side to climb up on the left side, by shrinking the search bar */
 @media (min-width: 997px) and (max-width: 1027px), (min-width: 1201px) and (max-width: 1300px) {
   :global(.DocSearch-Button-Keys) {
@@ -189,5 +166,16 @@
   .inner {
     max-width: calc(var(--ifm-container-width) + 100px);
   }
+}
+
+@media (max-width: 996px) {
+  .benchmarkButton,
+  :global(.navbar__items--right .navbar__item.header-github-link),
+  .searchBar,
+  .getQuestdb,
+  .themeToggleInHeading {
+    display: none;
+  }
+
 }
 

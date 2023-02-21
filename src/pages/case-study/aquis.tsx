@@ -18,7 +18,7 @@ const Aquis = () => {
 
   return (
     <Layout
-      canonical="/case-study/aquis/"
+      canonical="/case-study/aquis"
       description={description}
       title={title}
       image="/img/pages/case-study/aquis/flow.png"

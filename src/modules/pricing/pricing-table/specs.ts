@@ -33,9 +33,9 @@ const specs: Spec[] = [
     ram: 8,
     storage: 25,
     prices: {
-      "us-east-2": 0.366,
-      "us-west-2": 0.366,
-      "eu-west-1": 0.408,
+      "us-east-2": 0.346,
+      "us-west-2": 0.346,
+      "eu-west-1": 0.385,
     },
   },
   {
@@ -43,9 +43,9 @@ const specs: Spec[] = [
     ram: 8,
     storage: 100,
     prices: {
-      "us-east-2": 0.431,
-      "us-west-2": 0.431,
-      "eu-west-1": 0.479,
+      "us-east-2": 0.413,
+      "us-west-2": 0.413,
+      "eu-west-1": 0.455,
     },
   },
   {
@@ -53,8 +53,8 @@ const specs: Spec[] = [
     ram: 16,
     storage: 50,
     prices: {
-      "us-east-2": 0.686,
-      "us-west-2": 0.686,
+      "us-east-2": 0.692,
+      "us-west-2": 0.692,
       "eu-west-1": 0.768,
     },
   },
@@ -63,9 +63,9 @@ const specs: Spec[] = [
     ram: 16,
     storage: 100,
     prices: {
-      "us-east-2": 0.727,
-      "us-west-2": 0.727,
-      "eu-west-1": 0.813,
+      "us-east-2": 0.737,
+      "us-west-2": 0.737,
+      "eu-west-1": 0.815,
     },
   },
   {
@@ -73,9 +73,9 @@ const specs: Spec[] = [
     ram: 32,
     storage: 100,
     prices: {
-      "us-east-2": 1.049,
-      "us-west-2": 1.049,
-      "eu-west-1": 1.168,
+      "us-east-2": 1.059,
+      "us-west-2": 1.059,
+      "eu-west-1": 1.176,
     },
   },
   {
@@ -83,9 +83,9 @@ const specs: Spec[] = [
     ram: 32,
     storage: 250,
     prices: {
-      "us-east-2": 1.169,
-      "us-west-2": 1.169,
-      "eu-west-1": 1.301,
+      "us-east-2": 1.195,
+      "us-west-2": 1.195,
+      "eu-west-1": 1.316,
     },
   },
   {
@@ -93,9 +93,9 @@ const specs: Spec[] = [
     ram: 64,
     storage: 100,
     prices: {
-      "us-east-2": 1.893,
-      "us-west-2": 1.893,
-      "eu-west-1": 2.108,
+      "us-east-2": 2.027,
+      "us-west-2": 2.027,
+      "eu-west-1": 2.255,
     },
   },
   {
@@ -103,9 +103,9 @@ const specs: Spec[] = [
     ram: 64,
     storage: 250,
     prices: {
-      "us-east-2": 2.005,
-      "us-west-2": 2.005,
-      "eu-west-1": 2.232,
+      "us-east-2": 2.163,
+      "us-west-2": 2.163,
+      "eu-west-1": 2.396,
     },
   },
   {
@@ -113,9 +113,9 @@ const specs: Spec[] = [
     ram: 128,
     storage: 250,
     prices: {
-      "us-east-2": 3.812,
-      "us-west-2": 3.812,
-      "eu-west-1": 4.246,
+      "us-east-2": 4.099,
+      "us-west-2": 4.099,
+      "eu-west-1": 4.556,
     },
   },
   {
@@ -123,9 +123,9 @@ const specs: Spec[] = [
     ram: 128,
     storage: 500,
     prices: {
-      "us-east-2": 3.989,
-      "us-west-2": 3.989,
-      "eu-west-1": 4.441,
+      "us-east-2": 4.325,
+      "us-west-2": 4.325,
+      "eu-west-1": 4.790,
     },
   },
 ]

@@ -1,12 +1,16 @@
 import Link from "@docusaurus/Link"
 import { usePluralForm } from "@docusaurus/theme-common"
-import Translate, { translate } from "@docusaurus/Translate"
+import { translate } from "@docusaurus/Translate"
 import { MDXProvider } from "@mdx-js/react"
 import type { Props } from "@theme/BlogPostItem"
+import type { Metadata } from "@theme/BlogPostPage"
 import MDXComponents from "@theme/MDXComponents"
 import Seo from "@theme/Seo"
 import React from "react"
+import EditThisPage from "@theme/EditThisPage"
 import styles from "./styles.module.css"
+import customFields from "../../config/customFields"
+import { ensureTrailingSlash } from "../../utils"
 
 function useReadingTimePlural() {
   const { selectMessage } = usePluralForm()
@@ -25,6 +29,8 @@ function useReadingTimePlural() {
   }
 }
 
+type MetadataWithSource = Metadata & { source: string }
+
 function BlogPostItem(props: Props): JSX.Element {
   const readingTimePlural = useReadingTimePlural()
   const {
@@ -34,7 +40,15 @@ function BlogPostItem(props: Props): JSX.Element {
     truncated,
     isBlogPostPage = false,
   } = props
-  const { date, formattedDate, permalink, tags, readingTime } = metadata
+  const {
+    date,
+    formattedDate,
+    permalink,
+    tags,
+    readingTime,
+    source,
+    editUrl,
+  } = metadata as MetadataWithSource
   const { author, title, image, keywords } = frontMatter
 
   const authorURL = frontMatter.author_url ?? frontMatter.authorURL
@@ -42,10 +56,20 @@ function BlogPostItem(props: Props): JSX.Element {
   const authorImageURL =
     frontMatter.author_image_url ?? frontMatter.authorImageURL
 
-  const renderPostHeader = () => {
-    const TitleHeading = isBlogPostPage ? "h1" : "h2"
+  const contributeUrl =
+    editUrl ??
+    `${customFields.websiteGithubUrl}/edit/master/${source.replace(
+      "@site",
+      "",
+    )}`
 
-    return (
+  const isTruncated = typeof truncated === "boolean" ? truncated : false
+  const TitleHeading = isBlogPostPage || isTruncated ? "h1" : "h2"
+
+  return (
+    <>
+      <Seo {...{ keywords, image }} />
+
       <header>
         <TitleHeading className={styles.title}>
           {isBlogPostPage ? title : <Link to={permalink}>{title}</Link>}
@@ -61,81 +85,61 @@ function BlogPostItem(props: Props): JSX.Element {
           )}
         </time>
 
-        <div className="avatar margin-vert--md">
+        <div className={styles.avatar}>
           {typeof authorImageURL === "string" && (
-            <Link className="avatar__photo-link avatar__photo" href={authorURL}>
-              <img src={authorImageURL} alt={author} />
+            <Link className={styles.avatarPhoto} href={authorURL}>
+              <img src={authorImageURL} alt={author} width="45" height="45" />
             </Link>
           )}
 
-          <div className="avatar__intro">
-            {typeof author === "string" && (
-              <>
-                <h4 className="avatar__name">
-                  <Link href={authorURL}>{author}</Link>
-                </h4>
-                <small className="avatar__subtitle">{authorTitle}</small>
-              </>
-            )}
-          </div>
+          {typeof author === "string" && (
+            <>
+              <h3 className={styles.avatarName}>
+                <Link href={authorURL}>{author}</Link>
+              </h3>
+              <small>{authorTitle}</small>
+            </>
+          )}
         </div>
       </header>
-    )
-  }
 
-  return (
-    <>
-      <Seo {...{ keywords, image }} />
-
-      <article className={!isBlogPostPage ? "margin-bottom--xl" : undefined}>
-        {renderPostHeader()}
-        <div className="markdown">
-          <MDXProvider components={MDXComponents}>{children}</MDXProvider>
-        </div>
-        {(tags.length > 0 || truncated) && (
-          <footer className="row margin-vert--lg">
-            {tags.length > 0 && (
-              <div className="col">
-                <strong>
-                  <Translate
-                    id="theme.tags.tagsListLabel"
-                    description="The label alongside a tag list"
-                  >
-                    Tags:
-                  </Translate>
-                </strong>
-                {tags.map(({ label, permalink: tagPermalink }) => (
-                  <Link
-                    key={tagPermalink}
-                    className="margin-horiz--sm"
-                    to={tagPermalink}
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            {typeof truncated === "boolean" && (
-              <div className="col text--right">
-                <Link
-                  to={metadata.permalink}
-                  aria-label={`Read more about ${title}`}
-                >
-                  <strong>
-                    <Translate
-                      id="theme.blog.post.readMore"
-                      description="The label used in blog post item excerpts to link to full blog posts"
-                    >
-                      Read More
-                    </Translate>
-                  </strong>
-                </Link>
-              </div>
-            )}
-          </footer>
-        )}
+      <article className="markdown">
+        <MDXProvider components={MDXComponents}>{children}</MDXProvider>
       </article>
+
+      <footer className={styles.footer}>
+        {isTruncated ? (
+          <Link
+            to={metadata.permalink}
+            aria-label={`Read more about ${title}`}
+            className={styles.readMore}
+          >
+            Read More
+          </Link>
+        ) : (
+          <>
+            {tags.length > 0 && (
+              <div className={styles.tags}>
+                Tags:
+                <ul className={styles.tagsList}>
+                  {tags.map(({ label, permalink: tagPermalink }) => (
+                    <li key={tagPermalink}>
+                      <Link
+                        key={tagPermalink}
+                        to={ensureTrailingSlash(tagPermalink)}
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <EditThisPage editUrl={contributeUrl} />
+          </>
+        )}
+      </footer>
     </>
   )
 }

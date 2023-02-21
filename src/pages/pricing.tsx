@@ -6,14 +6,15 @@ import { Section } from "../components/Section"
 import { Plans } from "../modules/pricing/plans"
 import { OtherUseCases } from "../modules/pricing/other-use-cases"
 import { PricingChoices } from "../modules/pricing/pricing-choices"
+import { HighPerformer } from "../modules/pricing/high-performer"
+import { Quotes } from "../modules/pricing/quotes"
 
 const CloudPage = () => (
   <Layout
     canonical="/pricing"
     description="Pricing details of QuestDB Cloud. We bring elasticity, availability and security with a fully managed Cloud offering"
     title="Pricing"
-    // @TODO: make banner
-    image="/img/pages/pricing/banner.png"
+    image="/img/pages/cloud/screens-thumb.png"
   >
     <Section>
       <Section.Title level={1} center>
@@ -31,6 +32,14 @@ const CloudPage = () => (
     </Section>
 
     <Section center>
+      <Quotes />
+    </Section>
+
+    <Section center odd fullWidth>
+      <HighPerformer />
+    </Section>
+
+    <Section center>
       <PricingChoices />
     </Section>
 
@@ -40,7 +49,7 @@ const CloudPage = () => (
       </Section.Title>
 
       <Section noGap center>
-        <Button to="/cloud" uppercase={false}>
+        <Button to="/cloud/" uppercase={false}>
           More info
         </Button>
       </Section>

@@ -4,6 +4,9 @@ sidebar_label: Root directory
 description: Contents of the <root_directory> folder explained.
 ---
 
+import Tabs from "@theme/Tabs"
+import TabItem from "@theme/TabItem"
+
 QuestDB creates the following file structure in its `root_directory`:
 
 ```filestructure
@@ -39,9 +42,16 @@ $HOME/.questdb
 
 <TabItem value="macos">
 
+Path on Macs with Apple Silicon (M1 or M2) chip:
 
 ```shell
 /opt/homebrew/var/questdb
+```
+
+Path on Macs with Intel chip:
+
+```shell
+/usr/local/var/questdb
 ```
 
 </TabItem>
@@ -110,8 +120,10 @@ The table also stores metadata in `_meta` files:
 │   │   │   └── ...
 │   │   │  
 │   │   ├── _meta
-│   │   └── _txn
+│   │   ├── _txn
+│   │   └── _cv
 │   └──  table_1.lock
+
 ```
 
 If the table is not partitioned, data is stored in a directory called `default`:
@@ -129,6 +141,57 @@ If the table is not partitioned, data is stored in a directory called `default`:
 │   │   ├── _meta
 │   │   └── _txn
 │   └──  table_1.lock
+```
+
+For a [WAL table](docs/concept/write-ahead-log), the table structure contains one or more `wal` folders and a
+`seq` folder representing the Sequencer:
+
+``` wal table filestructure
+├── db
+│   ├── Table
+│   │   │  
+│   │   ├── Partition 1
+│   │   │   ├── _archive
+│   │   │   ├── column1.d
+│   │   │   ├── column2.d
+│   │   │   ├── column2.k
+│   │   │   └── ...
+│   │   ├── Partition 2
+│   │   │   ├── _archive
+│   │   │   ├── column1.d
+│   │   │   ├── column2.d
+│   │   │   ├── column2.k
+│   │   │   └── ...
+│   │   ├── txn_seq
+│   │   │   ├── _meta
+│   │   │   ├── _txnlog
+│   │   │   └── _wal_index.d
+│   │   ├── wal1
+│   │   │   └── 0
+│   │   │       ├── _meta
+│   │   │       ├── _event
+│   │   │       ├── column1.d
+│   │   │       ├── column2.d
+│   │   │       └── ...
+|   |   | 
+│   │   ├── wal2
+│   │   │   └── 0
+│   │   │   │   ├── _meta
+│   │   │   │   ├── _event
+│   │   │   │   ├── column1.d
+│   │   │   │   ├── column2.d
+│   │   │   │   └── ...
+│   │   │   └── 1
+│   │   │       ├── _meta
+│   │   │       ├── _event
+│   │   │       ├── column1.d
+│   │   │       ├── column2.d
+│   │   │       └── ...
+│   │   │ 
+│   │   ├── _meta
+│   │   ├── _txn
+│   │   └── _cv
+│   |
 ```
 
 :::caution

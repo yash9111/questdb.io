@@ -135,9 +135,9 @@ table. The difference is that the commit interval is a wall clock.
 
 The commit interval is calculated for each table as a fraction of the commit lag
 
-$$
+```
 commitInterval = commitLag * fraction
-$$
+```
 
 This fraction is `0.5` by default so if the table has a commit lag of `1` minute
 the commit interval will be `30` seconds. The fraction used to derive the commit

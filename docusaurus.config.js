@@ -1,38 +1,10 @@
-const visit = require("unist-util-visit")
 const ssrTemplate = require("./src/internals/ssr.template")
 const consts = require("./src/config/consts")
 const customFields = require("./src/config/customFields")
-const math = require("remark-math")
-const katex = require("rehype-katex")
-
-function variable() {
-  const RE_VAR = /{@([\w-_]+)@}/g
-  const getVariable = (full, partial) =>
-    partial ? customFields[partial] : full
-
-  function textVisitor(node) {
-    node.value = node.value.replace(RE_VAR, getVariable)
-  }
-
-  function linkVisitor(node) {
-    node.url = node.url.replace(RE_VAR, getVariable)
-
-    if (node.title) {
-      node.title = node.title.replace(RE_VAR, getVariable)
-    }
-  }
-
-  function transformer(ast) {
-    visit(ast, "text", textVisitor)
-    visit(ast, "code", textVisitor)
-    visit(ast, "link", linkVisitor)
-  }
-
-  return transformer
-}
+const markdownPlugins = require("./plugins/markdown-plugins")
 
 const config = {
-  title: "QuestDB: the database for time series",
+  title: "QuestDB",
   tagline: "QuestDB is the fastest open source time series database",
   url: `https://${consts.domain}`,
   baseUrl: "/",
@@ -42,7 +14,8 @@ const config = {
   projectName: "questdb",
   customFields: customFields,
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
+  onBrokenMarkdownLinks: "throw",
+
   plugins: [
     require.resolve("./plugins/fetch-latest-release/index"),
     require.resolve("./plugins/fetch-repo/index"),
@@ -64,7 +37,7 @@ const config = {
           {
             tagName: "meta",
             name: "theme-color",
-            content: "#d14671",
+            content: "#21222c",
           },
           {
             tagName: "meta",
@@ -82,14 +55,14 @@ const config = {
     [
       require.resolve("./plugins/blog"),
       {
-        remarkPlugins: [variable, math],
-        rehypePlugins: [katex],
+        ...markdownPlugins,
+        blogSidebarCount: 10,
         feedOptions: {
           type: "all",
           copyright: customFields.copyright,
         },
         showReadingTime: true,
-        postsPerPage: 12,
+        postsPerPage: 1000,
         blogPostComponent: require.resolve(
           "./src/theme/BlogPostPage/index.tsx",
         ),
@@ -103,13 +76,17 @@ const config = {
         ? require.resolve("posthog-docusaurus/src/index.js")
         : null,
     ],
+
+    ...[
+      process.env.NODE_ENV === "development"
+        ? require.resolve("./plugins/click-through-debug-iframe")
+        : null,
+    ],
   ].filter(Boolean),
+
   themeConfig: {
     posthog: {
       apiKey: process.env.POSTHOG_API_KEY,
-    },
-    announcementBar: {
-      id: "github-star",
     },
     colorMode: {
       defaultMode: "dark",
@@ -153,10 +130,15 @@ const config = {
         {
           label: "Product",
           position: "left",
+          href: "#",
           items: [
             {
               label: "QuestDB Cloud",
               to: "/cloud/",
+            },
+            {
+              label: "QuestDB Open Source",
+              to: "/get-questdb/",
             },
             {
               label: "QuestDB Enterprise",
@@ -179,6 +161,7 @@ const config = {
         {
           label: "Learn",
           position: "left",
+          href: "#",
           items: [
             {
               label: "Blog",
@@ -227,6 +210,10 @@ const config = {
             {
               label: "Cloud",
               to: "/cloud/",
+            },
+            {
+              label: "Open Source",
+              to: "/get-questdb/",
             },
             {
               label: "Enterprise",
@@ -328,13 +315,14 @@ const config = {
     [
       "@docusaurus/preset-classic",
       {
-        // blog is enabled through a custom plugin
+        // blog is enabled through a custom plugin, so we disable it from preset
         // ./plugins/blog/index.js
         blog: false,
         docs: {
-          remarkPlugins: [variable, math],
-          rehypePlugins: [katex],
+          ...markdownPlugins,
           sidebarPath: require.resolve("./sidebars.js"),
+          editUrl: ({ docPath }) =>
+            `${customFields.websiteGithubUrl}/edit/master/docs/${docPath}`,
         },
 
         sitemap: {
@@ -343,10 +331,7 @@ const config = {
           trailingSlash: true,
         },
         theme: {
-          customCss: [
-            require.resolve("./src/css/katex.min.css"),
-            require.resolve("./src/css/_global.css"),
-          ],
+          customCss: [require.resolve("./src/css/_global.css")],
         },
       },
     ],

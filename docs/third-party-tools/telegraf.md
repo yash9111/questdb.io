@@ -127,7 +127,7 @@ Telegraf should report the following if configured correctly:
 ## Verifying the integration
 
 1. Navigate to the QuestDB Web Console at
-   [http://127.0.0.1:9000/](http://127.0.0.1:9000/). The Schema Navigator in the
+   `http://127.0.0.1:9000/`. The Schema Navigator in the
    top left should display two new tables:
 
 - `cpu` generated from `inputs.cpu`

@@ -21,8 +21,8 @@ const quotes: Quote[] = [
     logo: {
       alt: "Airbus logo",
       src: "/img/pages/customers/cards/airbus.svg",
-      height: 56,
-      width: 140,
+      height: 44,
+      width: 110,
     },
     text:
       "QuestDB is used at Airbus for real-time applications involving hundreds of millions of data points per day. For us, QuestDB is an outstanding solution that meets (and exceeds) our performance requirements.",
@@ -92,8 +92,8 @@ const quotes: Quote[] = [
     logo: {
       alt: "Copenhagen Atomics logo",
       src: logos["copenhagen-atomics"].src,
-      height: 30,
-      width: 113,
+      height: 35,
+      width: 133,
     },
     text:
       "QuestDB was our choice for real time data due to high performance, open source, high flexibility and great support. Performance was significantly better than the competition and we believe that QuestDB will become market leading.",
@@ -106,8 +106,8 @@ const quotes: Quote[] = [
     logo: {
       alt: "LiveAction logo",
       src: logos.liveaction.src,
-      height: 56,
-      width: 140,
+      height: 48,
+      width: 120,
     },
     text:
       "QuestDB is impressive and stands out as a superior option. We use it as the basis of our time series analytics for network threat detection.",

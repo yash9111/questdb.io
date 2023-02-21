@@ -18,7 +18,7 @@ const Counterflow = () => {
 
   return (
     <Layout
-      canonical="/case-study/liveaction/"
+      canonical="/case-study/liveaction"
       description={description}
       title={title}
     >

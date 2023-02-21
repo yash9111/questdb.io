@@ -9,14 +9,20 @@ createTableDef
   'AS' '(' selectSql ')'  (',' castDef)* (',' indexDef)*
   )
   ) (
-  ('timestamp' '(' columnRef ')' ) ('PARTITION' 'BY' ('NONE' | 'YEAR' | 'MONTH' | 'DAY' | 'HOUR' ))?
-  )?
+  ('timestamp' '(' columnRef ')' ) ('PARTITION' 'BY' ('NONE' ('BYPASS' 'WAL')? | ('YEAR' | 'MONTH' | 'DAY' | 'HOUR')('WAL' | 'BYPASS' 'WAL')?))?
+  )? 
+ ('WITH' tableParameter)?
+ (tableTargetVolumeDef)?
+ 
 
 createTableLike
-::= 'CREATE' 'TABLE' ('(' 'LIKE' sourceTableName ')')? 
+::= 'CREATE' 'TABLE' ( '(' 'LIKE' sourceTableName ')' )? ';'
 
 alterTable 
   ::= 'ALTER' 'TABLE' tableName
+
+dropTable
+  ::= 'DROP' 'TABLE' tableName ('IF' 'EXISTS')? ';'
 
 castDef
   ::= 'cast' '(' columnRef 'as' typeDef ')'
@@ -33,6 +39,10 @@ typeDef
 
 indexDef 
   ::='INDEX' '(' columnRef ('CAPACITY' valueBlockSize)?')'
+
+tableTargetVolumeDef
+
+::= ','? 'IN' 'VOLUME' "'"? secondaryVolumeAlias "'"?
 
 insertInto
   ::= 'INSERT' ('batch' batchCount)?
@@ -157,6 +167,21 @@ InfluxLineProtocolOverTCP
 InfluxLineProtocolOverTCPLoadRebalance
   ::= Launch_Load_Balancing_Job  ('IF' load_ratio '>' 'max.load.ratio' Rebalance_Load)? ( 'IF' (updates_since_last_rebalance '<' 'n.updates.per.load.balance' | time_since_last_rebalance '<' 'maintenance.job.interval') Launch_Load_Balancing_Job ('IF' load_ratio '>' 'max.load.ratio' Rebalance_Load)?  )*
 
+JoinOverview:
+  ::= selectClause joinStatement ( 'WHERE' whereClause )?
+
+InnerLeftJoin
+
+::= ( 'INNER' | 'LEFT' )? 'JOIN' ( table | '(' sub-query ')' ) ( 'ON' ( ( column operator anotherColumn ) ( 'AND' ( column operator anotherColumn ) )* | '(' column ( ',' column )* ')' ) )?
+
+AasofLtSpliceJoin
+
+  ::= ( 'ASOF' | 'LT' | 'SPLICE' ) 'JOIN' ( table | '(' sub-query ')' ) ( 'ON' ( column '=' anotherColumn ( 'AND' column '=' anotherColumn )* | '(' column ( ',' column )* ')' ) )?
+
+CrossJoin
+
+::= 'CROSS' 'JOIN' ( table | '(' sub-query ')' )
+
 groupBy
   ::= 'SELECT' ((column ( ',' column )* ) ' ,' ( aggregation ( ',' aggregation )* )) 'FROM' table ('GROUP BY' (column ( ',' column )* ))?
 
@@ -204,12 +229,21 @@ setParamCommitLag
 VacuumTable
  ::= 'VACUUM' 'TABLE' tableName
 
+ResumeWal
+::= 'RESUME' 'WAL' ( 'FROM' 'TRANSACTION' sequencerTxn | 'FROM' 'TXN' sequencerTxn )?
+
+SetType
+::= 'SET' 'TYPE' ( 'BYPASS' )? 'WAL'
+
 Update
  ::= UPDATE 'tableName' SET columnName '=' 'expression' ( ',' columnName '=' 'expression' )*
 (FROM 'joinTable1' (JOIN 'joinTable2' ON 'joinCondition2')? )? (WHERE 'filter')?
 
 TruncateTable
 ::= 'TRUNCATE TABLE' tableName
+
+Explain
+::= 'EXPLAIN' statement 
 
 analyticFunction
 ::= functionName 'OVER' '(' ( 'PARTITION' 'BY' ( columnName? (',' columnName?)* ))?  ('ORDER' 'BY' ( columnName (ASC | DESC) ? (',' columnName (ASC | DESC) ?)* ))? ')'

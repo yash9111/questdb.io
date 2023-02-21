@@ -18,7 +18,7 @@ const Yahoo = () => {
 
   return (
     <Layout
-      canonical="/case-study/yahoo/"
+      canonical="/case-study/yahoo"
       description={description}
       title={title}
     >

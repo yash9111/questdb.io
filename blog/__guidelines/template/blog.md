@@ -11,6 +11,7 @@ keywords:
   - concept2
 image: /img/blog/path/file.png
 tags: [tutorial, tag1, tag2]
+slug: seo-friendly-url
 ---
 
 

@@ -1,12 +1,6 @@
 import React, { useLayoutEffect, useState } from "react"
 import Button from "@theme/Button"
 
-export const QueryButton = ({ href }) => (
-  <Button href={href} variant="secondary" size="xxsmall" uppercase={false}>
-    Open this query in Web Console
-  </Button>
-)
-
 const Grafana = ({ src }) => {
   const [rendered, setRendered] = useState(false)
 

@@ -17,6 +17,7 @@ image: /img/blog/2022-04-12/cover.png
 ---
 import Banner from "@theme/Banner"
 import Grafana from "@theme/Grafana"
+import DemoConsoleButton from "@theme/DemoConsoleButton"
 
 <Banner
   alt="Live crypto data ingested in QuestDB and displayed on Grafana"
@@ -66,7 +67,7 @@ native to QuestDB's SQL Engine:
   LATEST ON timestamp PARTITION BY symbol;
   ```
 
-  <QueryButton
+  <DemoConsoleButton
     href="https://demo.questdb.io/?query=SELECT%20%2a%20FROM%20trades%0AWHERE%20symbol%20in%20%28%27BTC-USD%27%2C%20%27ETH-USD%27%29%0ALATEST%20ON%20timestamp%20PARTITION%20BY%20symbol%3B"
   />
 </p>
@@ -98,7 +99,7 @@ aggregates time series data into homogeneous time chunks:
   SAMPLE BY 15m ALIGN TO CALENDAR;
   ```
 
-  <QueryButton
+  <DemoConsoleButton
     href="https://demo.questdb.io/?query=SELECT%20%0A%20%20%20%20timestamp%2C%0A%20%20%20%20first%28price%29%20AS%20open%2C%0A%20%20%20%20last%28price%29%20AS%20close%2C%0A%20%20%20%20min%28price%29%2C%0A%20%20%20%20max%28price%29%2C%0A%20%20%20%20sum%28amount%29%20AS%20volume%0AFROM%20trades%0AWHERE%20symbol%20%3D%20%27BTC-USD%27%20AND%20timestamp%20%3E%20dateadd%28%27d%27%2C%20-1%2C%20now%28%29%29%0ASAMPLE%20BY%2015m%20ALIGN%20TO%20CALENDAR%3B"
   />
 </p>
@@ -128,7 +129,7 @@ again, we downsample the dataset using `SAMPLE BY`.
   SAMPLE BY 15m ALIGN TO CALENDAR;
   ```
 
-  <QueryButton
+  <DemoConsoleButton
     href="https://demo.questdb.io/?query=SELECT%20%0A%20%20%20%20timestamp%2C%0A%20%20%20%20sum%28price%20%2a%20amount%29%20%2F%20sum%28amount%29%20AS%20vwap_price%2C%0A%20%20%20%20sum%28amount%29%20AS%20volume%0AFROM%20trades%0AWHERE%20symbol%20%3D%20%27BTC-USD%27%20AND%20timestamp%20%3E%20dateadd%28%27d%27%2C%20-1%2C%20now%28%29%29%0ASAMPLE%20BY%2015m%20ALIGN%20TO%20CALENDAR%3B"
   />
 </p>
@@ -149,26 +150,26 @@ price of ETH-USD to get the implied BTC/ETH rate.
 
   ```questdb-sql title="Implied BTC-ETH exchange rate"
   WITH btc AS (
-      SELECT timestamp, price
-      FROM trades
-      WHERE symbol = 'BTC-USD' AND timestamp > dateadd('d', -30, now())
-  ), 
+    SELECT timestamp AS x, price AS btcusd
+    FROM trades
+    WHERE symbol = 'BTC-USD' AND timestamp > dateadd('m', -30, now())
+  ),
   eth AS (
-      SELECT timestamp, price
-      FROM trades
-      WHERE symbol = 'ETH-USD' and timestamp > dateadd('d', -30, now())
+    SELECT timestamp AS y, price AS ethusd
+    FROM trades
+    WHERE symbol = 'ETH-USD' AND timestamp > dateadd('m', -30, now())
   )
-  SELECT 
-      btc.timestamp btc_time, 
-      btc.price btc_price, 
-      eth.price eth_price, 
-      round(btc.price/eth.price, 3) btc_to_eth_ratio
+  SELECT
+    x AS time,
+    btcusd / ethusd AS crossPrice,
+    btcusd,
+    ethusd
   FROM btc
   ASOF JOIN eth;
   ```
 
-  <QueryButton
-    href="https://demo.questdb.io/?query=WITH%20btc%20AS%20%28%0A%20%20%20%20SELECT%20timestamp%2C%20price%0A%20%20%20%20FROM%20trades%0A%20%20%20%20WHERE%20symbol%20%3D%20%27BTC-USD%27%20AND%20timestamp%20%3E%20dateadd%28%27d%27%2C%20-30%2C%20now%28%29%29%0A%29%2C%20%0Aeth%20AS%20%28%0A%20%20%20%20SELECT%20timestamp%2C%20price%0A%20%20%20%20FROM%20trades%0A%20%20%20%20WHERE%20symbol%20%3D%20%27ETH-USD%27%20and%20timestamp%20%3E%20dateadd%28%27d%27%2C%20-30%2C%20now%28%29%29%0A%29%0ASELECT%20%0A%20%20%20%20btc.timestamp%20btc_time%2C%20%0A%20%20%20%20btc.price%20btc_price%2C%20%0A%20%20%20%20eth.price%20eth_price%2C%20%0A%20%20%20%20round%28btc.price%2Feth.price%2C%203%29%20btc_to_eth_ratio%0AFROM%20btc%0AASOF%20JOIN%20eth%3B"
+  <DemoConsoleButton
+    href="https://demo.questdb.io/?query=WITH%20btc%20AS%20%28%0A%20%20SELECT%20timestamp%20AS%20x%2C%20price%20AS%20btcusd%0A%20%20FROM%20trades%0A%20%20WHERE%20symbol%20%3D%20%27BTC-USD%27%20AND%20timestamp%20%3E%20dateadd%28%27m%27%2C%20-30%2C%20now%28%29%29%0A%29%2C%0Aeth%20AS%20%28%0A%20%20SELECT%20timestamp%20AS%20y%2C%20price%20AS%20ethusd%0A%20%20FROM%20trades%0A%20%20WHERE%20symbol%20%3D%20%27ETH-USD%27%20AND%20timestamp%20%3E%20dateadd%28%27m%27%2C%20-30%2C%20now%28%29%29%0A%29%0ASELECT%0A%20%20x%20AS%20time%2C%0A%20%20btcusd%20/%20ethusd%20AS%20crossPrice%2C%0A%20%20btcusd%2C%0A%20%20ethusd%0AFROM%20btc%0AASOF%20JOIN%20eth%3B"
   />
 </p>
 

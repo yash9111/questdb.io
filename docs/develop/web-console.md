@@ -21,7 +21,7 @@ import Screenshot from "@theme/Screenshot"
 ## Accessing the Web Console
 
 The Web Console will be available at `http://[server-address]:9000`. When
-running locally, this will be [http://localhost:9000](http://localhost:9000).
+running locally, this will be `http://localhost:9000`.
 
 ## Layout
 

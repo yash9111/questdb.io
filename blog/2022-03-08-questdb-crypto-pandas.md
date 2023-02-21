@@ -19,8 +19,6 @@ tags: [tutorial, crypto, python, pandas, market data, matplotlib]
 image: /img/blog/shared/og-pandas.png
 ---
 
-# Exploring Crypto Prices with QuestDB and Pandas
-
 import Banner from "@theme/Banner"
 
 <Banner
@@ -44,13 +42,13 @@ limited in what it could do in terms of analyzing the dataset. In this post, we
 will use the popular Python libraries (pandas, matplotlib, and seaborn) to
 explore the dataset further.
 
-# Prerequisites
+## Prerequisites
 
 - [Crypto dataset](https://www.kaggle.com/sudalairajkumar/cryptocurrencypricehistory)
 - [Jupyter Notebook](https://jupyter.org/)
 - [QuestDB](https://questdb.io/)
 
-# Importing Data
+## Importing Data
 
 _NOTE: If you still have QuestDB running from Part I on Google Cloud, you can
 skip to the next step._
@@ -81,7 +79,7 @@ import Screenshot from "@theme/Screenshot"
   width={692}
 />
 
-# Setting up Jupyter Notebook
+## Setting up Jupyter Notebook
 
 Install Jupyter Notebook via [pip](https://jupyter.org/install) or with your
 favorite Python environment management tool such as
@@ -115,7 +113,7 @@ Now we’re ready to launch the notebook and start exploring the data:
 $ jupyter notebook
 ```
 
-# Connecting to QuestDB
+## Connecting to QuestDB
 
 First, we need to use the `psycopg2` library to connect to QuestDB and import
 the data.
@@ -186,7 +184,7 @@ These queries should return with `False` for all the columns. If you have
 missing values in your dataset, you can use the `dropna` function to remove that
 row or column.
 
-# Exploring the Data
+## Exploring the Data
 
 Now that we have our dataset in Jupyter, we can run answer some simple
 questions. For example, we can find the five lowest price of Solana by running
@@ -252,7 +250,7 @@ df_rolling_mean.tail()
   width={692}
 />
 
-# Visualizing the Data
+## Visualizing the Data
 
 To visualize our crypto dataset, we’ll use the
 [seaborn](https://seaborn.pydata.org/) library built on top of
@@ -330,7 +328,7 @@ indicators. While past performance is not indicative of future performance,
 these momentum indicators can be used to backtest and formulate new trading or
 price analysis strategies.
 
-# Conclusion
+## Conclusion
 
 With QuestDB and pandas, it’s easy to visualize and calculate various price and
 momentum indicators. By polling data from

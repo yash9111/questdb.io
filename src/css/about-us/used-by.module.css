@@ -32,7 +32,6 @@
   }
 }
 
-
-html[data-theme="light"] .logo__item {
+:global(html[data-theme="light"]) .logo {
   filter: brightness(0) opacity(0.6);
 }

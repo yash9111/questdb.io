@@ -66,7 +66,7 @@ You can [install QuestDB open source](https://questdb.io/get-questdb/) on your l
 brew install questdb
 ```
 
-Once the installation is complete, QuestDB automatically starts and is available on [http://localhost:9000](http://localhost:9000). To ensure that the installation has gone right, please visit this address and see if you can access the QuestDB console.
+Once the installation is complete, QuestDB automatically starts and is available on `http://localhost:9000`. To ensure that the installation has gone right, please visit this address and see if you can access the QuestDB console.
 
 ### Step 2. Install Nginx
 
@@ -76,7 +76,7 @@ To set up Basic Authentication using Nginx, you need to install Nginx on your sy
 brew install nginx
 ```
 
-After the installation, please ensure that Nginx is up and running by visiting [http://localhost:8080](http://localhost:8080).
+After the installation, please ensure that Nginx is up and running by visiting `http://localhost:8080`.
 
 ### Step 3. Configure Nginx to require Basic Authentication for QuestDB open source
 
@@ -181,7 +181,7 @@ brew services reload nginx
 
 Here’s what the output of the commands mentioned above will look like:
 
-![](/img/blog/2022-08-05/step_3c.png)
+![Screenshot terminal with output from previous command](/img/blog/2022-08-05/step_3c.png)
 
 ### Step 4. Verify if Basic Authentication is working while accessing QuestDB open source
 
@@ -189,19 +189,19 @@ After reloading the configuration file, open a new tab in your browser to test i
 
 `localhost` points to QuestDB based on the `nginx.conf`.
 
-![](/img/blog/2022-08-05/step_4_1.png)
+![Screenshot of a browser with localhost in address bar](/img/blog/2022-08-05/step_4_1.png)
 
 If `localhost` binding is working correctly, you should see the following screen asking for your username and password to log into QuestDB:
 
-![](/img/blog/2022-08-05/step_4_2.png)
+![Screenshot of a browser with visible Sign In dialog](/img/blog/2022-08-05/step_4_2.png)
 
 Once you enter your username and password, Nginx will go back to `.htpasswd` to verify whether you’ve entered the correct credentials. If the authentication succeeds, you’ll be able to log onto QuestDB and carry on with your work, as shown below:
 
-![](/img/blog/2022-08-05/step_4_3.png)
+![Screenshot of initial view of QuestDB Web Console](/img/blog/2022-08-05/step_4_3.png)
 
 However, if the authentication fails, you’ll see the following screen with an HTTP 401 specifying that you need the authorization to access `localhost`.
 
-![](/img/blog/2022-08-05/step_4_4.png)
+![Screenshot of a 401 error page](/img/blog/2022-08-05/step_4_4.png)
 
 If you end up getting an HTTP 401, recheck your username and password combination. If it is still not working, try creating another user or resetting the password for your current user using the [`htpasswd` command-line tool](https://httpd.apache.org/docs/2.4/programs/htpasswd.html).
 

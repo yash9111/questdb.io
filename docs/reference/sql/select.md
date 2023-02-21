@@ -178,7 +178,7 @@ Join tables based on a key or timestamp.
 
 #### Syntax
 
-![Flow chart showing the syntax of the JOIN keyword](/img/docs/diagrams/join.svg)
+![Flow chart showing the syntax of the high-level syntax of the JOIN keyword](/img/docs/diagrams/joinOverview.svg)
 
 For more information, please refer to the
 [JOIN reference](/docs/reference/sql/join)

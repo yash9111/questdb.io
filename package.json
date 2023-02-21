@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "docusaurus start",
-    "prebuild": "docusaurus clear && node scripts/optimise-images.js",
+    "prebuild": "docusaurus clear && node ./scripts/cleanup-guidelines",
     "build": "cross-env USE_SIMPLE_CSS_MINIFIER=true PWA_SW_CUSTOM= docusaurus build",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
@@ -38,8 +38,6 @@
     "react-markdown": "^8.0.3",
     "react-remark": "^2.1.0",
     "react-transition-group": "4.4.1",
-    "rehype-katex": "4",
-    "remark-math": "3",
     "styled-components": "^5.3.5",
     "styled-icons": "^10.46.0",
     "throttle-debounce": "3.0.1",
@@ -96,11 +94,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged --verbose"
     }
   },
   "lint-staged": {
-    "static/img/**/*": "scripts/check-size-hook.sh"
+    "static/**/*": "scripts/check-size-hook.sh",
+    "*.{png,jpeg,jpg,gif,svg}": "node scripts/optimise-images.js"
   },
   "resolutions": {
     "sharp": "0.26.3",

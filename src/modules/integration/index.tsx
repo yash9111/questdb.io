@@ -79,7 +79,7 @@ const integrations: Array<{
 export const Integration = () => (
   <Section noGap>
     <Section.Title size="small" center>
-      Use with the tools you love
+      Use QuestDB with the tools you love
     </Section.Title>
 
     <div className={styles.integrations}>
@@ -98,11 +98,13 @@ export const Integration = () => (
 
           <>
             <SvgImage
+              title={logo.alt}
               image={React.createElement(logo.svg, {
                 className: styles.logo,
                 alt: logo.alt,
                 width: logo.width ?? 50,
                 height: logo.height ?? 50,
+                loading: "lazy",
               })}
             />
             {label}

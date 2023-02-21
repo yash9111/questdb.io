@@ -128,15 +128,18 @@ const UseCaseHighlights = () => (
 
 const monitoringCustomers: Customer[] = [
   {
+    key: "liveaction",
+    quote:
+      "QuestDB is used by LiveAction as a time series database for storing flow and encrypted traffic metadata analyzed by their real-time threat detection engine.",
+    caseStudyLink: "/case-study/liveaction/",
+    logoWidth: 120,
+  },
+  {
     key: "yahoo",
     quote:
       "See how Yahoo uses QuestDB to monitor and autoscale cloud clusters that serve a billion users",
-    caseStudyLink: "/case-study/yahoo",
+    caseStudyLink: "/case-study/yahoo/",
     logoWidth: 100,
-  },
-  {
-    key: "liveaction",
-    logoWidth: 120,
   },
   {
     key: "syndica",
@@ -225,13 +228,12 @@ const marketDataCustomers: Customer[] = [
     logoWidth: 120,
   },
   {
-    key: "invezo",
-    logoWidth: 110,
-    logoHeight: 50,
+    key: "coinbase",
+    logoWidth: 120,
   },
   {
-    key: "toggle",
-    logoWidth: 100,
+    key: "okx",
+    logoWidth: 60,
   },
 ]
 
@@ -282,10 +284,17 @@ const MarketData = () => (
 
 const industrialTelemetryCustomers: Customer[] = [
   {
+    key: "copenhagen-atomics",
+    quote:
+      "Copenhagen Atomics, manufacturer of next generation molten salt reactors, uses QuestDB to monitor their thorium reactors in real time.",
+    caseStudyLink: "/case-study/copenhagen-atomics/",
+    logoWidth: 120,
+  },
+  {
     key: "tqs-integration",
     quote:
       "See how TQS, a Cognizant company, uses QuestDB to store manufacturing plants metrics for real-time data visualization and anomaly detection",
-    caseStudyLink: "/case-study/tqs-integration",
+    caseStudyLink: "/case-study/tqs-integration/",
     logoWidth: 120,
   },
   {
@@ -293,27 +302,8 @@ const industrialTelemetryCustomers: Customer[] = [
     logoWidth: 120,
   },
   {
-    key: "samtec",
-    logoWidth: 120,
-  },
-  {
-    key: "copenhagen-atomics",
-    logoWidth: 120,
-  },
-  {
-    key: "electric-era",
-    logoWidth: 120,
-  },
-  {
     key: "turk-telekom",
     logoWidth: 120,
-  },
-  {
-    key: "datron",
-    logoWidth: 90,
-  },
-  {
-    key: "razor-secure",
   },
 ]
 
@@ -370,8 +360,11 @@ const IndustrialTelemetry = () => (
 )
 
 const title = "Use Cases"
+const description =
+  "QuestDB offers high throughput ingestion and real-time SQL queries for applications in a wide range of use cases and industries"
+
 const UseCasesPage = () => (
-  <Layout canonical="/careers" description={title} title={title}>
+  <Layout canonical="/use-cases" description={description} title={title}>
     <Heading />
     <UseCaseHighlights />
     <Monitoring />

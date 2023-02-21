@@ -20,7 +20,7 @@ const CoreFeaturesItems: Feature[] = [
     inCloud: "available",
   },
   {
-    title: "Time series-native SQL extensions",
+    title: "Time-series-native SQL extensions",
     inOpenSource: "available",
     inCloud: "available",
   },
@@ -65,7 +65,7 @@ const SecurityFeaturesItems: Feature[] = [
   {
     title: "SSO Authentication",
     inOpenSource: "not-applicable",
-    inCloud: "coming-soon",
+    inCloud: "available-new",
   },
   {
     title: "TLS encryption",
@@ -91,6 +91,11 @@ const SecurityFeaturesItems: Feature[] = [
     title: "Bring your own key encryption",
     inOpenSource: "not-applicable",
     inCloud: "coming-soon",
+  },
+  {
+    title: "IP whitelisting",
+    inOpenSource: "not-applicable",
+    inCloud: "available-new",
   },
 ]
 

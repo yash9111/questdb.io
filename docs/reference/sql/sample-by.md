@@ -423,7 +423,8 @@ SELECT ts, avg(quantity*price) FROM trades SAMPLE BY 1d ALIGN TO CALENDAR;
 
 ## See also
 
-This section includes links to additional information such as tutorials.
+This section includes links to additional information such as tutorials:
 
-- [`SAMPLE BY`](/blog/2022/11/23/sql-extensions-time-series-data-questdb-part-ii):
-  Blog post focusing on the data analysis ability of `SAMPLE BY`
+- [SQL Extensions for Time Series Data in QuestDB](/blog/2022/11/23/sql-extensions-time-series-data-questdb-part-ii/)
+
+- [Three SQL Keywords for Finding Missing Data](/blog/three-sql-keywords-for-finding-missing-data/)

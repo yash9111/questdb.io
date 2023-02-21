@@ -8,7 +8,7 @@ import { Logos } from "./logos"
 const Customers = () => {
   const { isDarkTheme } = useThemeContext()
   return (
-    <Section noGap>
+    <Section noGap className={styles.section}>
       <Marquee gradientColor={isDarkTheme ? [33, 34, 44] : [255, 255, 255]}>
         <div className={styles.logos}>
           <Logos isDarkTheme={isDarkTheme} />
