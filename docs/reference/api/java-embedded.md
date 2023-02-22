@@ -19,9 +19,7 @@ import TabItem from "@theme/TabItem"
   { label: "Gradle", value: "gradle" },
 ]}>
 
-
 <TabItem value="maven">
-
 
 <InterpolateReleaseData
   renderText={(release) => {
@@ -57,9 +55,7 @@ import TabItem from "@theme/TabItem"
 
 </TabItem>
 
-
 <TabItem value="gradle">
-
 
 <InterpolateReleaseData
   renderText={(release) => {
@@ -83,9 +79,7 @@ import TabItem from "@theme/TabItem"
 
 </TabItem>
 
-
 </Tabs>
-
 
 ## Writing data
 
@@ -106,7 +100,6 @@ The `WalWriter` facilitates table writes to WAL tables. To successfully create
 an instance of `WalWriter`, the table must already exist.
 
 ```java title="Example WalWriter"
-
 try (CairoEngine engine = new CairoEngine(configuration)) {
     final SqlExecutionContext ctx = new SqlExecutionContextImpl(engine, 1);
     try (SqlCompiler compiler = new SqlCompiler(engine)) {
@@ -116,7 +109,8 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
                 ") timestamp(ts) partition by day WAL", ctx);
 
         // write data into WAL
-        try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), "testTable")) {
+        final TableToken tableToken = engine.getTableToken("testTable");
+        try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), tableToken)) {
             for (int i = 0; i < 3; i++) {
                 TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
                 row.putInt(0, 123);
@@ -153,7 +147,6 @@ successfully create an instance, the table must:
   attempt to obtain an exclusive cross-process lock on the table.
 
 ```java title="Example TableWriter"
-
 final CairoConfiguration configuration = new DefaultCairoConfiguration("dbRoot");
 try (CairoEngine engine = new CairoEngine(configuration)) {
     final SqlExecutionContext ctx = new SqlExecutionContextImpl(engine, 1);
@@ -164,7 +157,8 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
                 ") timestamp(ts) partition by day", ctx);
 
         // write data directly into the table
-        try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "testTable", "test")) {
+        final TableToken tableToken = engine.getTableToken("testTable");
+        try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), tableToken, "test")) {
             for (int i = 0; i < 11; i++) {
                 TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
                 row.putInt(0, 123);
@@ -184,7 +178,6 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
         }
     }
 }
-
 ```
 
 ### Writing data using `TableWriterAPI`
@@ -194,7 +187,6 @@ suitable `Writer` based on the table configurations. The table must already
 exist:
 
 ```java title="Example TableWriterAPI"
-
 try (CairoEngine engine = new CairoEngine(configuration)) {
     final SqlExecutionContext ctx = new SqlExecutionContextImpl(engine, 1);
     try (SqlCompiler compiler = new SqlCompiler(engine)) {
@@ -204,7 +196,8 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
                 ") timestamp(ts) partition by day WAL", ctx);
 
         // write data into the table
-        try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), "testTable", "test")) {
+        final TableToken tableToken = engine.getTableToken("testTable");
+        try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), tableToken, "test")) {
             for (int i = 0; i < 3; i++) {
                 TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
                 row.putInt(0, 123);
@@ -274,7 +267,6 @@ There are several ways to create a new table and we recommend using
 `SqlCompiler`:
 
 ```java title="Creating new table"
-
 // Create a non-WAL table:
 
 try (SqlCompiler compiler = new SqlCompiler(engine)) {
@@ -296,19 +288,18 @@ this writer instance later, when we use the same method of creating table writer
 again.
 
 ```java title="New table writer instance for a non-WAL table"
-
-try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "abc", "testing")) {
+final TableToken tableToken = engine.getTableToken("abc");
+try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), tableToken, "testing")) {
 ```
 
 ```java title="New table writer instance for a WAL table"
-
-try (WalWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "abc")) {
+final TableToken tableToken = engine.getTableToken("abc");
+try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), tableToken)) {
 ```
 
 ```java title="New table writer instance for either a WAL or non-WAL table"
-
-try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), "abc", "testing")) {
-
+final TableToken tableToken = engine.getTableToken("abc");
+try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), tableToken, "testing")) {
 ```
 
 `TableWriter` - A non-WAL table uses `TableWriter`, which will hold an exclusive
@@ -325,6 +316,7 @@ an interface implemented by both writers.
 #### Create a new row
 
 ```java title="Creating new table row with timestamp"
+
 TableWriter.Row row = writer.newRow(Os.currentTimeMicros());
 ```
 
@@ -335,6 +327,7 @@ stay the same as the last row. When the table is not partitioned and does not
 have a designated timestamp column, the timestamp value can be omitted.
 
 ```java title="Creating new table row without timestamp"
+
 TableWriter.Row row = writer.newRow();
 ```
 
@@ -416,7 +409,8 @@ try (CairoEngine engine = new CairoEngine(configuration)) {
         PageFrameCursor cursor = ...; // Setup PageFrameCursor instance
         compiler.compile("create table abc (a int, b byte, c short, d long, e float, g double, h date, i symbol, j string, k boolean, l geohash(8c), ts timestamp) timestamp(ts)", ctx);
 
-        try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), "abc", "testing")) {
+        final TableToken tableToken = engine.getTableToken("abc");
+        try (TableWriter writer = engine.getWriter(ctx.getCairoSecurityContext(), tableToken, "testing")) {
             int columnCount = writer.getMetadata().getColumnCount();
             TableBlockWriter blockWriter = writer.newBlock();
 
