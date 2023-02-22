@@ -442,3 +442,25 @@ html[data-theme='light'] .react-toggle-track {
 .transition-node-enter-active { opacity: 1; transition: opacity 200ms; }
 .transition-node-exit { opacity: 1; }
 .transition-node-exit-active { opacity: 0; transition: opacity 200ms; }
+
+.pink-table table {
+  --ifm-table-background: #943d6b;
+  --ifm-table-stripe-background: #943d6b;
+  --ifm-table-head-background: #943d6b;
+}
+
+.blue-table table {
+  --ifm-table-background: #446890;
+  --ifm-table-stripe-background: #446890;
+  --ifm-table-head-background: #446890;
+}
+
+.pink-table-alternate th:nth-child(odd),
+.pink-table-alternate td:nth-child(odd) {
+  background: #943d6b;
+}
+
+.pink-table-alternate th:nth-child(even),
+.pink-table-alternate td:nth-child(even){
+  background: #446890;
+}
