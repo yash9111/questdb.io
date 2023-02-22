@@ -47,6 +47,7 @@ Where the unit for sampled groups may be one of the following:
 | `h`  | hour        |
 | `d`  | day         |
 | `M`  | month       |
+| `y`  | year       |
 
 For example, given a table `trades`, the following query returns the number of
 trades per hour:
