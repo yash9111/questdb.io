@@ -4,10 +4,13 @@ sidebar_label: JOIN
 description: JOIN SQL keyword reference documentation.
 ---
 
-QuestDB supports the following types of joins: `INNER`, `LEFT (OUTER)`, `CROSS`,
-`ASOF`, and `SPLICE`. `FULL` joins are not yet implemented and are on our
-roadmap. All supported join types can be combined in a single SQL statement;
-QuestDB SQL's optimizer determines the best execution order and algorithms.
+QuestDB supports the type of joins you can frequently find in relational
+databases: `INNER`, `LEFT (OUTER)`, `CROSS`. Additionally, it implements joins
+which are particularly useful for time-series analytics: `ASOF`, `LT`, and
+`SPLICE`. `FULL` joins are not yet implemented and are on our roadmap.
+
+All supported join types can be combined in a single SQL statement; QuestDB
+SQL's optimizer determines the best execution order and algorithms.
 
 There are no known limitations on the size of tables or sub-queries used in
 joins and there are no limitations on the number of joins, either.
@@ -82,9 +85,9 @@ FROM a, b
 WHERE a.id = b.id;
 ```
 
-The type of join as well as the column will be inferred from the `WHERE` clause,
-and may be either an `INNER` or `CROSS` join. For the example above, the
-equivalent explicit statement would be:
+The type of join as well as the column are inferred from the `WHERE` clause, and
+may be either an `INNER` or `CROSS` join. For the example above, the equivalent
+explicit statement would be:
 
 ```questdb-sql
 SELECT *
@@ -94,14 +97,14 @@ JOIN b ON (id);
 
 ## (INNER) JOIN
 
-`(INNER) JOIN` is used to return rows from 2 tables where the records on the
-compared column have matching values in both tables. `JOIN` is interpreted as
+`(INNER) JOIN` returns rows from two tables where the records on the compared
+column have matching values in both tables. `JOIN` is interpreted as
 `INNER JOIN` by default, making the `INNER` keyword implicit.
 
-The following query will return the `movieId` and the average rating from table
-`ratings`. It will also add a column for the `title` from the table `movies`.
-The corresponding title will be identified based on the `movieId` in the
-`ratings` table matching an `id` in the `movies` table.
+The following query returns the `movieId` and the average rating from table
+`ratings`. It also adds a column for the `title` from the table `movies`. The
+corresponding title will be identified based on the `movieId` in the `ratings`
+table matching an `id` in the `movies` table.
 
 ```questdb-sql title="INNER JOIN ON"
 SELECT movieId a, title, avg(rating)
@@ -118,9 +121,9 @@ ON ratings.movieId = id;
 
 ## LEFT (OUTER) JOIN
 
-`LEFT OUTER JOIN` or simply `LEFT JOIN` will return **all** records from the
-left table, and if matched, the records of the right table. When there is no
-match for the right table, it will return `NULL` values in right table fields.
+`LEFT OUTER JOIN` or simply `LEFT JOIN` returns **all** records from the left
+table, and if matched, the records of the right table. When there is no match
+for the right table, it returns `NULL` values in right table fields.
 
 The general syntax is as follows:
 
@@ -150,10 +153,9 @@ WHERE tab2.colB = NULL;
 
 ## CROSS JOIN
 
-`CROSS JOIN` will return the Cartesian product of the two tables being joined
-and can be used to create a table with all possible combinations of columns. The
-following query will return all possible combinations of `starters` and
-`deserts`:
+`CROSS JOIN` returns the Cartesian product of the two tables being joined and
+can be used to create a table with all possible combinations of columns. The
+following query returns all possible combinations of `starters` and `deserts`:
 
 ```questdb-sql
 SELECT *
@@ -169,61 +171,150 @@ CROSS JOIN deserts;
 
 ## ASOF JOIN
 
-`ASOF` joins are used on time series data to join two tables based on timestamps
-that do not exactly match. For a given record at a given timestamp, it will
-return the corresponding record in the other table at the closest timestamp
-**prior to** the timestamp in the first table.
+`ASOF JOIN` joins two different time-series measured. For each row in the first
+time-series, the `ASOF JOIN` takes from the second time-series a timestamp that
+meets both of the following criteria:
 
-:::note
+- The timestamp is the closest to the first timestamp.
+- The timestamp is **strictly prior or equal to** the first timestamp.
 
-To be able to leverage `ASOF JOIN`, both joined tables must have a
-[designated timestamp](/docs/concept/designated-timestamp/) column.
-
-:::
-
-`ASOF` join is performed on tables or result sets that are ordered by time. When
-a table is created as ordered by time, the order of records is enforced and the
-timestamp column name is in the table metadata. `ASOF` join will use this
-timestamp column from metadata.
+### Example
 
 Given the following tables:
 
-Table `asks`:
+Table `bids` (the left table):
 
-| ts                          | ask |
-| --------------------------- | --- |
-| 2019-10-17T00:00:00.000000Z | 100 |
-| 2019-10-17T00:00:00.200000Z | 101 |
-| 2019-10-17T00:00:00.400000Z | 102 |
+<div class="pink-table">
 
-Table `bids`:
 
 | ts                          | bid |
 | --------------------------- | --- |
+| 2019-10-17T00:00:00.000000Z | 100 |
 | 2019-10-17T00:00:00.100000Z | 101 |
 | 2019-10-17T00:00:00.300000Z | 102 |
 | 2019-10-17T00:00:00.500000Z | 103 |
+| 2019-10-17T00:00:00.600000Z | 104 |
+
+</div>
+
+
+The `asks` table (the right table):
+
+<div class="blue-table">
+
+
+| ts                          | ask |
+| --------------------------- | --- |
+| 2019-10-17T00:00:00.100000Z | 100 |
+| 2019-10-17T00:00:00.300000Z | 101 |
+| 2019-10-17T00:00:00.400000Z | 102 |
+
+</div>
+
 
 An `ASOF JOIN` query can look like the following:
 
 ```questdb-sql
-SELECT bids.ts timebid, bid, ask
+SELECT bids.ts timebid, asks.ts timeask, bid, ask
 FROM bids
 ASOF JOIN asks;
 ```
 
+This is the JOIN result:
+
+<div class="pink-table-alternate">
+
+
+| timebid                     | timeask                     | bid | ask  |
+| --------------------------- | --------------------------- | --- | ---- |
+| 2019-10-17T00:00:00.000000Z | NULL                        | 101 | NULL |
+| 2019-10-17T00:00:00.100000Z | 2019-10-17T00:00:00.100000Z | 101 | 100  |
+| 2019-10-17T00:00:00.300000Z | 2019-10-17T00:00:00.300000Z | 102 | 101  |
+| 2019-10-17T00:00:00.500000Z | 2019-10-17T00:00:00.400000Z | 103 | 102  |
+| 2019-10-17T00:00:00.600000Z | 2019-10-17T00:00:00.400000Z | 104 | 102  |
+
+</div>
+
+
+The result has all rows from the `bids` table joined with rows from the `asks`
+table. For each timestamp from the `bids` table, the query looks for a timestamp that
+is equal or prior to it from the `asks` table. If no matching timestamp is
+found, NULL is inserted.
+
+### Using `ON` for matching column value
+
+An additional `ON` clause can be used to join the tables based on the value of a
+selected column.
+
+The query above does not use the optional `ON` clause. If both tables store data
+for multiple stocks, `ON` clause provides a way to find asks for bids with
+matching stock value.
+
+Table `bids` (the left table):
+
+| ts                          | bid | stock |
+| --------------------------- | --- | :---- |
+| 2019-10-17T00:00:00.000000Z | 500 | AAPL  |
+| 2019-10-17T00:00:00.100000Z | 101 | GOOG  |
+| 2019-10-17T00:00:00.200000Z | 102 | GOOG  |
+| 2019-10-17T00:00:00.300000Z | 501 | AAPL  |
+| 2019-10-17T00:00:00.500000Z | 103 | GOOG  |
+| 2019-10-17T00:00:00.600000Z | 502 | AAPL  |
+| 2019-10-17T00:00:00.600000Z | 200 | IBM   |
+
+Table `asks` (the right table):
+
+| ts                          | ask | stock |
+| --------------------------- | --- | :---- |
+| 2019-10-17T00:00:00.000000Z | 500 | AAPL  |
+| 2019-10-17T00:00:00.100000Z | 501 | AAPL  |
+| 2019-10-17T00:00:00.100000Z | 100 | GOOG  |
+| 2019-10-17T00:00:00.400000Z | 502 | AAPL  |
+| 2019-10-17T00:00:00.700000Z | 200 | IBM   |
+
+Notice how both tables have a new column `stock` that stores the stock name. The
+`ON` clause allows you to match the value of the `stock` column in the `bids`
+table with that in the `asks` table:
+
+```questdb-sql
+SELECT bids.stock stock, bids.ts timebid, asks.ts timeask, bid, ask
+FROM bids
+ASOF JOIN asks ON (stock);
+```
+
 The above query returns these results:
 
-| timebid                     | bid | ask |
-| --------------------------- | --- | --- |
-| 2019-10-17T00:00:00.100000Z | 101 | 100 |
-| 2019-10-17T00:00:00.300000Z | 102 | 101 |
-| 2019-10-17T00:00:00.500000Z | 103 | 102 |
+| stock | timebid                     | timeask                     | bid | ask  |
+| :---- | --------------------------- | --------------------------- | --- | ---- |
+| AAPL  | 2019-10-17T00:00:00.000000Z | 2019-10-17T00:00:00.000000Z | 500 | 500  |
+| GOOG  | 2019-10-17T00:00:00.100000Z | 2019-10-17T00:00:00.100000Z | 101 | 100  |
+| GOOG  | 2019-10-17T00:00:00.200000Z | 2019-10-17T00:00:00.100000Z | 102 | 100  |
+| AAPL  | 2019-10-17T00:00:00.300000Z | 2019-10-17T00:00:00.100000Z | 501 | 501  |
+| GOOG  | 2019-10-17T00:00:00.500000Z | 2019-10-17T00:00:00.100000Z | 103 | 100  |
+| AAPL  | 2019-10-17T00:00:00.600000Z | 2019-10-17T00:00:00.400000Z | 502 | 502  |
+| IBM   | 2019-10-17T00:00:00.600000Z | NULL                        | 200 | NULL |
 
-Note that there are no records from the `asks` table at timestamp
-`2019-10-17T00:00:00.100000Z`. The `ASOF JOIN` will look for the value in the
-`bids` table that has the closest timestamp prior to or equal to the target
-timestamp.
+This query returns all rows from the `bids` table joined with records from the
+`asks` table that meet both the following criterion:
+
+- The `stock` column of the two tables has the same value
+- The timestamp of the `asks` record is prior to or equal to the timestamp of
+  the `bids` record.
+
+The IBM record in the `bids` table is not joined with any record in the `asks`
+table because there is no record in the `asks` table with the same stock name
+and a timestamp prior to or equal to the timestamp of the IBM record. The asks
+table has a record with the IBM stock name but its timestamp is
+`2019-10-17T00:00:00.700000Z` which is after the timestamp of the IBM record in
+the `bids` table and therefore not joined.
+
+### Timestamp considerations
+
+`ASOF` join can be performed only on tables or result sets that are ordered by
+time. When a table is created with a
+[designated timestamp](/docs/concept/designated-timestamp/) the order of records
+is enforced and the timestamp column name is in the table metadata. `ASOF` join
+uses this timestamp column from metadata.
 
 In case tables do not have a designated timestamp column, but data is in
 chronological order, timestamp columns can be specified at runtime:
@@ -232,17 +323,6 @@ chronological order, timestamp columns can be specified at runtime:
 SELECT bids.ts timebid, bid, ask
 FROM (bids timestamp(ts))
 ASOF JOIN (asks timestamp (ts));
-```
-
-The query above assumes that there is only one instrument in `bids` and `asks`
-tables and therefore does not use the optional `ON` clause. If both tables store
-data for multiple instruments `ON` clause will allow you to find bids for asks
-with matching instrument value:
-
-```questdb-sql
-SELECT *
-FROM asks
-ASOF JOIN bids ON (instrument);
 ```
 
 :::caution
@@ -254,19 +334,18 @@ order, the join result is non-deterministic.
 
 ## LT JOIN
 
-`LT` join is very similar to `ASOF`, except that it searches for the last row
-from the right table strictly before the row from the left table. There will be
-one or no rows joined from the right table per each row from the left table.
+Similar to `ASOF JOIN`, `LT JOIN` joins two different time-series measured. For
+each row in the first time-series, the `LT JOIN` takes from the second
+time-series a timestamp that meets both of the following criteria:
+
+- The timestamp is the closest to the first timestamp.
+- The timestamp is **strictly prior to** the first timestamp.
+
+In other words: `LT JOIN` won't join records with equal timestamps.
+
+### Example
 
 Consider the following tables:
-
-Table `asks`:
-
-| ts                          | ask |
-| --------------------------- | --- |
-| 2019-10-17T00:00:00.000000Z | 100 |
-| 2019-10-17T00:00:00.300000Z | 101 |
-| 2019-10-17T00:00:00.400000Z | 102 |
 
 Table `bids`:
 
@@ -275,6 +354,14 @@ Table `bids`:
 | 2019-10-17T00:00:00.000000Z | 101 |
 | 2019-10-17T00:00:00.300000Z | 102 |
 | 2019-10-17T00:00:00.500000Z | 103 |
+
+Table `asks`:
+
+| ts                          | ask |
+| --------------------------- | --- |
+| 2019-10-17T00:00:00.000000Z | 100 |
+| 2019-10-17T00:00:00.300000Z | 101 |
+| 2019-10-17T00:00:00.400000Z | 102 |
 
 An `LT JOIN` can be built using the following query:
 
@@ -291,6 +378,14 @@ The query above returns the following results:
 | 2019-10-17T00:00:00.000000Z | NULL                        | 101 | NULL |
 | 2019-10-17T00:00:00.300000Z | 2019-10-17T00:00:00.000000Z | 102 | 100  |
 | 2019-10-17T00:00:00.500000Z | 2019-10-17T00:00:00.400000Z | 103 | 102  |
+
+Notice how the first record in the `bids` table is not joined with any record in
+the `asks` table. This is because there is no record in the `asks` table with a
+timestamp prior to the timestamp of the first record in the `bids` table.
+
+Similarly, the second record in the `bids` table is joined with the first record
+in the `asks` table because the timestamp of the first record in the `asks`
+table is prior to the timestamp of the second record in the `bids` table.
 
 :::note
 
@@ -348,12 +443,12 @@ need additional filtering on the two tables, the `ON` clause can be used as
 follows:
 
 ```questdb-sql
-SELECT ts timebid, instrument bidInstrument, bid, ask
+SELECT ts timebid, stock bidStock, bid, ask
 FROM bids
 SPLICE JOIN
     (
-    SELECT ts timesask, instrument askInstrument, ask ask
+    SELECT ts timesask, stock askStock, ask ask
     FROM asks
     )
-    ON bidInstrument=askInstrument;
+    ON bidStock=askStock;
 ```
