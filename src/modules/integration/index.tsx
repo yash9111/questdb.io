@@ -66,8 +66,7 @@ const integrations: Array<{
   {
     logo: { ...logos.redpanda, width: 50, svg: RedpandaLogo },
     label: "Redpanda",
-    src:
-      "/docs/third-party-tools/redpanda/",
+    src: "/docs/third-party-tools/redpanda/",
   },
   {
     logo: { ...logos.plotly, svg: PlotlyLogo },
