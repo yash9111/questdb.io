@@ -200,9 +200,7 @@ Now the Kafka Connect is initiated.
 
 ## Send a message
 
-Open the Redpand UI topic page,
-[http://127.0.0.1:8080/topics](http://127.0.0.1:8080/topics).It should display
-`example-topic`:
+Open the Redpand UI topic page, `http://127.0.0.1:8080/topics`.It should display `example-topic`:
 
 ![Screenshot of the Redpanda UI showing the example-topic](/img/docs/guide/redpanda/redpanda-topic.png)
 
@@ -225,8 +223,7 @@ Then, click 'Publish'.
 
 ## See result from QuestDB
 
-Go to QuestDB web console at [localhost:9000/](http://localhost:9000/). Run a
-`SELECT` query:
+Go to QuestDB web console at `http://localhost:9000/`. Run a `SELECT` query:
 
 ```questdb-sql
 SELECT * FROM example_table;
