@@ -46,7 +46,7 @@ const integrations: Array<{
   {
     logo: { ...logos.pandas, svg: PandasLogo },
     label: "Pandas",
-    src: "/blog/2022/03/08/questdb-crypto-pandas/",
+    src: "/docs/third-party-tools/pandas/",
   },
   {
     logo: { ...logos.telegraf, svg: TelegrafLogo },
@@ -67,7 +67,7 @@ const integrations: Array<{
     logo: { ...logos.redpanda, width: 50, svg: RedpandaLogo },
     label: "Redpanda",
     src:
-      "/blog/2022/05/25/how-to-build-a-real-time-crypto-tracker-with-redpanda-and-questdb/",
+      "/docs/third-party-tools/redpanda/",
   },
   {
     logo: { ...logos.plotly, svg: PlotlyLogo },
