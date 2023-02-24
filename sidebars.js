@@ -105,6 +105,7 @@ module.exports = {
             "third-party-tools/kafka/jdbc",
           ],
         },
+        "third-party-tools/mindsdb",
         "third-party-tools/pandas",
         "third-party-tools/prometheus",
         "third-party-tools/redpanda",
