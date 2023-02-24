@@ -302,8 +302,8 @@ the selected `Writer`'s `putGeoHash` method. The `putGeoHash` method accepts
 `GeoHashes.fromString` may be used for string conversion, but comes with some
 performance overhead as opposed to `long` values directly.
 
-Depending on whether the table is a
-[WAL](docs/concept/write-ahead-log/) table or not, the following components may be used:
+Depending on whether the table is a [WAL](docs/concept/write-ahead-log/) table
+or not, the following components may be used:
 
 - `TableWriter` is used to write data directly into a table.
 - `WalWriter` is used to write data into a WAL-enabled table via WAL.
@@ -311,27 +311,28 @@ Depending on whether the table is a
   suitable `Writer` based on the table metadata.
 
 ```java title="TableWriter"
-
 // Insert data into a non-WAL table:
-try (TableWriter writer = engine.getTableWriter(ctx.getCairoSecurityContext(), "geohash_table", "test")) {
-  for(int i = 0; i < 10; i++) {
-        TableWriter.Row row = writer.newRow();
-        row.putSym(0, "my_device");
-        // putGeoStr(columnIndex, hash)
-        row.putGeoStr(1, "u33d8b1b");
-        // putGeoHashDeg(columnIndex, latitude, longitude)
-        row.putGeoHashDeg(2, 48.669, -4.329)
-        row.append();
-    }
-    writer.commit();
+final TableToken tableToken = engine.getTableToken("geohash_table");
+try (TableWriter writer = engine.getTableWriter(ctx.getCairoSecurityContext(), tableToken, "test")) {
+  for (int i = 0; i < 10; i++) {
+      TableWriter.Row row = writer.newRow();
+      row.putSym(0, "my_device");
+      // putGeoStr(columnIndex, hash)
+      row.putGeoStr(1, "u33d8b1b");
+      // putGeoHashDeg(columnIndex, latitude, longitude)
+      row.putGeoHashDeg(2, 48.669, -4.329)
+      row.append();
+  }
+  writer.commit();
 }
 
 ```
 
 ```java title="WalWriter"
 // Insert data into a WAL table:
-try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), "geohash_table")) {
-    for(int i = 0; i < 10; i++) {
+final TableToken tableToken = engine.getTableToken("geohash_table");
+try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), tableToken)) {
+    for (int i = 0; i < 10; i++) {
         TableWriter.Row row = writer.newRow();
         row.putSym(0, "my_device");
         // putGeoStr(columnIndex, hash)
@@ -342,7 +343,7 @@ try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), "geoh
     }
     writer.commit();
 
-    // apply WAL to the table
+    // Apply WAL to the table
     try (ApplyWal2TableJob walApplyJob = new ApplyWal2TableJob(engine, 1, 1)) {
         while (walApplyJob.run(0));
     }
@@ -351,9 +352,10 @@ try (WalWriter writer = engine.getWalWriter(ctx.getCairoSecurityContext(), "geoh
 ```
 
 ```java title="TableWriterAPI"
-//Insert table into either a WAL or a non-WAL table:
-try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), "geohash_table", "test")) {
-    for(int i = 0; i < 10; i++) {
+// Insert table into either a WAL or a non-WAL table:
+final TableToken tableToken = engine.getTableToken("geohash_table");
+try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContext(), tableToken, "test")) {
+    for (int i = 0; i < 10; i++) {
         TableWriter.Row row = writer.newRow();
         row.putSym(0, "my_device");
         // putGeoStr(columnIndex, hash)
@@ -363,9 +365,10 @@ try (TableWriterAPI writer = engine.getTableWriterAPI(ctx.getCairoSecurityContex
         row.append();
     }
     writer.commit();
-    // apply WAL to the table
+
+    // Apply WAL to the table
     try (ApplyWal2TableJob walApplyJob = new ApplyWal2TableJob(engine, 1, 1)) {
-    while (walApplyJob.run(0));
+        while (walApplyJob.run(0));
     }
 }
 ```
@@ -396,8 +399,8 @@ see the [Java API documentation](/docs/reference/api/java-embedded).
 
 ## InfluxDB Line Protocol
 
-Geohashes may also be inserted via InfluxDB Line Protocol (ILP) by the
-following steps:
+Geohashes may also be inserted via InfluxDB Line Protocol (ILP) by the following
+steps:
 
 1. Create a table with columns of geohash type beforehand:
 

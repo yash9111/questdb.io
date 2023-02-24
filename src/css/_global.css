@@ -443,24 +443,41 @@ html[data-theme='light'] .react-toggle-track {
 .transition-node-exit { opacity: 1; }
 .transition-node-exit-active { opacity: 0; transition: opacity 200ms; }
 
-.pink-table table {
-  --ifm-table-background: #943d6b;
-  --ifm-table-stripe-background: #943d6b;
-  --ifm-table-head-background: #943d6b;
+.pink-table {
+  --color-odd: #943d6b;
+  --color-even: #446890;
+  --ifm-table-background: var(--color-odd);
+  --ifm-table-stripe-background: var(--color-odd);
+  --ifm-table-head-background: var(--color-odd);
 }
 
-.blue-table table {
-  --ifm-table-background: #446890;
-  --ifm-table-stripe-background: #446890;
-  --ifm-table-head-background: #446890;
+.blue-table {
+  --color-odd: #943d6b;
+  --color-even: #446890;
+
+  --ifm-table-background: var(--color-even);
+  --ifm-table-stripe-background: var(--color-even);
+  --ifm-table-head-background: var(--color-even);
 }
 
-.pink-table-alternate th:nth-child(odd),
-.pink-table-alternate td:nth-child(odd) {
-  background: #943d6b;
+.table-alternate {
+  --color-odd: #943d6b;
+  --color-even: #446890;
 }
 
-.pink-table-alternate th:nth-child(even),
-.pink-table-alternate td:nth-child(even){
-  background: #446890;
+html[data-theme='light'] .pink-table,
+html[data-theme='light'] .blue-table,
+html[data-theme='light'] .table-alternate {
+  --color-odd: #e6a9c9;
+  --color-even: #80b2ea;
+}
+
+.table-alternate th:nth-child(odd),
+.table-alternate td:nth-child(odd) {
+  background: var(--color-odd);
+}
+
+.table-alternate th:nth-child(even),
+.table-alternate td:nth-child(even){
+  background: var(--color-even);
 }
