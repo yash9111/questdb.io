@@ -4,7 +4,7 @@ description:
   Guide for getting started in Machine Learning with MindsDB and QuestDB
 ---
 
-[MindsDB](https://mindsdb.com/) provides Machine Learning capabilities to enable
+[MindsDB](https://mindsdb.com/questdb-machine-learning/) provides Machine Learning capabilities to enable
 predictive questions about your data. With MindsDB:
 
 - Developers can quickly add AI capabilities to their applications.
@@ -24,7 +24,7 @@ data from MindsDB to produce powerful ML models.
 - [docker](https://docs.docker.com/): To create an image and run the container.
 - mysql: The client we use to interact with MindsDB
   (`mysql -h 127.0.0.1 --port 47335 -u mindsdb -p`). Alternatively, use
-  [MindsDB web console](http://localhost:47334/) instead.
+  MindsDB web console at `http://localhost:47334/` instead.
 - [Curl](https://curl.se/download.html): To upload data to QuestDB from a local
   CSV file.
 
@@ -109,7 +109,7 @@ There are different ways to
 
 #### SQL
 
-We can access QuestDB's web console at `localhost:9000`.
+We can access QuestDB's web console at `http://localhost:9000`.
 
 Run the following SQL query to create a simple table:
 
@@ -171,7 +171,7 @@ We can connect to MindsDB with a standard mysql-wire-protocol compliant client
 mysql -h 127.0.0.1 --port 47335 -u mindsdb -p
 ```
 
-Alternatively, we can use MindsDB web console at `localhost:47334`:
+Alternatively, we can use MindsDB web console at `http://localhost:47334`:
 
 From the terminal or the MindsDB web console, run the following command to check
 the available databases:
@@ -327,14 +327,14 @@ from QuestDB's table `house_rentals_data` (100 rows) as a time series on the
 column `ts`.
 
 When status is complete, the model is ready for use; otherwise, we simply wait
-while we observe MindsDB's logs, and repeat the query periodically.
+while we observe MindsDB's logs.
 Creating/training a model will take time proportional to the number of features,
 i.e. cardinality of the source table as defined in the inner SELECT of the
-CREATE PREDICTOR statement, and the size of the corpus, i.e. number of rows. The
+CREATE MODEL statement, and the size of the corpus, i.e. number of rows. The
 model is a table in MindsDB:
 
 ```sql
-mysql> SHOW TABLES;
+SHOW TABLES;
 ```
 
 The new table is displayed:
@@ -443,7 +443,7 @@ WHERE ta.ts > LATEST;
 +---------------------+----------------+------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-### Stop the containers and remove the persisted data
+### Stop the container
 
 To terminate the container, run:
 
