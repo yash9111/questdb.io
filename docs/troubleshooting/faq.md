@@ -45,12 +45,10 @@ ALTER TABLE my_table RENAME COLUMN new_col TO old_col;
 You may get `table busy [reason=insert]` or similar errors when running `INSERT`
 statements concurrently on the same table. This means that the table is locked
 by inserts issued from another SQL connection or other client protocols for data
-import, like ILP over TCP or CSV over HTTP. To reduce the chances of getting
-this error, try using auto-commit to keep the transaction as short as possible.
+import, like ILP over TCP or CSV over HTTP.
 
-We're also considering adding automatic insert retries on the database side, but
-for now, it is safe to handle this error on the client side and retry the
-insert.
+To avoid this error, we recommend using [WAL](/docs/concept/write-ahead-log/)
+tables to allow concurrent ingestion across all interfaces.
 
 ## Why do I see `could not open read-write` messages when creating a table or inserting rows?
 
