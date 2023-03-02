@@ -196,8 +196,7 @@ HTTP access:
 1. The Wagon implementation I knew about
 2. A new “Native” implementation
 
-This new, "Native"
-[Wagon implementation](https://github.com/apache/maven-wagon/blob/88e8574c69d83e6a658fcd2ad10f3f80926b8840/wagon-providers/wagon-http-shared/src/main/java/org/apache/maven/wagon/shared/http/AbstractHttpClientWagon.java#L560)
+The [Wagon implementation](https://github.com/apache/maven-wagon/blob/88e8574c69d83e6a658fcd2ad10f3f80926b8840/wagon-providers/wagon-http-shared/src/main/java/org/apache/maven/wagon/shared/http/AbstractHttpClientWagon.java#L560)
 uses the Apache HTTP Client internally, and it configures the client with a
 retry handler. There are different retry strategies available. What is important
 is that the Wagon transport uses three retries by default:
