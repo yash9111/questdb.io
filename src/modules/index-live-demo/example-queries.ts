@@ -1,7 +1,7 @@
 export default [
   {
     comment: [
-      "Find the latest value available for each symbol. This dataset uses live crypto market data from Coinbase",
+      "Find the latest value available for each symbol (crypto pair). This dataset collects live market data from the Coinbase API.",
     ],
     query: `SELECT *
 FROM trades
@@ -11,9 +11,9 @@ LATEST ON timestamp PARTITION BY symbol;`,
 
   {
     comment: [
-      "Track different aggregations for the BTC-USD stock price evolution for the past day in 15 minutes intervals. This",
-      "could be used to display a candle chart visualization. Note how we are using SAMPLE BY to aggregate data at regular",
-      "intervals. This dataset uses live crypto market data from Coinbase",
+      "Aggregations for the BTC-USD for the past day downsampled in 15-minute intervals.",
+      "We use the SQL extension SAMPLE BY to aggregate data at regular intervals. QuestDB",
+      "ingests live market data from the Coinbase API.",
     ],
     query: `SELECT
   timestamp,
@@ -29,9 +29,9 @@ SAMPLE BY 15m ALIGN TO CALENDAR;`,
 
   {
     comment: [
-      "Show the weighted average of the BTC-USD stock price evolution for the past day in 15 minutes intervals.",
-      "Note how we are using SAMPLE BY to aggregate data at regular intervals.",
-      "This dataset uses live crypto market data from Coinbase",
+      "Calculates the weighted average for BTC-USD over the past day, downsampled in 15-minute intervals.",
+      "We use the SQL extension SAMPLE BY to aggregate data at regular intervals.",
+      "QuestDB ingests live market data from the Coinbase API",
     ],
     query: `SELECT
   timestamp,
@@ -46,10 +46,10 @@ SAMPLE BY 15m ALIGN TO CALENDAR;`,
 
   {
     comment: [
-      "Find the latest received position for each ship in the ocean, for ships within a specific geo boundary and",
-      "within a time frame. The geo boundary is represented using a geohash of precission 3, which represents an area",
+      "Find the latest position for each ship in the ocean, for ships within a specific geo boundary and",
+      "within a time frame. The geo boundary is represented using a geohash of precision 3, which represents an area",
       "of 156x156 Km. QuestDB supports geohashes from 5000x5000 km to 37.2mmx18.6mm. This dataset has been synthetically",
-      "generated for the purpose of this demo and contains over 122 million records",
+      "generated for this demo and contains over 122 million records",
     ],
     query: `SELECT *
 FROM pos
@@ -60,9 +60,9 @@ LATEST ON time PARTITION BY id;`,
 
   {
     comment: [
-      "Get all the taxi rides during 2014 and 2015. Note how we are just using the year when filtering the time range.",
-      "QuestDB has SQL extensions for making working with timestamps easier, and we could filter by an arbitrary range",
-      "This dataset is open data from the City of New York and has over 1.6 billion records",
+      "Show all the taxi rides during 2014 and 2015. We filter by time, selecting the entire year.",
+      "QuestDB supports SQL extensions to manipulate timestamped data with ease. You can filter the dataset",
+      "by any given time range. This dataset includes open data from the City of New York and is over 1.6 billion rows.",
     ],
     query: `SELECT *
 FROM trips
@@ -72,9 +72,9 @@ WHERE
   },
   {
     comment: [
-      "Count how many taxi rides per hour we saw in the 7 days from June 1st 2018. Note how we are using a SQL extension",
-      "to make working with time ranges more convenient. We are also using SAMPLE BY to aggregate records at regular intervals.",
-      "This dataset is open data from the City of New York and has over 1.6 billion records",
+      "Count the number of taxi rides per hour in the 7 days starting from June 1, 2018. We",
+      "use SQL extensions to manipulate time ranges with more ease. We also use SAMPLE BY to",
+      "aggregate records at regular intervals. This dataset includes open data from the City of New York with 1.6 billion rows.",
     ],
     query: `SELECT pickup_datetime, count()
 FROM trips
@@ -84,8 +84,8 @@ SAMPLE BY 1h;`,
 
   {
     comment: [
-      "Show some statistics of weather information aggregated per month",
-      "This dataset is extracted from public weather information and contains over 137000 records",
+      "Show weather statistics aggregated per month",
+      "This dataset contains public weather information and is over 137,000 records.",
     ],
     query: `SELECT
   timestamp,
@@ -98,12 +98,13 @@ SAMPLE BY 1M;`,
 
   {
     comment: [
-      "For each taxi ride in June 1st 2018, show the closest weather information we have on record",
-      "This query is joining two unrelated tables using an ASOF JOIN, which automatically finds the",
-      "closest event across multiple tables. Note we are not specifying which columns to use for the",
+      "For each taxi ride on June 1, 2018, retrieve the closest weather information we have on record.",
+      "This query joins two unrelated tables using an ASOF JOIN, automatically finding the closest event (by timestamp)",
+      "across multiple tables.We do not specify which columns to use",
+      "for the join, as QuestDB has the concept of a designated timestamp for each table.",
       "join, as QuestDB has the concept of a designated timestamp for each table.",
-      "This query uses a public weather dataset (130K records) and a New York City taxi rides public",
-      "dataset containing over 1.6 billion rows",
+      "We query a publicly available weather dataset (130K records)",
+      "and a New York City taxi rides public dataset containing over 1.6 billion rows.",
     ],
     query: `SELECT
   pickup_datetime,
@@ -119,9 +120,9 @@ FROM
 
   {
     comment: [
-      "Find the average gas price per galon in one month intervals",
-      "Note how we are using the SAMPLE BY extension to aggregate records at regular intervals",
-      "This query uses a small demo dataset (1028 records) with historical gas prices",
+      "Compute the average gas price per gallon in one-month intervals. We use the SAMPLE BY",
+      "SQL extension to aggregate records at regular intervals. This query covers a small demo",
+      "dataset (1,028 records) with historical gas prices.",
     ],
     query: `SELECT timestamp, avg(galon_price)
 FROM gas_prices
