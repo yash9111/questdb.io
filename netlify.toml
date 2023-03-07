@@ -282,6 +282,10 @@
   from = "/blog/2020/11/26/why-timeseries-data/"
   to = "/blog/time-series-data/"
 
+[[redirects]]
+  from = "/blog/2021/07/05/comparing-questdb-timescaledb-influxdb/"
+  to = "/blog/comparing-questdb-timescaledb-influxdb/"
+
 [[headers]]
   for = "/*"
   [headers.values]

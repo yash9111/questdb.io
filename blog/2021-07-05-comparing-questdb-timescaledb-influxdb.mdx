@@ -16,6 +16,7 @@ keywords:
 
 tags: [benchmark, influxdb, timescale, questdb, timeseries]
 image: /img/blog/shared/og-influxdb-timescaledb.png
+slug: comparing-questdb-timescaledb-influxdb
 ---
 
 import Banner from "@theme/Banner"
@@ -355,16 +356,40 @@ focused on three things:
   QuestDB uses SQL as the query language, so there's no need to learn a
   domain-specific language like Flux.
 
-In terms of performance, QuestDB also outperformed other TSDBs. The
-high-cardinality Time Series Benchmark Suite results use the `cpu-only` use case
-with 6 to 16 workers on 32 CPUs and 64GB RAM:
+In terms of performance, QuestDB
+[previously posted a blog post showing benchmark results](https://questdb.io/blog/2021/05/10/questdb-release-6-0-tsbs-benchmark)
+that achieved write speeds up to 1.4 million rows per second. QuestDB team used
+the TSBS benchmark with the cpu-only use case using up to 14 works on m5.8xlarge
+instance on AWS (NOTE: the 1.4 million number is from using AMD Ryzen5
+processor).
+
+For datasets with high cardinality (>10 million), QuestDB also outperformed
+other TSDBs with peak ingestion throughput of 904k rows/sec and sustaining about
+640k row/secs at 10 million devices using four threads on `m5.8xlarge` instance
+with Intel Xeon CPUs. When QuestDB ran the same benchmark on AMD Ryzen 3970X,
+QuestDB showed over a million rows/sec ingestion throughput.
 
 <Screenshot
-  alt="A chart showing high-cardinality ingestion performance of InfluxDB, TimescaleDB, and ClickHouse versus QuestDB"
+  alt="A chart showing high-cardinality ingestion performance of InfluxDB, TimescaleDB, versus QuestDB"
   height={591}
   src="/img/blog/2021-07-05/maximum-throughput.png"
   width={770}
 />
+
+More recently, QuestDB also published an updated benchmark with the release of
+QuestDB 7.0. The high-cardinality Time Series Benchmark Suite results use the
+`cpu-only` use case with 6 to 16 workers on 32 CPUs and 64GB RAM:
+
+<Screenshot
+  alt="A chart showing ingestion performance of InfluxDB, TimescaleDB, versus QuestDB"
+  height={591}
+  src="/img/blog/2021-07-05/benchmark.png"
+  width={770}
+/>
+
+QuestDB outperforms InfluxDB and Clickhouse significantly in all the scenarios,
+reaching over 4 million rows/sec when both InfluxDB and ClickHouse have
+merely under 1 million rows/sec.
 
 Again, performance benchmarks can be subjective based on the data model and
 tuning of the DBs, but it nevertheless paints a compelling comparison point for
