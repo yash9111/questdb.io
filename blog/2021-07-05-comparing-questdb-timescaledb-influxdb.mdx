@@ -16,7 +16,6 @@ keywords:
 
 tags: [benchmark, influxdb, timescale, questdb, timeseries]
 image: /img/blog/shared/og-influxdb-timescaledb.png
-
 ---
 
 import Banner from "@theme/Banner"
@@ -356,18 +355,9 @@ focused on three things:
   QuestDB uses SQL as the query language, so there's no need to learn a
   domain-specific language like Flux.
 
-In terms of performance, QuestDB
-[recently posted a blog post showing benchmark results](/blog/2021/05/10/questdb-release-6-0-tsbs-benchmark)
-that achieved write speeds up to 1.4 million rows per second. QuestDB team used
-the TSBS benchmark with the `cpu-only` use case using up to 14 works on
-`m5.8xlarge` instance on AWS (**NOTE:** the 1.4 million number is from using AMD
-Ryzen5 processor).
-
-For datasets with high cardinality (>10 million), QuestDB also outperformed
-other TSDBs with peak ingestion throughput of 904k rows/sec and sustaining about
-640k row/secs at 10 million devices using four threads on `m5.8xlarge` instance
-with Intel Xeon CPUs. When QuestDB ran the same benchmark on AMD Ryzen 3970X,
-QuestDB showed over a million rows/sec ingestion throughput.
+In terms of performance, QuestDB also outperformed other TSDBs. The
+high-cardinality Time Series Benchmark Suite results use the `cpu-only` use case
+with 6 to 16 workers on 32 CPUs and 64GB RAM:
 
 <Screenshot
   alt="A chart showing high-cardinality ingestion performance of InfluxDB, TimescaleDB, and ClickHouse versus QuestDB"
@@ -390,9 +380,10 @@ QuestDB. Regardless of the ingestion method, data can be queried using standard
 SQL with notable exceptions listed on the API reference page.
 
 As a newer entrant in this space, the most apparent downside to QuestDB is the
-lack of features such as replication (this is in the works). It does integrate with some of the most popular tools already
-(e.g., PostgreSQL, Grafana, Kafka, Telegraf, Tableau), but it will need some
-time to reach the level of the other TSDBs mentioned above.
+lack of features such as replication (this is in the works). It does integrate
+with some of the most popular tools already (e.g., PostgreSQL, Grafana, Kafka,
+Telegraf, Tableau), but it will need some time to reach the level of the other
+TSDBs mentioned above.
 
 Still, QuestDB is a promising project that can balance the positives of InfluxDB
 and TimescaleDB:
