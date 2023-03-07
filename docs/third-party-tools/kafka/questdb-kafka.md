@@ -20,6 +20,13 @@ This page has the following main sections:
 This guide shows the steps to use the QuestDB Kafka connector to read JSON data
 from Kafka topics and write them as rows into a QuestDB table.
 
+:::info 
+
+For Confluent users, please check the instructions in the
+[Confluent Docker images](https://github.com/questdb/kafka-questdb-connector/tree/main/kafka-questdb-connector-samples/confluent-docker-images).
+
+:::
+
 ### Prerequisites
 
 You will need the following:
@@ -27,7 +34,7 @@ You will need the following:
 - Kafka
 - A running QuestDB instance
 - - A local
-  [JDK installation](https://docs.oracle.com/en/java/javase/18/install/overview-jdk-installation.html#GUID-8677A77F-231A-40F7-98B9-1FD0B48C346A)
+    [JDK installation](https://docs.oracle.com/en/java/javase/18/install/overview-jdk-installation.html#GUID-8677A77F-231A-40F7-98B9-1FD0B48C346A)
 
 ### Configure Kafka
 
@@ -39,6 +46,9 @@ The Apache Kafka distribution contains the Kafka Connect framework, but the
 QuestDB-specific components need to be downloaded from
 [the QuestDB Kafka connector GH page](https://github.com/questdb/kafka-questdb-connector/releases/latest),
 under the zip archive named `kafka-questdb-connector-<version>-bin.zip`.
+
+The connector is also available from
+[the Confluent Hub](https://www.confluent.io/hub/questdb/kafka-questdb-connector).
 
 2. Copy the file to the Kafka `libs` directory.
 
@@ -409,6 +419,7 @@ issues. If you do, please report them to us.
 
 </p>
 </details>
+
 
 ## See also
 
