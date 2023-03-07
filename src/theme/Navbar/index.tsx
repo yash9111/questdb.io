@@ -60,6 +60,7 @@ function Navbar(): JSX.Element {
       },
     },
   } = useDocusaurusContext()
+  const { siteConfig } = useDocusaurusContext()
   const [sidebarShown, setSidebarShown] = useState(false)
   const [isSearchBarExpanded, setIsSearchBarExpanded] = useState(false)
 
@@ -84,6 +85,48 @@ function Navbar(): JSX.Element {
 
   const { leftItems, rightItems } = splitNavItemsByPosition(items)
 
+  // Make Blog and Docs to respect OS theme
+  const { setLightTheme, setDarkTheme } = useThemeContext()
+  let isDark = colorModeToggle.isDarkTheme
+  try {
+    const isDocs = location.pathname.match(/docs\//) != null
+    const isBlog = location.pathname.match(/blog\//) != null
+    if (isBlog || isDocs) {
+      const theme = localStorage.getItem("theme")
+      if (theme == null && window.matchMedia != null) {
+        if (
+          !window.matchMedia("(prefers-color-scheme: dark)").matches &&
+          siteConfig.themeConfig.colorMode.defaultMode === "dark"
+        ) {
+          // OS does not use dark theme, overwrite default mode to light
+          setLightTheme()
+          isDark = false
+          localStorage.setItem("theme-main", theme ?? "-")
+        }
+      }
+    } else {
+      const themeMain = localStorage.getItem("theme-main")
+      let theme = siteConfig.themeConfig.colorMode.defaultMode
+      if (themeMain != null) {
+        if (themeMain !== "-") {
+          localStorage.setItem("theme", themeMain)
+          theme = themeMain
+        } else {
+          if (theme === "dark") {
+            setDarkTheme()
+            isDark = true
+          }
+          localStorage.removeItem("theme")
+        }
+        localStorage.removeItem("theme-main")
+
+        // document.documentElement.setAttribute("data-theme", theme)
+      }
+    }
+  } catch {
+    // Ignore it, nothing critical here
+  }
+
   return (
     <header
       className={clsx("navbar", styles.navbar, "navbar--light", {
@@ -106,7 +149,7 @@ function Navbar(): JSX.Element {
           {!colorModeToggle.disabled && (
             <Toggle
               className={styles.themeToggleInHeading}
-              checked={colorModeToggle.isDarkTheme}
+              checked={isDark}
               onChange={colorModeToggle.toggle}
             />
           )}

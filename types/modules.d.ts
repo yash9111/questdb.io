@@ -40,7 +40,10 @@ declare module "@docusaurus/useDocusaurusContext" {
         videosUrl: string
       }
       themeConfig: {
-        colorMode: { disableSwitch: boolean }
+        colorMode: {
+          defaultMode: string
+          disableSwitch: boolean
+        }
         footer: { copyright: string; title: string; links: Item[] }
         image: string
         navbar: {
