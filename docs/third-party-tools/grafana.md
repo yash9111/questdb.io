@@ -15,6 +15,15 @@ to Grafana via the [Postgres](/docs/reference/api/postgres) endpoint.
 - QuestDB should be installed and running via
   [Docker](/docs/get-started/docker/)
 
+:::note
+
+We have discovered that Grafana 9.4.x has issues connecting to QuestDB. An
+[issue](https://github.com/grafana/grafana/issues/64376) has been raised with
+Grafana. We recommend using Grafana version to 9.3.8 until the issue is fixed.
+
+:::
+
+
 ## Configure database
 
 To avoid unnecessary memory usage, it is recommended to disable QuestDB's `SELECT`
