@@ -132,7 +132,7 @@
 
 [[redirects]]
   from = "/tutorial/2021/07/05/comparing-questdb-timescaledb-influxdb/"
-  to = "/blog/2021/07/05/comparing-questdb-timescaledb-influxdb/"
+  to = "/blog/comparing-questdb-timescaledb-influxdb/"
 
 [[redirects]]
   from = "/tutorial/2021/08/18/questdb-versus-timescaledb"
