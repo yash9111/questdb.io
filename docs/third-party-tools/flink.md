@@ -25,8 +25,8 @@ from Flink into QuestDB. The connector uses the SQL interface to interact with
 Flink. The overall steps are the followings:
 
 1. The connector creates a table in Flink backed by QuestDB.
-1. The connector inserts data into the table.
-1. Finally it queries the data in QuestDB.
+2. The connector inserts data into the table.
+3. Finally it queries the data in QuestDB.
 
 ### Prerequisites
 
@@ -47,8 +47,7 @@ Flink. The overall steps are the followings:
 
 - Download [Apache Flink distribution](https://flink.apache.org/downloads/) and
   unpack it.
-- Download QuestDB Flink connector from
-  [Maven Central](https://repo1.maven.org/maven2/org/questdb/flink-questdb-connector/0.2/flink-questdb-connector-0.2.jar)
+- [Download](https://repo1.maven.org/maven2/org/questdb/flink-questdb-connector/0.2/flink-questdb-connector-0.2.jar) the QuestDB Flink connector from Maven Central
   and place it in the `lib` directory of your Flink installation.
 - Go to the `bin` directory of your Flink installation and run the following to
   start a Flink cluster:
@@ -162,6 +161,20 @@ CREATE TABLE Orders (
    'table' = 'orders'
 );
 ```
+
+## Connector Distribution
+The connector is distributed as a single jar file. The jar file is available in the
+[Maven Central repository](https://repo1.maven.org/maven2/org/questdb/flink-questdb-connector/) and it's available under the following coordinates:
+
+```xml
+<dependency>
+  <groupId>org.questdb</groupId>
+  <artifactId>flink-questdb-connector</artifactId>
+  <version>LATEST</version>
+</dependency>
+```
+The latest version is:
+[![a badge with the latest connector version in Maven Central](https://maven-badges.herokuapp.com/maven-central/org.questdb/flink-questdb-connector/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.questdb/flink-questdb-connector)
 
 ## FAQ
 
