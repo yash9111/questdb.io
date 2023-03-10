@@ -78,8 +78,11 @@ pages for the following topics:
 This section describes how to integrate QuestDB with third-party tools and
 utilities for collecting metrics and visualizing data:
 
-- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting
-  QuestDB as a datasource for building visualizations and dashboards
+- [Flink](/docs/third-party-tools/flink/) guide for ingesting data from
+  Flink into QuestDB
+- [Grafana](/docs/third-party-tools/grafana/) instructions for connecting QuestDB
+  as a datasource for building visualizations and dashboards
+- [MindsDB](/docs/third-party-tools/mindsdb/) tutorial for connecting QuestDB to MindsDB for running models with Machine Learning capabilities.
 - [Kafka](/docs/third-party-tools/kafka/overview/) guide for ingesting data from
   Kafka topics into QuestDB
 - [Pandas](/docs/third-party-tools/pandas/) for ingesting Pandas dataframes via

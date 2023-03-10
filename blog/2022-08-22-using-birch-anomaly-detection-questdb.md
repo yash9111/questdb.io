@@ -12,7 +12,7 @@ keywords:
   - python
 
 image: /img/blog/2022-08-22/banner.png
-tags: [birch, anomaly detection, python, tutorial]
+tags: [birch, anomaly detection, python]
 ---
 
 import Banner from "@theme/Banner"

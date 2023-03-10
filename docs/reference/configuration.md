@@ -254,7 +254,7 @@ This section describes configuration settings for the Cairo SQL engine in
 QuestDB.
 
 | Property                                       | Default           | Description                                                                                                                                                                                                              |
-|------------------------------------------------| ----------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | query.timeout.sec                              | 60                | A global timeout (in seconds) for long-running queries.                                                                                                                                                                  |
 | cairo.max.uncommitted.rows                     | 500000            | Maximum number of uncommitted rows per table, when the number of pending rows reaches this parameter on a table, a commit will be issued.                                                                                |
 | cairo.commit.lag (QuestDB 6.5.5 and earlier)   | 5 minutes         | Expected maximum time lag for out-of-order rows in milliseconds.                                                                                                                                                         |
@@ -274,8 +274,8 @@ QuestDB.
 | cairo.default.symbol.capacity                  | 256               | Specifies approximate capacity for `SYMBOL` columns. It should be equal to number of unique symbol values stored in the table and getting this value badly wrong will cause performance degradation. Must be power of 2. |
 | cairo.file.operation.retry.count               | 30                | Number of attempts to open files.                                                                                                                                                                                        |
 | cairo.idle.check.interval                      | 300000            | Frequency of writer maintenance job in milliseconds.                                                                                                                                                                     |
-| cairo.inactive.reader.ttl                      | -120000           | Frequency of reader pool checks for inactive readers in milliseconds.                                                                                                                                                    |
-| cairo.inactive.writer.ttl                      | -600000           | Frequency of writer pool checks for inactive writers in milliseconds.                                                                                                                                                    |
+| cairo.inactive.reader.ttl                      | 120000            | TTL (Time-To-Live) to close inactive readers in milliseconds.                                                                                                                                                            |
+| cairo.inactive.writer.ttl                      | 600000            | TTL (Time-To-Live) to close inactive writers in milliseconds.                                                                                                                                                            |
 | cairo.index.value.block.size                   | 256               | Approximation of number of rows for a single index key, must be power of 2.                                                                                                                                              |
 | cairo.max.swap.file.count                      | 30                | Number of attempts to open swap files.                                                                                                                                                                                   |
 | cairo.mkdir.mode                               | 509               | File permission mode for new directories.                                                                                                                                                                                |
@@ -343,16 +343,17 @@ QuestDB.
 
 ### WAL table configurations
 
-The following WAL tables settings on parallel threads are configurable for applying WAL data to the table storage:
+The following WAL tables settings on parallel threads are configurable for
+applying WAL data to the table storage:
 
-| Property                 | Default                        | Description                                                                                                                                                                                          |
-| ------------------------ | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| wal.apply.worker.count   | equal to the CPU core count    | Number of dedicated worker threads assigned to handle WAL table data. |
-| wal.apply.worker.affinity | equal to the CPU core count    | Comma separated list of CPU core indexes.                                            |
-| wal.apply.worker.haltOnError     | false                | Flag that indicates if worker thread must shutdown on unhandled error   |
-| cairo.wal.purge.interval | 30000                       | Period in ms of how often WAL-applied files are cleaned up from the disk |
-| cairo.wal.segment.rollover.row.count | 200000           | The number of rows written to the same WAL segment before starting a new segment |
-| cairo.wal.commit.squash.row.limit | 500000                  | Maximum row count that can be squashed together from multiple transactions before applying to the table. A very low value can delay data visibility. |
+| Property                             | Default                     | Description                                                                                                                                          |
+| ------------------------------------ | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| wal.apply.worker.count               | equal to the CPU core count | Number of dedicated worker threads assigned to handle WAL table data.                                                                                |
+| wal.apply.worker.affinity            | equal to the CPU core count | Comma separated list of CPU core indexes.                                                                                                            |
+| wal.apply.worker.haltOnError         | false                       | Flag that indicates if worker thread must shutdown on unhandled error                                                                                |
+| cairo.wal.purge.interval             | 30000                       | Period in ms of how often WAL-applied files are cleaned up from the disk                                                                             |
+| cairo.wal.segment.rollover.row.count | 200000                      | The number of rows written to the same WAL segment before starting a new segment                                                                     |
+| cairo.wal.commit.squash.row.limit    | 500000                      | Maximum row count that can be squashed together from multiple transactions before applying to the table. A very low value can delay data visibility. |
 
 ### CSV import
 
@@ -499,7 +500,7 @@ line protocol.
 | line.tcp.writer.worker.affinity            |              | Comma-separated list of thread numbers which should be pinned for line protocol ingestion over TCP. CPU core indexes are 0-based.                                                                                                                     |
 | line.tcp.io.worker.count                   |              | Number of dedicated I/O worker threads assigned to parse TCP input. When `0`, the writer jobs will use the shared pool.                                                                                                                               |
 | line.tcp.io.worker.affinity                |              | Comma-separated list of thread numbers which should be pinned for line protocol ingestion over TCP. CPU core indexes are 0-based.                                                                                                                     |
-| line.tcp.default.partition.by              | DAY          | Table partition strategy to be used with tables that are created automatically by ILP. Possible values are: `HOUR`, `DAY`, `MONTH` and `YEAR`                                                                                                         |
+| line.tcp.default.partition.by              | DAY          | Table partition strategy to be used with tables that are created automatically by ILP. Possible values are: `HOUR`, `DAY`, `WEEK`, `MONTH` and `YEAR`.                                                                                                |
 | line.tcp.disconnect.on.error               | true         | Disconnect TCP socket that sends malformed messages.                                                                                                                                                                                                  |
 
 #### UDP specific settings

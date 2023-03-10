@@ -56,7 +56,7 @@ const integrations: Array<{
   {
     logo: { ...logos.mindsDB, svg: MindsDBLogo },
     label: "MindsDB",
-    src: "/blog/2022/04/18/enabling-machine-learning-in-questdb-with-mindsdb/",
+    src: "/docs/third-party-tools/mindsdb",
   },
   {
     logo: { ...logos.cube, svg: CubeLogo },

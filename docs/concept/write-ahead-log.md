@@ -8,10 +8,10 @@ description:
 
 import Screenshot from "@theme/Screenshot"
 
-From QuestDB 7.0, we add a new approach to ingest data using a write-ahead log
+In QuestDB 7.0, we added a new approach to ingest data using a write-ahead log
 (WAL). This page introduces the properties of a WAL-enabled table (WAL table)
-and compares it with a non-WAL table. It also contains a summary of key
-components and relevant functions as well as SQL keywords.
+and compares it to a non-WAL table. It also contains a summary of key
+components, relevant functions, as well as related SQL keywords.
 
 ## Properties
 
@@ -27,15 +27,16 @@ The following configurations and keywords enable and create WAL tables:
 - WAL table creation is enabled by the following methods:
 
   - Table-wide configuration via
-    [`CREATE TABLE`](/docs/reference/sql/create-table/):
+    [`CREATE TABLE`](/docs/reference/sql/create-table/)
 
     - `WAL` generates a WAL table.
     - `BYPASS WAL` generates a non-WAL table.
 
-  - Server-wide configuration `cairo.wal.enabled.default`: When
-    `cairo.wal.enabled.default` is set to `true`,
-    [`CREATE TABLE`](/docs/reference/sql/create-table/) SQL keyword generates
-    WAL tables without `WAL` and `BYPASS WAL`.
+  - Server-wide configuration via `cairo.wal.enabled.default`
+
+    - When `cairo.wal.enabled.default` is set to `true`, the
+      [`CREATE TABLE`](/docs/reference/sql/create-table/) SQL keyword generates
+      WAL tables without `WAL`. The `BYPASS WAL` keyword still works as expected.
 
 - Parallel threads to apply WAL data to the table storage can be configured, see
   [WAL table configuration](/docs/reference/configuration/#wal-table-configurations)
@@ -48,7 +49,7 @@ table:
 
 | WAL table                                                                                  | Non-WAL table                                                                                                             |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| Concurrent data ingestion via multiple interfaces                                          | ILP data locks the table for ingestion, concurrent data ingestion via other interfaces is not allowed - `Table Busy`error |
+| Concurrent data ingestion via multiple interfaces                                          | ILP locks the table for ingestion; concurrent data ingestion via other interfaces is not allowed - `Table Busy`error |
 | Unconstrained concurrent DDLs and DMLs                                                     | Concurrent DDLs and DMLs for ILP interface only                                                                           |
 | Asynchronous operations - in rare situations there may be slight delays in data visibility | Synchronous operations - no-wait commits                                                                                  |
 | Improved data freshness for `DROP` and `RENAME` of the table with a system-wide lock       | No change                                                                                                                 |
@@ -58,19 +59,19 @@ table:
 
 :::note
 
-We are working to reduce the limitations.
+We are working hard to reduce the below limitations.
 
 :::
 
 For a WAL table, the following existing operations may have different behaviors
-to a non-WAL table:
+from a non-WAL table:
 
-- [`UPDATE`](/docs/reference/sql/update/):
+- [`UPDATE`](/docs/reference/sql/update/)
 
   - No row count returned
   - No support for `JOIN`
 
-- `ALTER TABLE`:
+- `ALTER TABLE`
 
   - [`ADD COLUMN`](/docs/reference/sql/alter-table-add-column/) can only add 1
     column per statement
@@ -86,22 +87,21 @@ to a non-WAL table:
 
 A WAL table uses the following components to manage concurrent commit requests:
 
-- `WAL`: dedicated APIs for each ingestion interface. When data is ingested via
-  multiple interfaces, dedicated `WALs` ensure that the table is not locked for
+- **WAL**: acts as a dedicated API for each ingestion interface. When data is ingested via
+  multiple interfaces, dedicated `WALs` ensure that the table is not locked by
   one interface only.
 
-- Sequencer: centrally manages transactions, providing a single source of truth.
-  The sequencer generates unique `txn` numbers as identifications to
-  transactions and keeps a log tracking the allocation. This log is called
+- **Sequencer**: centrally manages transactions, providing a single source of truth.
+  The sequencer generates unique `txn` numbers as transaction identifiers
+  and keeps a log that tracks their allocation, preventing duplicates. This log is called
   `TransactionLog` and is stored in a meta file called `_txnlog`. See
   [root directory](/docs/concept/root-directory-structure/#db-directory) for
   more information.
 
-- WAL apply job: collects the commit requests based on the unique `txn` numbers
+- **WAL apply job**: collects the commit requests based on the unique `txn` numbers
   and sends them to the `TableWriter` to be committed.
 
-- `TableWriter`: updates the database and resolves any out-of-order data writes.
-  Each committed transaction is given a `txn` number.
+- **TableWriter**: updates the database and resolves any out-of-order data writes.
 
 <Screenshot
   alt="Diagram showing the sequencer allocating txn numbers to events cronologically"
@@ -121,11 +121,11 @@ A WAL table uses the following components to manage concurrent commit requests:
 
 ## Checking WAL configurations
 
-The following table metadata functions are useful to check WAL table settings:
+The following table metadata functions are useful for checking WAL table settings:
 
-- [`tables()`](/docs/reference/function/meta/#tables) shows general table
+- [`tables()`](/docs/reference/function/meta/#tables) returns general table
   metadata, including whether a table is a WAL table or not.
-- [`wal_tables()`](/docs/reference/function/meta/#wal_tables) shows WAL-table
+- [`wal_tables()`](/docs/reference/function/meta/#wal_tables) returns WAL-table
   status.
 - [ALTER TABLE RESUME WAL](/docs/reference/sql/alter-table-resume-wal/) restarts
   suspended transactions.
