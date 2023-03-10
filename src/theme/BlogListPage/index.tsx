@@ -53,6 +53,7 @@ const prioritizedTags: ChipProps["items"] = [
   "time-series",
   "sql",
   "kafka",
+  "kubernetes",
   "prometheus",
   "telegraf",
   "company",

@@ -222,8 +222,7 @@ ASOF JOIN asks;
 
 This is the JOIN result:
 
-<div class="pink-table-alternate">
-
+<div class="table-alternate">
 
 | timebid                     | timeask                     | bid | ask  |
 | --------------------------- | --------------------------- | --- | ---- |

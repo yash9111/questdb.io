@@ -6,6 +6,9 @@ description:
   QuestDB installed and how to access and secure the instance on Amazon Web
   Services
 ---
+import InterpolateReleaseData from "../../src/components/InterpolateReleaseData"
+import CodeBlock from "@theme/CodeBlock"
+
 
 AWS Marketplace is a digital catalog with software listings from independent
 software vendors that runs on AWS. This guide describes how to launch QuestDB
@@ -110,4 +113,41 @@ The HTTP interface may alternatively be set to **readonly**:
 ```ini title="/var/lib/questdb/conf/server.conf"
 # set HTTP interface to readonly
 http.security.readonly=true
+```
+
+## Upgrading QuestDB
+
+:::note
+
+- Check the [release notes](https://github.com/questdb/questdb/releases) and
+  ensure that necessary [backup](/docs/operations/backup/) is completed.
+
+:::
+
+You can perform the following steps to upgrade your QuestDB version on an official AWS QuestDB AMI:
+
+- Stop the service:
+
+```shell
+systemctl stop questdb.service
+```
+
+- Download and copy over the new binary
+
+<InterpolateReleaseData
+  renderText={(release) => (
+    <CodeBlock className="language-shell">
+      {`wget https://github.com/questdb/questdb/releases/download/${release.name}/questdb-${release.name}-no-jre-bin.tar.gz \\
+tar xzvf questdb-${release.name}-no-jre-bin.tar.gz
+cp questdb-${release.name}-no-jre-bin/questdb.jar /usr/local/bin/questdb.jar
+cp questdb-${release.name}-no-jre-bin/questdb.jar /usr/local/bin/questdb-${release.name}.jar`}
+    </CodeBlock>
+  )}
+/>
+
+- Restart the service again:
+
+```shell
+systemctl restart questdb.service
+systemctl status questdb.service
 ```
