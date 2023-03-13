@@ -286,6 +286,10 @@
   from = "/blog/laoding-pandas-dataframes/"
   to = "/blog/loading-pandas-dataframes/"
 
+[[redirects]]
+  from = "/docs/reference/api/ilp/tcp-receiver/"
+  to = "/docs/reference/api/ilp/overview/"
+
 [[headers]]
   for = "/*"
   [headers.values]

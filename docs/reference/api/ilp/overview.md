@@ -20,13 +20,49 @@ languages: [ILP client libraries](/docs/reference/clients/overview).
 
 :::
 
-## Examples
+## TCP receiver overview
 
-We provide examples in a number of programming languages. See our
-[ILP section](/docs/develop/insert-data#influxdb-line-protocol) of the "develop"
-docs.
+The TCP receiver is a high-throughput ingestion-only API for QuestDB. Here are
+some key facts about the service:
+
+- ingestion only, there is no query capability
+- accepts plain text input in a form of InfluxDB Line Protocol
+- implicit transactions, batching
+- supports automatic table and column creation
+- multi-threaded, non-blocking
+- supports authentication
+- encryption requires an optional external reverse-proxy
+
+By default, QuestDB listens over TCP on `0.0.0.0:9009`. The receiver consists of
+two thread pools, which is an important design feature to be aware of to
+configure the receiver for maximum performance. The `io worker` threads are
+responsible for parsing text input. The `writer` threads are responsible for
+persisting data in tables. We will talk more about these in
+[capacity planning](#capacity-planning) section.
+
+## Authentication
+
+Although the original protocol does not support it, we have added authentication
+over TCP. This works by using an
+[elliptic curve P-256](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography)
+JSON Web Token (JWT) to sign a server challenge. Details of authentication over
+ILP can be found in the
+[authentication documentation](/docs/reference/api/ilp/authenticate/).
+
+## Configuration reference
+
+The TCP receiver configuration can be completely customized using
+[configuration keys](/docs/reference/configuration#influxdb-line-protocol). You
+can use this to configure the thread pools, buffer and queue sizes, receiver IP
+address and port, load balancing, etc.
 
 ## Usage
+
+This section provides usage information and details for data ingestion via ILP.
+
+We provide examples in a number of programming languages. See our
+[ILP Insert Data](/docs/develop/insert-data#influxdb-line-protocol) for code
+snippets.
 
 ### Syntax
 
@@ -101,10 +137,13 @@ CREATE TABLE readings (
 
 ### Designated timestamp
 
+### Timestamps
+
 Designated timestamp is the trailing value of an ILP message. It is optional,
 and when present, is a timestamp in Epoch nanoseconds. When the timestamp is
 omitted, the server will insert each message using the system clock as the row
-timestamp.
+timestamp. See `cairo.timestamp.locale` and `line.tcp.timestamp`
+[configuration options](/docs/reference/configuration).
 
 :::warning
 
@@ -161,7 +200,7 @@ This would result in the following table:
 :::tip
 
 Whilst we offer this function for flexibility, we recommend that users try to
-minimise structural changes to maintain operational simplicity.
+minimize structural changes to maintain operational simplicity.
 
 :::
 
@@ -253,3 +292,149 @@ supported value types:
 [Float](/docs/reference/api/ilp/columnset-types#float),
 [String](/docs/reference/api/ilp/columnset-types#string) and
 [Timestamp](/docs/reference/api/ilp/columnset-types#timestamp)
+
+### Inserting NULL values
+
+To insert a NULL value, skip the column (or symbol) for that row.
+
+For example:
+
+```text
+table1 a=10.5 1647357688714369403
+table1 b=1.25 1647357698714369403
+```
+
+Will insert as:
+
+| a      | b      | timestamp                   |
+| :----- | :----- | --------------------------- |
+| 10.5   | _NULL_ | 2022-03-15T15:21:28.714369Z |
+| _NULL_ | 1.25   | 2022-03-15T15:21:38.714369Z |
+
+### ILP Datatypes and Casts
+
+#### Strings vs Symbols
+
+Strings may be recorded as either the `STRING` type or the `SYMBOL` type.
+
+Inspecting a sample ILP we can see how a space `' '` separator splits `SYMBOL`
+columns to the left from the rest of the columns.
+
+```text
+table_name,col1=symbol_val1,col2=symbol_val2 col3="string val",col4=10.5
+                                            ┬
+                                            ╰───────── separator
+```
+
+In this example, columns `col1` and `col2` are strings written to the database
+as `SYMBOL`s, whilst `col3` is written out as a `STRING`.
+
+`SYMBOL`s are strings which are automatically
+[interned](https://en.wikipedia.org/wiki/String_interning) by the database on a
+per-column basis. You should use this type if you expect the string to be
+re-used over and over, such as is common with identifiers.
+
+For one-off strings use `STRING` columns which aren't interned.
+
+#### Casts
+
+QuestDB types are a superset of those supported by ILP. This means that when
+sending data you should be aware of the performed conversions.
+
+See:
+
+- [QuestDB Types in SQL](/docs/reference/sql/datatypes)
+- [ILP types and cast conversion tables](/docs/reference/api/ilp/columnset-types)
+
+### Constructing well-formed messages
+
+Different library implementations will perform different degrees of content
+validation upfront before sending messages out. To avoid encountering issues,
+follow these guidelines:
+
+- **All strings must be UTF-8 encoded.**
+
+- **Columns should only appear once per row.**
+
+- **Symbol columns must be written out before other columns.**
+
+- **Table and column names can't have invalid characters.** These should not
+  contain `?`, `.`,`,`, `'`, `"`, `\`, `/`, `:`, `(`, `)`, `+`, `-`, `*`, `%`,
+  `~`,`' '` (space), `\0` (nul terminator),
+  [ZERO WIDTH NO-BREAK SPACE](https://unicode-explorer.com/c/FEFF).
+
+- **Write timestamp column via designated API**, or at the end of the message if
+  you are using raw sockets. If you have multiple timestamp columns write
+  additional ones as column values.
+
+- **Don't change column type between rows.**
+
+- **Supply timestamps in order.** These need to be at least equal to previous
+  ones in the same table, unless using the out of order feature. This is not
+  necessary if you use the [out-of-order](/docs/guides/out-of-order-commit-lag)
+  feature.
+
+### Error handling
+
+QuestDB will always log any ILP errors in its
+[server logs](/docs/concept/root-directory-structure#log-directory).
+
+It is recommended that sending applications reuse TCP connections. If QuestDB
+receives an invalid message, it will discard invalid lines, produce an error
+message in the logs and forcibly _disconnect_ the sender to prevent further data
+loss.
+
+Data may be discarded because of:
+
+- missing new line characters at the end of messages
+- an invalid data format such as unescaped special characters
+- invalid column / table name characters
+- schema mismatch with existing tables
+- message size overflows on the input buffer
+- system errors such as no space left on the disk
+
+Detecting malformed input can be achieved through QuestDB logs by searching for
+`LineTcpMeasurementScheduler` and `LineTcpConnectionContext`, for example:
+
+```bash
+2022-02-03T11:01:51.007235Z I i.q.c.l.t.LineTcpMeasurementScheduler could not create table [tableName=trades, ex=`column name contains invalid characters [colName=trade_%]`, errno=0]
+```
+
+The following input is tolerated by QuestDB:
+
+- a column is specified twice or more on the same line, QuestDB will pick the
+  first occurrence and ignore the rest
+- missing columns, their value will be defaulted to `null`/`0.0`/`false`
+  depending on the type of the column
+- missing designated timestamp, the current server time will be used to generate
+  the timestamp
+- the timestamp is specified as a column instead of appending it to the end of
+  the line
+- timestamp appears as a column and is also present at the end of the line, the
+  value sent as a field will be used
+
+With sufficient client-side validation, the lack of errors to the client and
+confirmation isn't necessarily a concern: QuestDB will log out any issues and
+disconnect on error. The database will process any valid lines up to that point
+and insert rows.
+
+To resume WAL table ingestion after recovery from errors, see
+[ALTER TABLE RESUME WAL](/docs/reference/sql/alter-table-resume-wal/) for more
+information.
+
+### If you don't immediately see data
+
+If you don't see your inserted data, this is usually down to one of two things:
+
+- You prepared the messages, but forgot to call `.flush()` or similar in your
+  client library, so no data was sent.
+
+- The internal timers and buffers within QuestDB did not commit the data yet.
+  For development (and development only), you may want to tweak configuration
+  settings to commit data more frequently.
+  ```ini title=server.conf
+  cairo.max.uncommitted.rows=1
+  ```
+  Refer to
+  [ILP's commit strategy](/docs/reference/api/ilp/tcp-receiver/#commit-strategy)
+  documentation for more on these configuration settings.

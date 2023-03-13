@@ -7,7 +7,7 @@ description: InfluxDB line protocol UDP receiver reference documentation.
 :::note
 
 The UDP receiver is deprecated since QuestDB version 6.5.2.
-We recommend the [TCP receiver](/docs/reference/api/ilp/tcp-receiver/) instead.
+We recommend the [TCP receiver](/docs/reference/api/ilp/overview/) instead.
 
 :::
 

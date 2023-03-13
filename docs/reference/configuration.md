@@ -508,7 +508,7 @@ line protocol.
 :::note
 
 The UDP receiver is deprecated since QuestDB version 6.5.2. We recommend the
-[TCP receiver](/docs/reference/api/ilp/tcp-receiver/) instead.
+[ILP TCP receiver](/docs/reference/api/ilp/overview/) instead.
 
 :::
 
