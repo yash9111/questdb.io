@@ -282,6 +282,10 @@
   from = "/blog/2020/11/26/why-timeseries-data/"
   to = "/blog/time-series-data/"
 
+[[redirects]]
+  from = "/blog/laoding-pandas-dataframes/"
+  to = "/blog/loading-pandas-dataframes/"
+
 [[headers]]
   for = "/*"
   [headers.values]
