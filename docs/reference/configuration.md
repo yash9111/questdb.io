@@ -192,7 +192,7 @@ the [health monitoring page](/docs/operations/health-monitoring).
 
 ### HTTP server
 
-This section describes configuration settings for the Web Console available by
+This section describes configuration settings for the Web Console and the REST API available by
 default on port `9000`. For details on the use of this component, refer to the
 [web console documentation](/docs/develop/web-console) page.
 
