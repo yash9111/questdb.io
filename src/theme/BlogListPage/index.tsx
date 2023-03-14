@@ -21,26 +21,23 @@ export type FrontMatter = OriginalFrontMatter & { permalink?: string }
 const categories: CategoriesProps["categories"] = [
   {
     title: "Benchmarks",
-    description:
-      "Reproducible benchmarks of QuestDB and other databases using open source benchmarking frameworks",
+    description: "Reproducible benchmarks of QuestDB and other databases",
     url: "/blog/tags/benchmark/",
   },
   {
     title: "Demos",
-    description:
-      "Demos involving QuestDB and other popular open source tools for a wide range of use cases",
+    description: "Demos involving QuestDB and other popular open source tools",
     url: "/blog/tags/demo/",
   },
   {
     title: "Tutorials",
     description:
-      "Step-by-step tutorials and guides for developers to build applications with QuestDB",
+      "Step-by-step guides for developers to build applications with QuestDB",
     url: "/blog/tags/tutorial/",
   },
   {
     title: "User Stories",
-    description:
-      "How QuestDB powers the core infrastructure of our users for time series data and real-time analytics",
+    description: "How QuestDB powers the core infrastructure for our users",
     url: "/customers/",
   },
 ]

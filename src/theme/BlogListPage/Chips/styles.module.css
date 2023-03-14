@@ -1,10 +1,9 @@
 .root {
-  margin-bottom: 5rem;
-}
-
-.chip {
-  margin-bottom: 1rem;
-  margin-right: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  align-items: center;
+  margin-bottom: 3rem;
 }
 
 .linkToTags,
