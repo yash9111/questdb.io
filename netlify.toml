@@ -290,6 +290,10 @@
   from = "/docs/reference/api/ilp/tcp-receiver/"
   to = "/docs/reference/api/ilp/overview/"
 
+[[redirects]]
+  from = "/blog/2020/07/22/influxdb-lp-on-tcp/"
+  to = "/blog/ilp-tcp-questdb/"
+
 [[headers]]
   for = "/*"
   [headers.values]

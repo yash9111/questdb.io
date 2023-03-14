@@ -1,5 +1,5 @@
 ---
-title: InfluxDB line protocol on QuestDB
+title: InfluxDB Line Protocol on QuestDB
 author: David G. Simmons
 author_title: QuestDB Team
 author_url: https://github.com/davidgs
@@ -11,8 +11,10 @@ keywords:
   - timeseries
   - questdb
   - influxdb
-tags: [tutorial, questdb, influxdb]
+  - ilp
+tags: [tutorial, questdb, influxdb, lip]
 image: /img/blog/shared/og-influx-line-protocol.png
+slug: ilp-tcp-questdb
 ---
 
 import Banner from "@theme/Banner"
@@ -28,21 +30,17 @@ import Banner from "@theme/Banner"
   via <a href="https://unsplash.com">Unsplash</a>
 </Banner>
 
-:::note
+This tutorial will walk you through the basics of setting it up and using the
+InfluxDB Line Protocol (ILP) using TCP. For an added bonus, we'll see how to
+migrate from using InfluxDB to using QuestDB with a single-line configuration
+change.
 
-The UDP receiver is deprecated since QuestDB version 6.5.2.
-We recommend the [TCP receiver](/docs/reference/api/ilp/overview/) introduced by this article.
+::: tip
+
+For general QuestDB users, client libraries are available for a number of
+languages: [ILP client libraries](/docs/reference/clients/overview/).
 
 :::
-
-We've had a UDP version of the InfluxDB Line Protocol (ILP) reader in QuestDB
-for quite some time, but we've had customers ask for a TCP version of it, so we
-delivered!
-
-Using and configuring it are relatively simple, so this tutorial will walk you
-through the basics of setting it up and using it. For an added bonus, we'll see
-how to migrate from using InfluxDB to using QuestDB with a single-line
-configuration change.
 
 <!--truncate -->
 
@@ -51,13 +49,12 @@ configuration change.
 Here's the best part, at least for a basic implementation that you don't need to
 performance tune at all: It's already set up.
 
-That's right, as soon as you start QuestDB, both the UDP and TCP ILP listeners
-start automatically on port `9009`. Yes, TCP and UDP both use the same port. No,
-that's not a problem since one is UDP and one is TCP.
+That's right, as soon as you start QuestDB, the TCP ILP listeners start
+automatically on port `9009`.
 
 There are many configuration options you can tune in your `conf/server.conf`
 file if you're interested. I won't go through them here, but you can read all
-about them in our [docs](/docs/reference/api/ilp/overview). I hope they are
+about them in our [docs](/docs/reference/api/ilp/overview/). I hope they are
 relatively self-explanatory.
 
 ## InfluxDB line protocol refresher
@@ -94,7 +91,7 @@ Finally comes your `timestamp` value, typically in µSeconds.
 ### Example ILP
 
 Let's use an example of writing some environmental data to QuestDB. I have a
-sensor that reads the temperature, atmospheric pressure, humidity, and altitude.
+sensor that reads the temperature, atmospheric pressure, humidity, and altitude:
 
 | Reading     | Value       |
 | ----------- | ----------- |
@@ -161,8 +158,8 @@ the TCP write for me:
 espClient.connect(Quest_Server, 9009);
 ```
 
-Will connect the client to the QuestDB Server defined by `Quest_Server` on port
-`9009`.
+This will connect the client to the QuestDB Server defined by `Quest_Server` on
+port `9009`.
 
 If I then have a line of ILP like this:
 `iot,dev_id=THPL002,dev_loc=Demo,dev_name=BME280 temp_c=23.18,altitude=93.10,humidity=52.16,pressure=1002.12\n`
@@ -187,7 +184,7 @@ support it.
 
 I'm now going to give you a simple configuration change to migrate from using
 InfluxDB to using QuestDB. If you're using Telegraf as a data collector, we have
-[documentation for integrating with QuestDB](/docs/third-party-tools/telegraf)
+[documentation for integrating with QuestDB](/docs/third-party-tools/telegraf/)
 for more details, but to summarize the migration, edit `telegraf.conf` (it may
 be in different places, depending on your operating system) and change the line:
 
