@@ -110,7 +110,6 @@ We published a tutorial for this integration that demonstrates how to build a
 
 Some of our top picks and featured tutorials are:
 
-- [Monitoring the uptime of an application using Python, Nuxt.js](/blog/2021/01/13/application-uptime-monitoring-with-python-nuxtjs-questdb/)
 - [SQL extensions for time series in QuestDB](https://towardsdatascience.com/sql-extensions-for-time-series-data-in-questdb-f6b53acf3213)
 - [Building a monitoring dashboard with Grafana](https://dzone.com/articles/build-a-monitoring-dashboard-with-questdb-and-graf)
 
