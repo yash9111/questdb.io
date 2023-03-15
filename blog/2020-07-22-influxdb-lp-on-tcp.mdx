@@ -35,13 +35,6 @@ InfluxDB Line Protocol (ILP) using TCP. For an added bonus, we'll see how to
 migrate from using InfluxDB to using QuestDB with a single-line configuration
 change.
 
-::: tip
-
-For general QuestDB users, client libraries are available for a number of
-languages: [ILP client libraries](/docs/reference/clients/overview/).
-
-:::
-
 <!--truncate -->
 
 ## Configuring TCP InfluxDB line protocol listener
@@ -49,7 +42,7 @@ languages: [ILP client libraries](/docs/reference/clients/overview/).
 Here's the best part, at least for a basic implementation that you don't need to
 performance tune at all: It's already set up.
 
-That's right, as soon as you start QuestDB, the TCP ILP listeners start
+That's right, as soon as you start QuestDB, the TCP ILP listener starts
 automatically on port `9009`.
 
 There are many configuration options you can tune in your `conf/server.conf`
@@ -113,7 +106,9 @@ And my `table_name` is `iot`
 Now I have all the basic elements I need to construct my ILP, which will look
 like this:
 
-`iot,dev_id=THP002,dev_loc=Apex,dev_name=BME280 temp_c=23.18,altitude=93.10,humidity=52.16,pressure=1002.12`
+```shell
+iot,dev_id=THP002,dev_loc=Apex,dev_name=BME280 temp_c=23.18,altitude=93.10,humidity=52.16,pressure=1002.12
+```
 
 And yes, I rounded those values. But you'll notice that I did not add a
 `timestamp` value. In this case, it's because I am sending the values from a
@@ -150,21 +145,49 @@ This is what that table looks like in the QuestDB Web Console:
 
 ## But how did you write that?
 
-Oh, so how did I write that ILP to QuestDB? Well, my sensor is an Arduino, with
-a Bosch BME280 sensor attached. It is WiFi connected, so a `WiFiClient` can do
-the TCP write for me:
+Oh, so how did I write that ILP to QuestDB? Well, QuestDB supports
+[ILP client libraries](/docs/reference/clients/overview/) for some of the most
+popular programming languages, so there are a few options. Here is an example
+code using the official Python client library. It inserts the following row:
 
-```C title="WiFiClient Connect"
-espClient.connect(Quest_Server, 9009);
+```shell
+iot,dev_id=THP002,dev_loc=Apex,dev_name=BME280 temp_c=23.18,altitude=93.10,humidity=52.16,pressure=1002.12
 ```
 
-This will connect the client to the QuestDB Server defined by `Quest_Server` on
-port `9009`.
+```python title="Inserting a row into the table iot"
 
-If I then have a line of ILP like this:
-`iot,dev_id=THPL002,dev_loc=Demo,dev_name=BME280 temp_c=23.18,altitude=93.10,humidity=52.16,pressure=1002.12\n`
-in a `buffer` I can call `espClient.printf(buffer);` and that line of data will
-be written to QuestDB.
+from questdb.ingress import Sender, IngressError, TimestampNanos
+import sys
+
+
+def example(host: str = 'localhost', port: int = 9009):
+    try:
+        with Sender(host, port) as sender:
+            sender.row(
+                'iot',
+                symbols={
+                    'dev_id': 'THP002',
+                    'dev_loc': 'Apex'},
+                columns={
+                    'dev_name': 'BME280',
+                    'temp_c': 23.18,
+                    'altitude': 93.10,
+                    'humidity': 52.16,
+                    'pressure': 1002.12})
+            sender.flush()
+
+    except IngressError as e:
+        sys.stderr.write(f'Got error: {e}\n')
+
+
+if __name__ == '__main__':
+    example()
+```
+
+This will connect the client to the QuestDB Server defined by `port` at `9009`.
+
+`sender.flush()` flushes the internal buffer and we recommend flushing
+periodically, for example every few seconds.
 
 ## Can I do batch writes?
 
@@ -172,7 +195,7 @@ Of course, you can! Put each line of ILP on a separate 'line', separated by a
 newline `\n`, and then when you have all your batch built up, write the whole
 thing to QuestDB.
 
-Of course, if you're relying on QuestDB to add `timestamps` for you, then be
+If you're relying on QuestDB to add `timestamps` for you, then be
 aware that QuestDB will give the entire batch sequential timestamps based on
 when they are read/written to the database.
 
