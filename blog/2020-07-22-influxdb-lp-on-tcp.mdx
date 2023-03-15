@@ -189,13 +189,7 @@ This will connect the client to the QuestDB Server defined by `port` at `9009`.
 `sender.flush()` flushes the internal buffer and we recommend flushing
 periodically, for example every few seconds.
 
-## Can I do batch writes?
-
-Of course, you can! Put each line of ILP on a separate 'line', separated by a
-newline `\n`, and then when you have all your batch built up, write the whole
-thing to QuestDB.
-
-If you're relying on QuestDB to add `timestamps` for you, then be
+If, similar to this example, you're relying on QuestDB to add `timestamps`, then be
 aware that QuestDB will give the entire batch sequential timestamps based on
 when they are read/written to the database.
 
