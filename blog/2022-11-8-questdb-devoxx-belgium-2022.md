@@ -12,7 +12,7 @@ keywords:
   - questdb
   - timeseries
 image: /img/blog/2022-11-08/devoxx.png
-tags: [devoxx, questdb, timeseries, event, java]
+tags: [devoxx, community, questdb, timeseries, event, java]
 ---
 
 As a member of the Java community, QuestDB sponsored this year's Devoxx Belgium
