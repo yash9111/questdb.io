@@ -10,12 +10,11 @@ description:
   records on the fly.
 keywords:
   - timeseries
-  - crypto
   - pandas
   - matplotlib
   - seaborn
   - marketdata
-tags: [tutorial, crypto, python, pandas, market data, matplotlib]
+tags: [tutorial, market data, crypto, python, pandas, market data, matplotlib]
 image: /img/blog/shared/og-pandas.png
 ---
 

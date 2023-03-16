@@ -11,9 +11,10 @@ keywords:
   - questdb
   - python
   - grafana
+  - marketdata
   - crypto
   - database
-tags: [tutorial, crypto, trading, python, grafana]
+tags: [tutorial, market data, crypto, trading, python, grafana]
 image: /img/blog/shared/og-bitcoin-grafana.png
 ---
 

@@ -56,7 +56,7 @@ const prioritizedTags: ChipProps["items"] = [
   "company",
   "community",
   "newsletter",
-  "crypto",
+  "market data",
 ].map((tag) => ({
   name: tag,
   permalink: `/blog/tags/${tag.replace(/ /g, "-")}`,
