@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 400;
   border: 1px solid transparent;
 }
 
@@ -24,10 +24,10 @@
 
 .skinSecondary {
   color: var(--color);
-  background: #33333D;
+  background: #33333d;
 }
 
-:global(html[data-theme="light"]) .skinSecondary  {
+:global(html[data-theme="light"]) .skinSecondary {
   background: #fff;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .sizeMedium {
-  padding: 0.5rem 1rem;
+  padding: 0.2rem 0.8rem;
   font-size: 0.9rem;
   border-radius: 30px;
 }
