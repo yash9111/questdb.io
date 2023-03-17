@@ -124,7 +124,13 @@ values={[
 
 
 ```shell
+-- To run the instance as a windows service (preferably as a privileged account):
+questdb.exe install
 questdb.exe start
+
+-- To run a one-off instance in the current work directory:
+
+questdb.exe
 ```
 
 </TabItem>
