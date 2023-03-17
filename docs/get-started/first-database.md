@@ -21,12 +21,12 @@ of sensors.
 
 :::info
 
-All commands are run through the [Web Console](/docs/develop/web-console)
-accessible at http://localhost:9000.
+All commands are run through the [Web Console](/docs/develop/web-console/)
+accessible at `http://localhost:9000`.
 
 You can also run the same SQL via the
-[Postgres endpoint](/docs/reference/api/postgres) or the
-[REST API](/docs/reference/api/rest).
+[Postgres endpoint](/docs/reference/api/postgres/) or the
+[REST API](/docs/reference/api/rest/).
 
 :::
 
@@ -55,15 +55,14 @@ INSERT INTO sensors
         x ID, --increasing integer
         rnd_str('Eberle', 'Honeywell', 'Omron', 'United Automation', 'RS Pro') make,
         rnd_str('New York', 'Miami', 'Boston', 'Chicago', 'San Francisco') city
-    FROM long_sequence(10000) x
-;
+    FROM long_sequence(10000) x;
 ```
 
 For more information about insert statements, refer to the
-[INSERT](/docs/reference/sql/insert) reference documentation. To learn more
+[INSERT](/docs/reference/sql/insert/) reference documentation. To learn more
 about the functions used here, see the
-[random generator](/docs/reference/function/random-value-generator) and
-[row generator](/docs/reference/function/row-generator) pages.
+[random generator](/docs/reference/function/random-value-generator/) and
+[row generator](/docs/reference/function/row-generator/) pages.
 
 Our `sensors` table now contains 10,000 randomly-generated sensor values of
 different makes and in various cities. Use this command to view the table:
@@ -101,7 +100,7 @@ PARTITION BY MONTH;
 The query above demonstrates how to use the following features:
 
 - `TIMESTAMP(ts)` elects the `ts` column as a
-  [designated timestamp](/docs/concept/designated-timestamp). This enables
+  [designated timestamp](/docs/concept/designated-timestamp/). This enables
   partitioning tables by time.
 - `PARTITION BY MONTH` creates a monthly partitioning strategy where the stored
   data is effectively sharded by month.
@@ -196,7 +195,7 @@ JOIN
     FROM sensors
     WHERE city='Miami' AND make='Omron') a
 ON readings.sensorId = a.sensId
-WHERE ts IN '2019-10-21;1d' -- this is an interval between 21-10 and 1 day later
+WHERE ts IN '2019-10-21;1d' -- this is an interval between 2019/10/21 and the next day
 SAMPLE BY 1h -- aggregation by hourly time buckets
 ALIGN TO CALENDAR; -- align the ts with the start of the hour (hh:00:00)
 ```
@@ -213,13 +212,14 @@ The results should look like the table below:
 | ...                         | ...   | ...   | ...             |
 
 For more information about these statements, please refer to the
-[SELECT](/docs/reference/sql/select), [JOIN](/docs/reference/sql/join) 
-and [SAMPLE BY](/docs/reference/sql/sample-by) pages.
+[SELECT](/docs/reference/sql/select/), [JOIN](/docs/reference/sql/join/) and
+[SAMPLE BY](/docs/reference/sql/sample-by/) pages.
 
 ## Deleting tables
 
-We can now clean up the demo data by using `DROP TABLE` SQL. Be careful using
-this statement as QuestDB cannot recover data that is deleted in this way:
+We can now clean up the demo data by using
+[`DROP TABLE`](/docs/reference/sql/drop/) SQL. Be careful using this statement
+as QuestDB cannot recover data that is deleted in this way:
 
 ```questdb-sql
 DROP TABLE readings;
