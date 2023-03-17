@@ -11,7 +11,7 @@ export type Props = {
 
 export const Categories = ({ activeCategory = "", categories }: Props) => (
   <div className={styles.root}>
-    {categories.map(({ title, description, url }) => {
+    {categories.map(({ title, url }) => {
       const urlWithTrailingSlash = ensureTrailingSlash(url)
       const active =
         ensureTrailingSlash(activeCategory) === urlWithTrailingSlash
@@ -25,7 +25,6 @@ export const Categories = ({ activeCategory = "", categories }: Props) => (
           })}
         >
           <h3 className={styles.title}>{title}</h3>
-          <p className={styles.description}>{description}</p>
         </Link>
       )
     })}

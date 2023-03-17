@@ -197,21 +197,24 @@ JOIN
     WHERE city='Miami' AND make='Omron') a
 ON readings.sensorId = a.sensId
 WHERE ts IN '2019-10-21;1d' -- this is an interval between 21-10 and 1 day later
+SAMPLE BY 1h -- aggregation by hourly time buckets
+ALIGN TO CALENDAR; -- align the ts with the start of the hour (hh:00:00)
 ```
 
 The results should look like the table below:
 
 | ts                          | city  | make  | average         |
 | :-------------------------- | :---- | :---- | :-------------- |
-| 2019-10-21T00:00:44.600000Z | Miami | Omron | 20.004285872098 |
-| 2019-10-21T00:00:52.400000Z | Miami | Omron | 16.68436714013  |
-| 2019-10-21T00:01:05.400000Z | Miami | Omron | 15.243684089291 |
-| 2019-10-21T00:01:06.100000Z | Miami | Omron | 17.193984104315 |
-| 2019-10-21T00:01:07.100000Z | Miami | Omron | 20.778686822666 |
+| 2019-10-21T00:00:00.000000Z | Miami | Omron | 20.004285872098 |
+| 2019-10-21T00:01:00.000000Z | Miami | Omron | 16.68436714013  |
+| 2019-10-21T00:02:00.000000Z | Miami | Omron | 15.243684089291 |
+| 2019-10-21T00:03:00.000000Z | Miami | Omron | 17.193984104315 |
+| 2019-10-21T00:04:00.000000Z | Miami | Omron | 20.778686822666 |
 | ...                         | ...   | ...   | ...             |
 
 For more information about these statements, please refer to the
-[SELECT](/docs/reference/sql/select) and [JOIN](/docs/reference/sql/join) pages.
+[SELECT](/docs/reference/sql/select), [JOIN](/docs/reference/sql/join) 
+and [SAMPLE BY](/docs/reference/sql/sample-by) pages.
 
 ## Deleting tables
 

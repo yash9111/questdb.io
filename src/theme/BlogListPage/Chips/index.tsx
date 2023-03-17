@@ -1,5 +1,4 @@
 import React from "react"
-import Link from "@docusaurus/Link"
 import { Chip } from "../Chip"
 import styles from "./styles.module.css"
 import { ensureTrailingSlash } from "../../../utils"
@@ -20,9 +19,5 @@ export const Chips = ({ items, activeChip }: Props) => (
         active={activeChip === permalink}
       />
     ))}
-
-    <Link className={styles.linkToTags} to="/blog/tags/">
-      See all topics
-    </Link>
   </div>
 )

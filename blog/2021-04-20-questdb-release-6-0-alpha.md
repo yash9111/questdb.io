@@ -14,7 +14,7 @@ keywords:
   - timeseries
   - database
 image: /img/blog/2021-04-20/og.png
-tags: [release, engineering, docker]
+tags: [release, docker]
 ---
 
 <!-- prettier-ignore-start -->

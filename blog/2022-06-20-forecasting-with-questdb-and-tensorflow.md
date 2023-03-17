@@ -16,7 +16,7 @@ keywords:
   - tensorflow
   - machine learning
 image: /img/blog/2022-06-20/banner.png
-tags: [tutorial, python, tensorflow, machine learning, data science]
+tags: [python, tensorflow, machine learning, data science, time-series]
 ---
 
 This post is contributed by

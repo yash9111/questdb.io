@@ -10,7 +10,6 @@ description:
   records on the fly.
 keywords:
   - timeseries
-  - crypto
   - pandas
   - matplotlib
   - seaborn

@@ -11,6 +11,7 @@ import EditThisPage from "@theme/EditThisPage"
 import styles from "./styles.module.css"
 import customFields from "../../config/customFields"
 import { ensureTrailingSlash } from "../../utils"
+import { Chip } from "../BlogListPage/Chip"
 
 function useReadingTimePlural() {
   const { selectMessage } = usePluralForm()
@@ -109,29 +110,29 @@ function BlogPostItem(props: Props): JSX.Element {
 
       <footer className={styles.footer}>
         {isTruncated ? (
-          <Link
-            to={metadata.permalink}
-            aria-label={`Read more about ${title}`}
+          <Chip
+            permalink={metadata.permalink}
+            label="Read Article"
             className={styles.readMore}
-          >
-            Read More
-          </Link>
+          />
         ) : (
           <>
             {tags.length > 0 && (
               <div className={styles.tags}>
                 Tags:
                 <ul className={styles.tagsList}>
-                  {tags.map(({ label, permalink: tagPermalink }) => (
-                    <li key={tagPermalink}>
-                      <Link
-                        key={tagPermalink}
-                        to={ensureTrailingSlash(tagPermalink)}
-                      >
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
+                  {tags
+                    .filter(({ label }) => label !== "pinned")
+                    .map(({ label, permalink: tagPermalink }) => (
+                      <li key={tagPermalink}>
+                        <Link
+                          key={tagPermalink}
+                          to={ensureTrailingSlash(tagPermalink)}
+                        >
+                          {label}
+                        </Link>
+                      </li>
+                    ))}
                 </ul>
               </div>
             )}
