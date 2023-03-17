@@ -9,13 +9,12 @@ description:
   compiler, JDK 17 support, SQL and ILP improvements and autocomplete in the Web
   Console.
 keywords:
-  - sql
   - jit
   - performance
   - timeseries
   - database
 image: /img/blog/2022-01-27/banner.png
-tags: [release, sql]
+tags: [release]
 ---
 
 import Banner from "@theme/Banner"

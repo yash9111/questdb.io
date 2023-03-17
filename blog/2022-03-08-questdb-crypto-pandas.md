@@ -14,7 +14,7 @@ keywords:
   - matplotlib
   - seaborn
   - marketdata
-tags: [tutorial, market data, crypto, python, pandas, market data, matplotlib]
+tags: [tutorial, crypto, python, pandas, market data, matplotlib]
 image: /img/blog/shared/og-pandas.png
 ---
 
