@@ -71,10 +71,6 @@
   to = "/blog/2020/06/15/python-questdb-tutorial/"
 
 [[redirects]]
-  from = "/tutorial/2020/07/22/influxdb-lp-on-tcp"
-  to = "/blog/2020/07/22/influxdb-lp-on-tcp/"
-
-[[redirects]]
   from = "/tutorial/2020/08/25/questitto"
   to = "/blog/2020/08/25/fast-iot-stack-with-questdb-mqtt/"
 

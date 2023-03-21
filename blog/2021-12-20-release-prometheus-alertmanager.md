@@ -140,6 +140,10 @@ information on setting this parameter, see the
 query.timeout.sec=60
 ```
 
+Timeout for each query can override the default by setting HTTP header
+[`Statement-Timeout`](/docs/reference/api/rest/#headers) or Postgres
+[`options`](/docs/reference/api/postgres/#list-of-supported-connection-properties).
+
 ## Next up
 
 The team will be adding Java 17 support in the next release, meanwhile, we're
