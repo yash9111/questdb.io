@@ -286,6 +286,14 @@
   from = "/docs/reference/api/ilp/tcp-receiver/"
   to = "/docs/reference/api/ilp/overview/"
 
+[[redirects]]
+  from ="/blog/2020/07/22/influxdb-lp-on-tcp/"
+  to = "/docs/reference/clients/overview/"
+
+[[redirects]]
+  from ="/blog/mongodb-benchmark-review/"
+  to = "/blog/mongodb-time-series-benchmark-review/"
+
 [[headers]]
   for = "/*"
   [headers.values]
