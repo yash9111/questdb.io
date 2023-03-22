@@ -69,6 +69,16 @@ const specs: Spec[] = [
     },
   },
   {
+    cpu: 4,
+    ram: 16,
+    storage: 250,
+    prices: {
+      "us-east-2": 0.848,
+      "us-west-2": 0.848,
+      "eu-west-1": 0.929,
+    },
+  },
+  {
     cpu: 8,
     ram: 32,
     storage: 100,
@@ -89,6 +99,16 @@ const specs: Spec[] = [
     },
   },
   {
+    cpu: 8,
+    ram: 32,
+    storage: 1000,
+    prices: {
+      "us-east-2": 1.748,
+      "us-west-2": 1.748,
+      "eu-west-1": 1.914,
+    },
+  },
+  {
     cpu: 16,
     ram: 64,
     storage: 100,
@@ -101,21 +121,31 @@ const specs: Spec[] = [
   {
     cpu: 16,
     ram: 64,
-    storage: 250,
+    storage: 500,
     prices: {
-      "us-east-2": 2.138,
-      "us-west-2": 2.138,
-      "eu-west-1": 2.37,
+      "us-east-2": 2.338,
+      "us-west-2": 2.338,
+      "eu-west-1": 2.578,
     },
   },
   {
-    cpu: 32,
-    ram: 128,
-    storage: 250,
+    cpu: 16,
+    ram: 64,
+    storage: 1000,
     prices: {
-      "us-east-2": 4.074,
-      "us-west-2": 4.074,
-      "eu-west-1": 4.53,
+      "us-east-2": 2.716,
+      "us-west-2": 2.716,
+      "eu-west-1": 2.994,
+    },
+  },
+  {
+    cpu: 16,
+    ram: 64,
+    storage: 2000,
+    prices: {
+      "us-east-2": 3.299,
+      "us-west-2": 3.299,
+      "eu-west-1": 3.619,
     },
   },
   {
@@ -126,6 +156,26 @@ const specs: Spec[] = [
       "us-east-2": 4.274,
       "us-west-2": 4.274,
       "eu-west-1": 4.738,
+    },
+  },
+  {
+    cpu: 32,
+    ram: 128,
+    storage: 1000,
+    prices: {
+      "us-east-2": 4.652,
+      "us-west-2": 4.652,
+      "eu-west-1": 5.154,
+    },
+  },
+  {
+    cpu: 32,
+    ram: 128,
+    storage: 2000,
+    prices: {
+      "us-east-2": 5.235,
+      "us-west-2": 5.235,
+      "eu-west-1": 5.779,
     },
   },
 ]
