@@ -7,76 +7,62 @@ author_image_url: https://avatars.githubusercontent.com/davidgs
 description:
   Use a Jupyter notebook to create a database, insert and query data and graph
   the results using Python.
-keywords:
-  - python
-  - pandas
-  - jupiternotebook
-  - timeseries
-  - questdb
 tags: [tutorial, python, pandas, jupyternotebook]
-image: /img/blog/shared/og-python.png
+image: /img/blog/2020-06-15/banner.png
 ---
 
 import Banner from "@theme/Banner"
 
 <Banner
-  alt="A software developer typing code on a laptop"
+  alt="Flow chart of QuestDB database, analytic tools, and data visualization"
   height={365}
-  src="/img/blog/2020-06-15/banner.jpg"
+  src="/img/blog/2020-06-15/banner.png"
   width={650}
->
-  Photo by{" "}
-  <a href="https://unsplash.com/photos/npxXWgQ33ZQ">Glenn Carstens-Peters</a>{" "}
-  via <a href="https://unsplash.com">Unsplash</a>
-</Banner>
+></Banner>
 
-This tutorial shows how to use QuestDB with a Jupyter notebook. We will learn
-how to create a database, query data and read table contents into a Pandas
-dataframe, and use `matplotlib` to create charts of our table data.
-
-<!-- truncate -->
+In this tutorial, we will explore how to use QuestDB in combination with a
+Jupyter notebook by following the steps to generate a database, execute queries,
+import contents into a Pandas dataframe, and use `matplotlib` to visualize the
+data.
 
 ## Getting started
 
-To get started, you'll need a few things installed and set up. This should be
-quick.
+You'll need a few things installed and set up to get started.
 
-**QuestDB:** To download QuestDB, you can find complete instructions for getting
-started with [Docker](/docs/get-started/docker),
-[Homebrew](/docs/get-started/homebrew) on macOS, or the
-[binaries](/docs/get-started/binaries).
+**QuestDB:**: [Install QuestDB](/docs/#get-started).
 
-**Jupyter Notebooks:** These are interactive Python environments that will help
-you run a complete version of this tutorial. To run it, you should:
+**Jupyter Notebooks:**: These interactive Python environments will help you run
+a complete version of this tutorial.
+
+To run it, you should:
 
 - make sure you are running Python 3.x and not Python 2.7. If you're in doubt,
-  `python --version` will tell you.
-- install Jupyter Notebooks with `pip3 install --upgrade ipython jupyter` make
-  sure that the libraries we use in this tutorial are also installed with
-  `pip3 install requests urlib matplotlib pandas`
+  check `python --version`.
+- install Jupyter Notebooks and make sure that the libraries we use in this
+  tutorial are also installed:
+
+  ```shell
+  pip3 install --upgrade ipython jupyter
+  pip3 install requests urlib matplotlib pandas
+  ```
+
 - clone [this repository](https://github.com/davidgs/QuestNotebook)
   (`git clone https://github.com/davidgs/QuestNotebook`) in the repository
-  directory run Jupyter Notebook
+  directory running Jupyter Notebook
 
 That will get you right back to a page that looks eerily similar to this that is
 interactive, allowing you to run the code and interact with the database
 yourself.
 
 If you get errors like `ModuleNotFoundError: No module named 'requests'` for any
-of the libraries you installed above, double-check to make sure that you are
-actually using Python 3.x `jupytper --path` will let you know if Jupyter is
-using 2.7 or 3.x
+of the libraries you installed above, double-check that you are actually using
+Python 3.x `jupytper --path` will let you know if Jupyter is using 2.7 or 3.x
 
 ## Create a database
 
-We will need someplace to store our data, so let's create a test database where
-we can put some random data. We will create a simple table with 5 columns, one
-of which is a timestamp.
-
-The create operation in QuestDB appends records to the bottom of a table. If the
-table has a designated new record, timestamps must be greater than, or equal to
-the latest timestamp. Attempts to add a timestamp in middle of a table will
-result in a timestamp out of order error.
+We will use QuestDB as our data storage. Let's create a test database and
+generate some random data. We will create a simple table with 5 columns,
+including one for timestamp:
 
 - `cust_id` is the customer identifier. It uniquely identifies a customer.
 
