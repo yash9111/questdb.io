@@ -28,15 +28,7 @@ export const StartBuilding = () => {
       >
         Start building now
       </Button>
-      <span className={styles.startBuildingCredits}>
-        <img
-          src="/img/icons/dollar.svg"
-          alt="Dollar sign icon"
-          width="17"
-          height="17"
-        />
-        Get $200 in free credits
-      </span>
+      <span className={styles.startBuildingCredits}>$200 in free credits</span>
     </div>
   )
 }

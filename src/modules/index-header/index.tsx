@@ -22,7 +22,7 @@ export const Header = () => {
           <Button to={customFields.cloudUrl} newTab={false}>
             Start building with Cloud
           </Button>
-          <span>Get $200 in free credits</span>
+          <span>$200 in free credits</span>
         </div>
       </div>
     </Section>
