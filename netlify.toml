@@ -68,8 +68,12 @@
 
 [[redirects]]
   from = "/tutorial/2020/06/15/python-questdb-tutorial"
-  to = "/blog/2020/06/15/python-questdb-tutorial/"
+  to = "/blog/querying-data-jupyter-noteboook"
 
+[[redirects]]
+  from = "/blog/2020/06/15/python-questdb-tutorial/"
+  to = "/blog/querying-data-jupyter-noteboook"
+  
 [[redirects]]
   from = "/tutorial/2020/08/25/questitto"
   to = "/blog/2020/08/25/fast-iot-stack-with-questdb-mqtt/"
