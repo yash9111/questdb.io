@@ -44,9 +44,13 @@ To run it, you should:
 
   ```shell
   pip3 install --upgrade ipython jupyter
-  pip3 install requests urlib matplotlib pandas
+  pip3 install requests matplotlib pandas
   ```
-
+- Start a Jupyter Notebook by running:
+  ```shell
+  jupyter notebook
+  ```
+  
 - clone [this repository](https://github.com/davidgs/QuestNotebook)
   (`git clone https://github.com/davidgs/QuestNotebook`) in the repository
   directory running Jupyter Notebook
@@ -87,7 +91,7 @@ exists.
 import requests import urllib.parse as par
   q = 'create table balances'\
     '(cust_id int,'\
-    ' balance_ccy char,'\
+    ' balance_ccy sym,'\
     'balance double,'\
     'inactive boolean,'\
     'timestamp timestamp)'\
@@ -110,10 +114,10 @@ from datetime import datetime
 
 success = 0
 fail = 0
-currency = ["$", "€", "£", "¥"]
+currency = ["USD", "EUR", "GBP", "JPY"]
 random.seed()
 
-for x in range(1000):
+for x in range(100):
   cust = random.randint(20, 42)
   cur = random.choice(currency)
   bal = round(random.uniform(10.45, 235.15), 2)
@@ -187,7 +191,7 @@ q = "select cust_id,"\
     " timestamp"\
     " from balances"\
     " where cust_id = 26"\
-    " and balance_ccy = '$'"\
+    " and balance_ccy = 'USD'"\
     " and not inactive"
 
 query = urllib.parse.quote(q)
