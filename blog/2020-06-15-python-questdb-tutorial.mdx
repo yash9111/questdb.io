@@ -50,7 +50,7 @@ To run it, you should:
   ```shell
   jupyter notebook
   ```
-  
+
 - clone [this repository](https://github.com/davidgs/QuestNotebook)
   (`git clone https://github.com/davidgs/QuestNotebook`) in the repository
   directory running Jupyter Notebook
@@ -197,7 +197,7 @@ q = "select cust_id,"\
 query = urllib.parse.quote(q)
 r = requests.get("http://localhost:9000/exp?query=" + query)
 queryData = r.text
-rawData = pd.read_csv(io.StringIO(queryData), parse_dates=['timestamp'])
+rawData = pd.read_csv(io.StringIO(queryData.decode('utf-8')), parse_dates=['timestamp'])
 print(rawData)
 ```
 
