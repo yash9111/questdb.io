@@ -1,8 +1,7 @@
 import React from "react"
 import style from "./styles.module.css"
 import clsx from "clsx"
-import { Dialog } from "../../../components/Dialog"
-import { ContactForm } from "../ContactForm"
+import Link from "@docusaurus/Link"
 
 type Status =
   | "available"
@@ -43,14 +42,9 @@ const Availability = ({ status }: { status: Status }) => {
       return <span className={style.comingSoon}>Coming soon</span>
     case "contact-us":
       return (
-        <Dialog>
-          <Dialog.Trigger>
-            <span className={style.link}>Contact us</span>
-          </Dialog.Trigger>
-          <Dialog.Content>
-            <ContactForm interestedIn="sla" modal />
-          </Dialog.Content>
-        </Dialog>
+        <Link to="/enterprise" className={style.link}>
+          Contact us
+        </Link>
       )
   }
 }

@@ -1,11 +1,8 @@
 import React, { useState } from "react"
 import { Section } from "../../../components/Section"
 import { PricingTable } from "../pricing-table"
-import Button from "@theme/Button"
 import style from "./styles.module.css"
 import useBaseUrl from "@docusaurus/useBaseUrl"
-import { Dialog } from "../../../components/Dialog"
-import { ContactForm } from "../../cloud/ContactForm"
 import { Provider } from "./provider"
 import { Dropdown } from "./dropdown"
 import { regions } from "../pricing-table/specs"
@@ -24,7 +21,6 @@ export const PricingChoices = () => {
       </Section.Title>
 
       <Section noGap className={style.description}>
-        <p>None of the plans work for you?</p>
         <p>
           Pick the best fitting specs.
           <br />
@@ -32,6 +28,10 @@ export const PricingChoices = () => {
           ,&nbsp;
           <span className={style.highlighted}>256 GB RAM</span> and{" "}
           <span className={style.highlighted}>16 TB</span> storage.
+        </p>
+
+        <p>
+          This is a non-exhaustive list of instance and storage combinations
         </p>
 
         <div className={style.options}>
@@ -88,26 +88,11 @@ export const PricingChoices = () => {
       </Section>
 
       <div className={style.table}>
+        <h3>Instance type and storage examples</h3>
         <PricingTable region={regions[region]} />
         <span className={style.tableSubtext}>
           Contact us if your application requires more resources.
         </span>
-      </div>
-
-      <div className={style.footer}>
-        <Dialog>
-          <Dialog.Trigger>
-            <Button
-              uppercase={false}
-              dataHook="pricing-table-contact-us-button"
-            >
-              Contact Us
-            </Button>
-          </Dialog.Trigger>
-          <Dialog.Content>
-            <ContactForm interestedIn="custom" modal />
-          </Dialog.Content>
-        </Dialog>
       </div>
     </div>
   )

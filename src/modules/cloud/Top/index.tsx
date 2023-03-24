@@ -1,13 +1,13 @@
 import React from "react"
 import { Section } from "../../../components/Section"
 import localStyle from "./styles.module.css"
-import { ContactForm } from "../ContactForm"
+import { StartBuilding } from "./start-building"
 
 const featureList = [
   "Database-as-a-service",
   "Infrastructure monitoring and logs",
   "Built-in auth and TLS encryption",
-  "Decoupled compute and storage",
+  "High availability",
   "Multiple regions",
   "Additional database features",
 ]
@@ -34,7 +34,7 @@ export const Top = () => {
         </div>
 
         <Section noGap center>
-          <ContactForm interestedIn="cloud" />
+          <StartBuilding />
         </Section>
       </div>
     </Section>

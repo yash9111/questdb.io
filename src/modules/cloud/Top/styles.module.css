@@ -43,6 +43,26 @@
   margin-left: 0.5rem;
 }
 
+.startBuildingRoot {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 2rem;
+}
+
+.startBuildingImage {
+  box-shadow: var(--image-shadow);
+  height: auto;
+}
+
+.startBuildingCredits {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: auto;
+  text-align: center;
+  font-size: var(--font-size-medium);
+}
+
 @media (min-width: 1000px) {
   .section {
       padding-top: 6rem;
