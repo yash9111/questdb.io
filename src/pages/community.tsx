@@ -144,12 +144,6 @@ const Community = () => {
                   watched our Stack Overflow tag
                 </a>
               </p>
-              <p className={paCss.property}>
-                You have{" "}
-                <a className={paCss.link_item} href={customFields.slackUrl}>
-                  joined our Community Slack
-                </a>
-              </p>
               <div className={clsx(paCss.custom_box, paCss.text_center)}>
                 <p className={`${paCss.default_text} ${paCss.mb5}`}>
                   What you get:
@@ -163,6 +157,7 @@ const Community = () => {
           </div>
         </div>
       </section>
+
       <section className={clsx(seCss.section, seCss["section--center"])}>
         <div className={clsx(seCss["section--inner"])}>
           <div className={paCss.half__section}>
@@ -172,22 +167,14 @@ const Community = () => {
               To claim your swag for this level:
             </p>
             <p className={paCss.property}>
-              You have asked or answered a question on Stack Overflow{" "}
-              <a
-                className={paCss.link_item}
-                href={customFields.stackoverflowUrl}
-              >
-                with the QuestDB tag
-              </a>
-            </p>
-            <p className={paCss.property}>
-              You have opened a valid{" "}
+              Submit a bugfix, feature or any other meaningful contribution via{" "}
               <a
                 className={paCss.link_item}
                 href="https://github.com/questdb/questdb"
               >
-                GitHub issue or Pull Request
-              </a>
+                bug report or pull request
+              </a>{" "}
+              with a reproducer
             </p>
             <div className={paCss.contribution}>
               <p className={paCss.default_text}>How to contribute?</p>
@@ -244,57 +231,27 @@ const Community = () => {
           </div>
         </div>
       </section>
-      <section className={clsx(seCss["section--odd"])}>
-        <div
-          className={clsx(seCss["section--inner"], paCss.flex__reverse_section)}
-        >
-          <div className={paCss.half__section}>
-            <p className={paCss.level__title}>Level 3</p>
-            <h2 className={paCss.section__title}>Dedicated to the Quest</h2>
-            <p className={paCss.default_text}>
-              To claim your swag for this level:
-            </p>
-            <p className={paCss.property}>
-              You have written an original{" "}
-              <a className={paCss.link_item} href="/tutorial/">
-                tutorial or guide using QuestDB
-              </a>
-            </p>
 
-            <div className={clsx(paCss.custom_box, paCss.text_center)}>
-              <p className={clsx(paCss.default_text, paCss.mb5)}>
-                What you get:
-              </p>
-              <p className={paCss.second_text}>
-                For this level, we have even more cool swag!
-              </p>
-            </div>
-          </div>
-          <div className={`${paCss.half__section} ${paCss.section_center}`}>
-            <img
-              src="/img/pages/community/questdb-swag-mousemat.png"
-              alt="A pink and black water bottle, a cellphone cover and a circular mousemat printed with the QuestDB logo"
-              className={paCss.section_image}
-              width={500}
-              height={561}
-            />
-          </div>
-        </div>
-        <div className={paCss.card} style={{ margin: "auto" }}>
-          <p className={clsx(paCss.default_text, paCss.mb5, paCss.text_center)}>
-            How can you claim swag?
-          </p>
-          <p className={clsx(paCss.default_text, paCss.mb5)}>
-            Fill out the{" "}
-            <a
-              className={paCss.link_item}
-              href="https://forms.gle/X6ze4mJqaUC6odaEA"
+      <section className={clsx(seCss.section, seCss["section--odd"])}>
+        <div className={clsx(seCss["section--inner"])}>
+          <div className={paCss.card} style={{ margin: "auto" }}>
+            <p
+              className={clsx(paCss.default_text, paCss.mb5, paCss.text_center)}
             >
-              swag request form
-            </a>{" "}
-            with required information. Our team will review and validate your
-            requests.
-          </p>
+              How can you claim swag?
+            </p>
+            <p className={clsx(paCss.default_text, paCss.mb5)}>
+              Fill out the{" "}
+              <a
+                className={paCss.link_item}
+                href="https://forms.gle/X6ze4mJqaUC6odaEA"
+              >
+                swag request form
+              </a>{" "}
+              with required information. Our team will review and validate your
+              requests.
+            </p>
+          </div>
         </div>
       </section>
     </Layout>
