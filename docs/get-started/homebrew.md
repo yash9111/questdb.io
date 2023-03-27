@@ -62,7 +62,7 @@ The file structure is as the following:
 To remove QuestDB, use Homebrew's `uninstall` command:
 
 ```shell
-questdb uninstall
+brew uninstall questdb
 ```
 
 ## Troubleshooting Homebrew issues
