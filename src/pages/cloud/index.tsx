@@ -5,7 +5,8 @@ import { Section } from "../../components/Section"
 import { ActionFooter } from "../../components/ActionFooter"
 import { CompareFeatures } from "../../modules/cloud/CompareFeatures"
 import { Top } from "../../modules/cloud/Top"
-import { GetAccess } from "../../modules/cloud/get-access"
+import Button from "@theme/Button"
+import customFields from "../../config/customFields"
 
 const CloudPage = () => (
   <Layout
@@ -20,7 +21,9 @@ const CloudPage = () => (
       <Section.Title center>Ready to get started?</Section.Title>
 
       <Section noGap center>
-        <GetAccess />
+        <Button variant="primary" to={customFields.cloudUrl} newTab={false}>
+          Start building now
+        </Button>
       </Section>
     </Section>
     <Section>
