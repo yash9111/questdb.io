@@ -64,6 +64,6 @@ program and using one of the connectors. Engines such as
 transformations, enrichment, and filtering; at the same time, they can help you
 with shared concerns such as fault-tolerance and serialization. However, they
 often have a non-trivial learning curve. QuestDB offers a
-[connector for Apache Flink](https://github.com/questdb/flink-questdb-connector).
+[connector for Apache Flink](/docs/third-party-tools/flink/).
 It is the recommended strategy if you are an existing Flink user, and you need
 to do complex transformations while inserting entries from Kafka to QuestDB.
