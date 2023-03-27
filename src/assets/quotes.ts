@@ -83,7 +83,7 @@ const quotes: Quote[] = [
     },
     text:
       "QuestDB outperforms every database we have tested and delivered a 10x improvement in querying speed. It has become a critical piece of our infrastructure.",
-    author: "Ahmed Abbasi",
+    author: "Ahmad Abbasi",
     role: "Co-Founder/CEO",
     company: "Syndica",
   },
