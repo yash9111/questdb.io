@@ -138,6 +138,21 @@ questdb.exe
 
 </Tabs>
 
+The file structure is as the following:
+
+```bash
+
+/questdb
+├── conf
+├── db
+├── log
+└── public
+```
+
+For information about the file structure, see
+[root directory](/docs/concept/root-directory-structure/).
+
+
 ### Upgrade QuestDB version
 
 :::note

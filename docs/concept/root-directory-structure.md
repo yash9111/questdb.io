@@ -207,7 +207,7 @@ this effect.
 
 ## `log` directory
 
-Contains the log files for QuestDB:
+Contains the [log files](/docs/troubleshooting/log/) for QuestDB:
 
 ```filestructure
 ├── log
