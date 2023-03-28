@@ -38,7 +38,8 @@ This can be done with a single command using:
 />
 
 This command starts a docker container from `questdb/questdb` image. In
-addition, it exposes some ports and also mounts a volume, to allow your data to persist.
+addition, it exposes some ports and also mounts a volume, to allow your data to
+persist.
 
 Below each parameter is described in detail.
 
@@ -150,12 +151,17 @@ migration or backups:
 ├── conf
 │   └── server.conf
 ├── db
-└── public
+├── log
+├── public
+└── snapshot (optional)
 ```
 
 For details on passing QuestDB server settings to a Docker container, see the
 [Docker section](/docs/reference/configuration#docker) of the server
 configuration documentation.
+
+For information about the file structure, see
+[root directory](/docs/concept/root-directory-structure/).
 
 ### Upgrade QuestDB version
 

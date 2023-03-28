@@ -221,9 +221,10 @@ can be used in QuestDB.
 For hints on diagnosing common configuration issues, see the following
 resources:
 
-- [Troubleshooting FAQ](/docs/troubleshooting/faq) guide with solutions for
+- [Troubleshooting FAQ](/docs/troubleshooting/faq/) guide with solutions for
   various HW & SW configuration issues
-- [List of OS error codes](/docs/troubleshooting/os-error-codes) page with the
+- [Log](/docs/troubleshooting/log/) guide for log location and details
+- [List of OS error codes](/docs/troubleshooting/os-error-codes/) page with the
   list of Operating System error codes
 
 We are happy to help with any question you may have, particularly to help you

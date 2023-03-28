@@ -6,6 +6,17 @@ description: FAQ for QuestDB troubleshooting.
 The following document contains common hardware and software configuration
 issues met when running QuestDB, as well as solutions to them.
 
+## Where do I find the log and how tdo I filed the log messages?
+
+Log files are stored in the `log` folder under the [root_directory](/docs/concept/root-directory-structure/).
+The [log](/docs/troubleshooting/log/) has the following levels:
+
+- Advisory
+- Critical
+- Error
+- Info
+- Debug
+
 ## How do I delete a row?
 
 See our guide on [modifying data](/docs/guides/modifying-data).

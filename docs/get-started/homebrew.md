@@ -57,6 +57,9 @@ The file structure is as the following:
 └── public
 ```
 
+For information about the file structure, see
+[root directory](/docs/concept/root-directory-structure/).
+
 ## Uninstall QuestDB
 
 To remove QuestDB, use Homebrew's `uninstall` command:
