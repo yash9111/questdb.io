@@ -269,7 +269,7 @@ The result should be something like this:
 
 Beyond SELECT statements, for instance when we need to save the results of a
 query into a new table, we need to use QuestDB's web console available at
-[localhost:9000](http://localhost:9000/):
+`http://localhost:9000/`:
 
 ```questdb-sql
 CREATE TABLE sample_query_results AS (

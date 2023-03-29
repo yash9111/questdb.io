@@ -1,79 +1,54 @@
 ---
-title: How Reliable is Your Distributed Database?
+title: The Inner Workings of Distributed Databases
 author: Alex Pelagenko
 author_title: QuestDB team
 author_url: https://github.com/ideoma
 author_image_url: https://avatars.githubusercontent.com/ideoma
 description: Comparion of replication options of time-series databases.
-keywords:
-  - replication
-  - failover
-  - Write Ahead Log
-  - comparison
 image: /img/blog/2023-03-03/database-replication.png
-tags: [replication, comparison, engineering]
-slug: how-reliable-your-distributed-database
+tags: [replication, comparison, engineering, write ahead log, distributed, high availability, failover]
+slug: inner-workings-distributed-databases
 ---
 
-A brief analysis of what can go wrong with databases and how different
-time-series databases can use replication to solve common write failover
-scenarios.
+A introduction to how replication works in distributed databases,
+and how common write failover scenarios are handled by time-series databases.
 
 <!--truncate-->
 
+After being unable to ride my new electric bike to work yet again because it was in the shop
+(this time because of a wiring problem that prevented the bike from running!), I started to
+think about how I could create some redundancy in my biking setup so I wouldn't be stuck
+riding the Tube for weeks at a time due to simple maintenance or a supply chain issue. What if I had
+another bike to ride while my current one is being fixed? That would definitely help,
+but electric bikes are expensive, and there's little room to store a backup bike
+in my cozy London apartment.
+
+Believe it or not, this problem is similar to what I've been tackling at my
+day job as a database developer. Just like bicycles, databases can break down too!
+Sometimes hardware fails mysteriously, or a network config has changed and your database is no longer reachable.
+Sure, you could always restore your data from a backup onto new hardware in the event of a failure,
+but then you're stuck with downtime and potentially lost data; and that's assuming you've tested your restore
+process recently to ensure that it even works! Even if you're able to run a restore seamlessly, just like I need
+to wait for the shop to finish fixing my bike before I can start riding it
+to work again, you would also need to wait for the restore to complete and the new database to be configured before
+using it.
+
+But luckily, unlike my bike situation, modern databases have the capability to stay online and continue their normal
+operations when things go wrong. This is especially important in the world of time series databases,
+which are designed to be constantly writing data, in many cases almost nonstop. There's no time to restore from
+a backup, since precious data could be lost during any period of downtime.
+
+How can this happen? The answer is through replication! By synchronizing multiple database nodes and
+building a solution for moving execution over to healthy ones when a node breaks down (write failover),
+databases can ensure that no data is lost. This is like if I got a flat tire on my commute and could switch to a spare
+bike right on the spot in the middle of the road! Seems pretty cool, right?
+
 ## Failover
 
-Last year, I started to commute to the office since the pandemic loosened its
-grip on London life. To beat the traffic and unreliable (as well as expensive!)
-trains, I bought a quality electric bicycle from a famous Swiss-American brand.
-It's a well-thought-out device; sometimes I even want to call it a gadget!
-Despite how enjoyable it is, in the last 6 months, I've had to go to the bike
-repair shop to fix quite a few things. There were some gearbox glitches (yes, it
-has a gearbox), then broken electrical wiring to the backlight stopped the bike
-from running. Soon after that, I had to do some trivial maintenance, replacing
-the a tire and brake pads. Finally, the driving belt snapped (it has a belt
-instead of a chain). Electric bikes are hot at the moment, but not mainstream
-yet, and annoyingly it takes a few days or even weeks for the replacement parts
-to come in.
+Let's take a look at a scenario is when an application writes to a database, but it suddenly gets a network disconnect.
+What should happen in this case?
 
-import Banner from "@theme/Banner"
-
-<Banner
-  alt="commute failover problem"
-  height={439}
-  src="/img/blog/2023-03-03/electric_bike.jpeg"
-  width={650}
->
-  Commute failover problem
-</Banner>
-
-I like the bike when it works, but on its bad days, I cannot help but think that
-I have a strong case for redundancy. What if I had another bike to ride while my
-current one is being fixed? That would definitely help.
-
-In a sense, databases are like bicycles. Sometimes you ride them, but other
-times they can have a bad day. Fortunately, databases are much more reliable
-than my commuting piece of art, but there are still some rough edges. For
-example, if database hardware fails, there is an option to recover your data
-from a backup. But that would be comparable to going to the shop to buy a new
-bike every time it breaks. Even if a new bike was reasonably cheap, it would
-still take time to buy and set up; similar to how restoring DB backups also
-comes along with downtime. Ideally, I'd want to have a second bike ready to go
-as a hot backup, or in database terms, I'd want to have a replicated database
-node to switch to in case of a failure.
-
-Time series databases are designed to be writing data constantly, and one of the
-basic use cases of any time series database is to support nonstop writing. Using
-my bike analogy, if I had a device on my bicycle to record my trip with very
-high precision, saving the location multiple times per second, that would be
-somewhat similar to this requirement. And in an ideal world, if the bike breaks
-down, I could just switch to a spare right on the spot, in the middle of the
-road, and continue my journey along with all of my trip data saved without
-delay.
-
-A similar scenario is when an application writes to a database. When it sends
-inserts to a table and then suddenly gets a network disconnect, the application
-should switch to a replicated node and continue inserting.
+The application should switch to a replicated node and continue inserting data.
 
 For example, if I had an application `App` writing to DB `Node 1` with replica
 DB `Node 2` I could draw this scenario as a sequence diagram:
