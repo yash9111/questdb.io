@@ -298,6 +298,10 @@
   from ="/blog/how-reliable-your-distributed-database/"
   to = "/blog/inner-workings-distributed-databases/"
 
+[[redirects]]
+  from ="/blog/sql-performance-tuning-introducing-explain/"
+  to = "/blog/explain-sql-query-plan/"
+
 [[headers]]
   for = "/*"
   [headers.values]
