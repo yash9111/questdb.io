@@ -1,22 +1,5 @@
 const consts = require("./consts")
 
-const makeCloudUrl = () => {
-  const base = "https://cloud.questdb.com/"
-
-  const hasPosthog =
-    typeof window !== "undefined" &&
-    // use nullish coalescing operator, to avoid errors,
-    // because browser might have rejected posthog
-    window.posthog?.get_distinct_id
-
-  if (hasPosthog) {
-    const id = window.posthog.get_distinct_id()
-    return `${base}?utm_id=${id}`
-  }
-
-  return base
-}
-
 module.exports = {
   artifactHubUrl: "https://artifacthub.io/packages/helm/questdb/questdb",
   copyright: `Copyright © ${new Date().getFullYear()} QuestDB`,
@@ -37,5 +20,5 @@ module.exports = {
   videosUrl: "https://www.youtube.com/c/QuestDB",
   redditUrl: "https://www.reddit.com/r/questdb",
   linenUrl: "https://community-chat.questdb.io",
-  cloudUrl: makeCloudUrl(),
+  cloudUrl: "https://cloud.questdb.com/",
 }

@@ -1,9 +1,11 @@
 import React from "react"
 import styles from "./styles.module.css"
 import Button from "@theme/Button"
-import customFields from "../../../config/customFields"
+import { useCloudUrl } from "../../../utils/cloud-url"
 
 export const StartBuilding = () => {
+  const cloudUrl = useCloudUrl()
+
   return (
     <div className={styles.startBuildingRoot}>
       <img
@@ -23,7 +25,7 @@ export const StartBuilding = () => {
       <Button
         variant="primary"
         className={styles.startBuildingButton}
-        to={customFields.cloudUrl}
+        to={cloudUrl}
         newTab={false}
       >
         Start building now
