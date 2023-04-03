@@ -1,6 +1,5 @@
 import React from "react"
 import Layout from "../../theme/Layout"
-
 import { Section } from "../../components/Section"
 import { ActionFooter } from "../../components/ActionFooter"
 import { CompareFeatures } from "../../modules/cloud/CompareFeatures"
