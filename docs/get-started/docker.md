@@ -38,7 +38,7 @@ This can be done with a single command using:
 />
 
 This command starts a docker container from `questdb/questdb` image. In
-addition, it exposes some ports and also mounts a volume, to allow your data to persist.
+addition, it exposes some ports and also mounts a [volume](#v-parameter-to-mount-storage), to allow your data to persist.
 
 Below each parameter is described in detail.
 
@@ -67,19 +67,53 @@ following location:
 
 <!-- prettier-ignore-start -->
 
-export const volumeTabs = [
-  { label: "Linux", value: "linux", code: '/var/lib/questdb' },
-  { label: "macOS", value: "macos", code: '/var/lib/questdb' },
-  { label: "Windows", value: "windows", code: 'C:\\questdb' },
-]
+<Tabs defaultValue="nix" values={[
+  { label: "Linux/FreeBSD", value: "nix" },
+  { label: "macOS (Homebrew)", value: "macos" },
+  { label: "Windows", value: "windows" },
+]}>
 
-<Tabs defaultValue="linux" values={volumeTabs}>
-{ volumeTabs.map(tab => (
-  <TabItem key={tab.value} value={tab.value}>
-    <CodeBlock>{tab.code}</CodeBlock>
-  </TabItem>
-))}
+<!-- prettier-ignore-end -->
+
+<TabItem value="nix">
+
+
+```shell
+$HOME/.questdb
+```
+
+</TabItem>
+
+
+<TabItem value="macos">
+
+Path on Macs with Apple Silicon (M1 or M2) chip:
+
+```shell
+/opt/homebrew/var/questdb
+```
+
+Path on Macs with Intel chip:
+
+```shell
+/usr/local/var/questdb
+```
+
+</TabItem>
+
+
+<TabItem value="windows">
+
+
+```shell
+C:\Windows\System32\qdbroot
+```
+
+</TabItem>
+
+
 </Tabs>
+
 
 <!-- prettier-ignore-end -->
 
