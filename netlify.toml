@@ -306,6 +306,10 @@
   from ="/blog/migrating-relational-databases-time-series-databases/"
   to = "https://itnext.io/migrating-from-relational-databases-to-time-series-databases-9f059a3e34cb"
 
+[[redirects]]
+  from ="/blog/2022/06/07/data-pipeline-with-kafka-and-questdb/"
+  to = "/blog/processing-time-series-with-questdb-apache-kafka/"
+  
 [[headers]]
   for = "/*"
   [headers.values]
