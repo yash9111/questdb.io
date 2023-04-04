@@ -10,6 +10,9 @@ tags: [kafka, tutorial, time-series, market data]
 slug: processing-time-series-with-questdb-apache-kafka
 ---
 
+## Introduction: Choosing Apache Kafka and QuestDB to stream time-series data
+
+
 Apache Kafka is a battle-tested distributed stream-processing platform popular
 in the financial industry to handle mission-critical transactional workloads.
 Kafka's ability to handle large volumes of real-time market data makes it a core
@@ -196,7 +199,7 @@ Create the sink for SPY as well:
 curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @questdb-sink-SPY.json http://localhost:8083/connectors
 ```
 
-## Streaming real-time stock quotes
+## Streaming real-time stock quotes with Apache Kafka and QuestDB
 
 Now that we have our data pipeline set up, we are ready to stream real time
 stock quotes to Kafka and store them in QuestDB.
@@ -356,7 +359,7 @@ SELECT avg(price), timestamp FROM topic_SPY SAMPLE BY 2m;
 
 ![Screenshot of the result ot the SAMPLE BY statement](/img/blog/2023-03-31/sample-by-spy.png)
 
-### Conclusion
+## Conclusion
 
 Kafka is a trusted component of data pipelines handling large amounts of time
 series data such as financial data. Kafka can be used to stream mission-critical
@@ -372,3 +375,13 @@ up. The
 [GitHub repo](https://github.com/questdb/kafka-questdb-connector/tree/main/kafka-questdb-connector-samples)
 for the connector also has sample projects including a Node.js and a Java
 example for those looking to extend this reference architecture.
+
+## Additional resources
+
+[Apache Kafka Connector for QuestDB](/docs/third-party-tools/kafka/questdb-kafka/)
+
+[Finnhub API documentation](https://finnhub.io/docs/api)
+
+[Realtime crypto tracker with QuestDB Kafka Connector](/blog/realtime-crypto-tracker-with-questdb-kafka-connector/)
+
+[Real-time analytics and anomaly detection with Apache Kafka, Apache Flink, Grafana & QuestDB](https://www.youtube.com/watch?v=256354kG66A)
