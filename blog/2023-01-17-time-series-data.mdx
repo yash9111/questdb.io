@@ -9,7 +9,7 @@ description:
   time-series database is best suited to process this data type.
 image: /img/blog/2023-01-17/banner.jpg
 tags:
-  [time-series, time-series data, tsdb, time-series database, community, SQL]
+  [time-series, time-series data, tsdb, time-series database, SQL]
 slug: time-series-data
 ---
 
@@ -25,6 +25,8 @@ import Screenshot from "@theme/Screenshot"
   Photo by <a href="https://unsplash.com/photos/uCMKx2H1Y38">AbsolutVision</a>{" "}
   on <a href="https://unsplash.com">Unsplash</a>
 </Banner>
+
+## Introduction
 
 This blog post covers the basics of time-series data and its most common use
 cases and applications. We introduce the time-series database category, which has
@@ -50,19 +52,81 @@ even nanosecond, and the trend is best presented as time-series data.
   width={650}
 />
 
-Time-series data has always been plentiful in financial services with
-fast-changing tick price data and in e-commerce/ad-tech to better understand
-user analytics. With the rise in connected devices, application monitoring, and
-observability, time-series data is now critical in nearly all fields. We list a
-couple of examples below:
+## Examples of time-series data
+
+### Financial markets
 
 <Screenshot
-  alt="Table showing time series data use cases by segment"
-  height={327}
-  src="/img/blog/2023-01-17/useCases.png"
-  title="The primary use cases for time-series databases such as QuestDB"
-  width={650}
+  alt="Price of BTC and ETH"
+  width={892}
+  height={432}
+  src="/img/blog/2023-01-17/btc-eth-chart.png"
+  title="Chart with price of Bitcoin and Ethereum"
 />
+
+Financial markets are the birthplace of time-series data. The price of securities
+change quickly, and every increment is known as tick data. Those increments can be
+in milliseconds, microseconds or even nanoseconds. 
+
+Financial exchanges expose the price of stocks, but there is also a broader spectrum
+of securities, such as commodities and bonds. Since 2009, a new asset class has emerged
+with cryptocurrencies such as Bitcoin and Ethereum.
+
+### Sensor data and industrial analytics
+
+Time-series data is a critical component in various industries, including energy,
+space exploration, telco, and manufacturing. 
+
+In oil & gas exploration, sensors are used to measure the pressure, temperature,
+and flow rates of oil wells. Similarly, in electricity grids, smart meters are
+used to record the energy consumption of households and businesses, generating 
+time-series data that can be analyzed to optimize the grid's performance. 
+
+In space exploration, sensors and monitoring devices are installed throughout the rocket,
+including the engine. This data includes critical parameters such as pressure, temperature,
+fuel consumption, and thrust, which are recorded over time.
+The data is used to monitor the rocket's performance, optimize trajectory and fuel consumption,
+and detect anomalies in real-time.
+
+### Application metrics and analytics
+
+The behaviour of users on an application or website is often analyzed to refine
+the user journey. In e-commerce, companies track and react to consumer behaviors dynamically,
+in order to automate marketing campaign triggers. To do so, they record online order tracking,
+keyword searches, and log user interaction with online advertisement. 
+
+These analytics are often displayed in real-time on a dashboard such as Grafana. 
+
+Other industries of choice for analytics include cyber security (network flow data),
+DevOps (servers), SaaS apps and Web3.
+
+<Screenshot
+  src="/img/pages/case-study/central-group/dashboard-2.png"
+  width={819}
+  height={308}
+  title="Marketing performance tracking dashboard, allowing dynamic comparison
+amongst several ad platforms (screenshot altered to protect sensitive data)."
+/>
+
+### Asset tracking
+
+The integration of GPS sensors into a fleet of delivery trucks enables 
+real-time tracking of their location, speed, and direction. The resulting time-series data
+is typically transmitted to a central server for analysis. By analyzing this data, logistics
+and mobility operators can optimize delivery schedules, reduce fuel consumption, and monitor fleets behavior.
+
+Additionally to timestamped data, geospatial data is also in use to track the location of 
+objects on a map. QuestDB features the [geohash data type](/docs/concept/geohashes/)
+natively.
+
+### Machine learning forecasting 
+
+Machine learning forecasting models use time-series data to predict future values of a variable
+by learning from past patterns and trends. These models take into account seasonality, 
+trends, and fluctuations in the data to make accurate forecasts. 
+Prophet is an example of a forecasting model developed by Facebook.
+
+## Time-series data features
 
 Time-series data has several unique characteristics:
 
@@ -87,7 +151,7 @@ database category for the past five years according to
   width={650}
 />
 
-## The design of a time-series database
+## Time-series databases are optimized to process time-series data
 
 As use cases and the need for time series analysis are increasing exponentially, so is the amount of raw data itself. To
 better cope with the ever-growing amount of data, time-series databases emerged a decade ago. They focus on performance
