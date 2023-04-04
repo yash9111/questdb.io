@@ -25,7 +25,7 @@ first failure. It is therefore possible to add some columns and not others.
 ![Flow chart showing the syntax of the ALTER TABLE keyword](/img/docs/diagrams/alterTable.svg)
 ![Flow chart showing the syntax of ALTER TABLE with ADD COLUMN keyword](/img/docs/diagrams/alterTableAddColumn.svg)
 
-## Examples
+## SQL ADD COLUMN Examples
 
 ### Add a column to a table
 
