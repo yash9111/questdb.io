@@ -30,16 +30,15 @@ data.
 
 You'll need a few things installed and set up to get started.
 
-**QuestDB:**: [Install QuestDB](/docs/#get-started).
+- QuestDB: [Install QuestDB](/docs/#get-started).
 
-**Jupyter Notebooks:**: These interactive Python environments will help you run
+- Jupyter Notebooks: These interactive Python environments will help you run
 a complete version of this tutorial.
 
 To run it, you should:
 
-- make sure you are running Python 3.x and not Python 2.7. If you're in doubt,
-  check `python --version`.
-- install Jupyter Notebooks and make sure that the libraries we use in this
+- install Jupyter Notebooks
+- make sure that the libraries we use in this
   tutorial are also installed:
 
   ```shell
@@ -50,7 +49,7 @@ To run it, you should:
 - clone [this repository](https://github.com/davidgs/QuestNotebook)
   (`git clone https://github.com/davidgs/QuestNotebook`) in the repository
   directory running Jupyter Notebook
-
+<!--https://github.com/questdb/QuestNotebook-->
 - Start a Jupyter Notebook by running:
   ```shell
   jupyter notebook
@@ -60,10 +59,6 @@ To run it, you should:
 That will get you right back to a page that looks very similar to this that is
 interactive, allowing you to run the code and interact with the database
 yourself.
-
-If you get errors like `ModuleNotFoundError: No module named 'requests'` for any
-of the libraries you installed above, double-check that you are actually using
-Python 3.x `jupytper --path` will let you know if Jupyter is using 2.7 or 3.x
 
 ## Create a database
 
@@ -88,10 +83,11 @@ than once, subsequent runs will return `400` because the database already
 exists:
 
 ```python
-import requests import urllib.parse as par
+import requests 
+import urllib.parse as par
   q = 'create table balances'\
     '(cust_id int,'\
-    ' balance_ccy sym,'\
+    ' balance_ccy symbol,'\
     'balance double,'\
     'inactive boolean,'\
     'timestamp timestamp)'\
@@ -150,7 +146,7 @@ rawData = r.text
 print(rawData)
 ```
 
-## Read the content into pandas dataframe
+## Read the content into Pandas DataFrame
 
 So you'll notice that the returned data is just a massive CSV string. If you'd
 rather have JSON data, then you would change the endpoint to
@@ -196,13 +192,13 @@ q = "select cust_id,"\
 query = urllib.parse.quote(q)
 r = requests.get("http://localhost:9000/exp?query=" + query)
 queryData = r.text
-rawData = pd.read_csv(io.StringIO(queryData.decode('utf-8')), parse_dates=['timestamp'])
+rawData = pd.read_csv(queryData.decode('utf-8'), parse_dates=['timestamp']))
 print(rawData)
 ```
 
 ## Plot the data
 
-We will use matplotlib to plot the data
+We will use `matplotlib` to plot the data
 
 ```python
 from matplotlib import pyplot as plt
@@ -233,7 +229,7 @@ find some great uses for it!
 
 ## Additional information
 
-We also built [`play`](https://play.questdb.io/) for anyone to try our database
+We also built a project, [`play`](https://play.questdb.io/), for anyone to try our database
 with a Jupyter Notebook, data, sample code, queries, and graphs.
 
 If you enjoyed this tutorial, please
