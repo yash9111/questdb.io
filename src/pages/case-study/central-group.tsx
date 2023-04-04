@@ -237,7 +237,7 @@ const CentralGroup = () => {
               <li>E-commerce platforms: Online order tracking.</li>
               <li>Analytical data: Keyword searches, user data analysis.</li>
               <li>
-                Online marketing data: Unser interaction with social media
+                Online marketing data: User interaction with social media
                 feeds, online advertisement.
               </li>
             </ul>
