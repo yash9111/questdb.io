@@ -178,11 +178,7 @@ function BlogListPage(props: Props): JSX.Element {
           </div>
         )}
 
-        {isBlogOnlyMode ? (
-          <h1>Blog Posts</h1>
-        ) : (
-          <h2>{allPostsTitle(currentTagName)}</h2>
-        )}
+        <h1>{isBlogOnlyMode ? "Blog Posts" : allPostsTitle(currentTagName)}</h1>
 
         <div className={styles.posts}>
           {posts.map(({ content }, i) => (
