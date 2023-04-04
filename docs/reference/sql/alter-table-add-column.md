@@ -1,7 +1,7 @@
 ---
 title: ALTER TABLE ADD COLUMN
 sidebar_label: ADD COLUMN
-description: ALTER TABLE ADD COLUMN SQL keyword adds a column to a table..
+description: ALTER TABLE ADD COLUMN SQL keyword adds a column to a table.
 ---
 
 `ALTER TABLE ADD COLUMN` adds a column of any specified type to an existing table.
