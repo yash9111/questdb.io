@@ -1,10 +1,10 @@
 ---
 title: ALTER TABLE ADD COLUMN
 sidebar_label: ADD COLUMN
-description: ALTER TABLE ADD COLUMN SQL keyword reference documentation.
+description: ALTER TABLE ADD COLUMN SQL keyword adds a column to a table..
 ---
 
-Adds a new column of a specified type to an existing table.
+`ALTER TABLE ADD COLUMN` adds a column of any specified type to an existing table.
 
 The new column is not back-populated even if the table contains data. While a
 single column is added atomically, adding multiple columns is not an atomic
@@ -27,11 +27,15 @@ first failure. It is therefore possible to add some columns and not others.
 
 ## Examples
 
+### Add a column to a table
+
 Add a new column called `comment` of type `STRING` type to the table `ratings`
 
 ```questdb-sql title="New column"
 ALTER TABLE ratings ADD COLUMN comment STRING;
 ```
+
+### Add a `symbol` column to table with optional keywords
 
 When adding a column of `Symbol` type, optional keywords may be passed which are
 unique to this type. These keywords are described in the
