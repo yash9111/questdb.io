@@ -30,7 +30,7 @@ this will be `http://localhost:9000/`.
 
 import Screenshot from "@theme/Screenshot"
 
-<a href="web-console">
+<a href="/docs/develop/web-console/">
     <Screenshot
     alt="Screenshot of the Web Console"
     height={375}

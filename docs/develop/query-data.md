@@ -30,7 +30,7 @@ QuestDB ships with an embedded Web Console running by default on port `9000`.
 
 import Screenshot from "@theme/Screenshot"
 
-<a href="web-console">
+<a href="/docs/develop/web-console/">
     <Screenshot
     alt="Screenshot of the Web Console"
     height={375}
