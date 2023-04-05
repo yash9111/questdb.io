@@ -68,7 +68,7 @@ export const ContactForm = ({
               </p>
             ) : (
               <div className={style.content}>
-                <h2 className={style.formTitle}>Join private preview</h2>
+                <h2 className={style.formTitle}>Contact us</h2>
                 {typeof interestedIn === "string" && (
                   <input
                     type="hidden"
@@ -112,7 +112,7 @@ export const ContactForm = ({
                     type="submit"
                     dataHook="contact-form-submit"
                   >
-                    {loading ? "Sending..." : "Sign up for early access"}
+                    {loading ? "Sending..." : "Submit message"}
                   </Button>
                 </div>
               </div>
@@ -120,11 +120,11 @@ export const ContactForm = ({
           </CSSTransition>
         </TransitionGroup>
       </form>
-      <div className={style.bookADemo}>
+      <div className={style.actions}>
         <SvgImage image={<CameraIcon />} title="An icon showing a camera" />
         <span>
-          If you want to know more,{" "}
-          <Link to="/cloud/book-a-demo/">book a demo</Link>.
+          Alternatively, <Link to="/cloud/book-a-demo/">book a Cloud demo</Link>
+          .
         </span>
       </div>
     </div>

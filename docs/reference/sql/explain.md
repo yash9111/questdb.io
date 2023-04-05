@@ -261,4 +261,4 @@ methods.
 
 This section includes links to additional information such as tutorials:
 
-- [SQL Performance Tuning: Introducing EXPLAIN](/blog/sql-performance-tuning-introducing-explain/)
+- [SQL Performance Tuning: Introducing EXPLAIN](/blog/explain-sql-query-plan/)

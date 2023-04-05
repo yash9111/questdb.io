@@ -5,8 +5,8 @@ author_title: Guest
 author_url: https://github.com/gabor-boros
 author_image_url: https://avatars.githubusercontent.com/gabor-boros
 description:
-  Learn how to improve your time series analysis capability by using the QuestDB
-  Python package to ingest Pandas DataFrames.
+  Learn how to use the QuestDB Python package 
+  to ingest Pandas DataFrames.
 keywords:
   - timeseries
   - questdb
@@ -28,40 +28,36 @@ import Banner from "@theme/Banner"
   width={770}
 />
 
-Learn how to improve your time series analysis capability by using the QuestDB
-Python package to ingest Pandas DataFrames.
+Learn how to use the QuestDB Python package to ingest Pandas DataFrames.
 
 <!--truncate-->
 
-## Introduction
+## Introduction to Pandas and QuestDB
 
 Pandas is an open-source data analysis and data manipulation library for Python
 that has become an essential tool for data scientists and analysts. It provides
 a simple and intuitive way to manipulate data, making it a popular choice for
 data analysis tasks. However, while Pandas is excellent for small to
 medium-sized datasets, it can struggle with large datasets that exceed the
-available memory of the machine it is running on. This is where QuestDB excels,
-designed specifically for high-performance operations in such
-scenarios, making it the go-to solution for demanding data analysis tasks. By
-loading Pandas DataFrames into QuestDB, we can leverage
+available memory of the machine it is running on. 
+
+This is where QuestDB comes in, as it is well suited for processing large 
+time-series datasets. By loading Pandas DataFrames into QuestDB, we can leverage
 [powerful data processing capabilities](https://github.com/questdb/py-tsbs-benchmark#serialization-network-send--data-insertion-into-questdb)
-of the database, allowing you to scale your analysis and data manipulation
-operations to large datasets. We will learn how to load large
-Pandas dataframes into QuestDB. We use yellow and green taxi trip records
-published by NYC Taxi & Limousine Commission as our data source.
+of the database, allowing you to analyze and manipulate large datasets. 
 
 In this tutorial, we will learn how to load large Pandas dataframes into
 QuestDB. We use yellow and green taxi trip records published by NYC Taxi &
 Limousine Commission as our data source.
 
-## Prerequisites
+## Prerequisites to start loading Pandas DataFrames into QuestDB
 
 For this tutorial, it is recommended to have a basic understanding of Python,
 and SQL. Also, you will need to have the following installed on your machine:
 
 - Docker
 
-## Getting the data to ingest
+## Downloading the dataset before loading it using Pandas
 
 Before we begin loading the data into QuestDB, we need to obtain the data that
 we will be working with. As mentioned above, we will use the NYC TLC’s records
@@ -80,9 +76,9 @@ Make sure you replace `<MONTH>` with the zero-prefixed number of the month you
 wish to download (between 01 and 11, the 12th month is not available at the time
 of writing).
 
-Now, we have the data to ingest. It is time to try loading it using Pandas.
+Now, we have the data. It is time to try loading it using Pandas.
 
-## Loading records into memory
+## Loading Parquet files into memory using Pandas
 
 You may already have noticed that the downloaded files are in Parquet format.
 Parquet is a columnar storage format commonly used for big data processing. They
@@ -103,7 +99,7 @@ or the OS will OOM kill the process we are running.
 docker run -it -m 1g -v "$(pwd)":/tutorial -w /tutorial --net host python:3.11.1-slim-bullseye /bin/bash
 ```
 
-Right, we have an Ubuntu-based Python 3.11 docker container. Let’s install our
+We have an Ubuntu-based Python 3.11 docker container. Let’s install our
 requirements. Create a `requirements.txt` file with the content below:
 
 ```txt title="requirements.txt"
@@ -128,12 +124,12 @@ print(df.head())
 
 ```
 
-Now, execute it within the docker container by running `python data_loader.py`.
+Execute it within the docker container by running `python data_loader.py`.
 The program runs successfully and we should see the following:
 
 ![A screenshot of the result of running data_loader.py: an overview of the data loaded](/img/blog/2023-03-09/data-loader-test.png)
 
-We just loaded the taxi trip records for 2022 January! Let’s try to load more
+We have just loaded the taxi trip records for 2022 January! Let’s try to load more
 data. Replace the content of `data_loader.py` by the code below to load all
 files from the data directory and execute the program again:
 
@@ -156,7 +152,7 @@ When executing the `data_loader.py` you should get an error message: “Killed�
 As you may assume, OOM killer terminated the process. We were not able to load
 the dataset, therefore we cannot work with that. We need a different approach.
 
-## Ingesting to QuestDB
+## Ingesting to QuestDB from Pandas DataFrames using the Python Client
 
 In a new terminal window, start a QuestDB container by executing:
 
@@ -205,7 +201,7 @@ directly from Pandas DataFrames.
 
 In the Python container, run `python data_loader.py`. The script will ingest one parquet file at a time.
 
-## Working with trip data
+## Executing some queries and loading the output into DataFrames
 
 So far, we have prepared the dataset and loaded it into QuestDB. It’s time to
 execute some queries and load the result into DataFrames. Using the whole
@@ -268,3 +264,13 @@ using Pandas and QuestDB. You can customize this method to suit your specific
 needs and continue to explore the possibilities of these powerful tools. The end
 goal is to make data analysis and manipulation easier and more efficient,
 regardless of the size of the dataset.
+
+You can check the [documentation for Pandas](/docs/third-party-tools/pandas/) and learn 
+more about the [InfluxDB Line Protocol](/docs/develop/insert-data/#influxdb-line-protocol).
+
+## Additional resources
+
+[Pandas DataFrames Documentation](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame)
+
+[Tutorial: How to Create and Use a Pandas DataFrame](https://www.dataquest.io/blog/tutorial-how-to-create-and-use-a-pandas-dataframe/)
+

@@ -190,7 +190,7 @@ const CentralGroup = () => {
             are collected into our data pipelines and our solution displays the
             information as analytical dashboards on Grafana. Real-time
             monitoring means that the business unit can take corrective actions
-            promptly if any abnormalities are detected.
+            promptly if any anomalies are detected.
           </p>
 
           <p className="font-size--large">
@@ -237,7 +237,7 @@ const CentralGroup = () => {
               <li>E-commerce platforms: Online order tracking.</li>
               <li>Analytical data: Keyword searches, user data analysis.</li>
               <li>
-                Online marketing data: Unser interaction with social media
+                Online marketing data: User interaction with social media
                 feeds, online advertisement.
               </li>
             </ul>

@@ -23,31 +23,13 @@ const currentOpenings: Opening[] = [
   },
   {
     href: "/careers/senior-backend-engineer-python/",
-    title: "Backend Engineers (Python)",
+    title: "Backend Engineer (Python)",
     location: "Remote",
   },
 
   {
     href: "/careers/core-database-engineer/",
     title: "Core Database Engineers",
-    location: "Remote",
-  },
-
-  {
-    href: "/careers/developer-relations-engineer/",
-    title: "Developer Relations Engineers",
-    location: "Remote",
-  },
-
-  {
-    href: "/careers/senior-cloud-engineer/",
-    title: "Cloud Engineers",
-    location: "Remote",
-  },
-
-  {
-    href: "/careers/solution-engineer/",
-    title: "Solution Engineer",
     location: "Remote",
   },
 ]
