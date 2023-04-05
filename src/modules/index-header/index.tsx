@@ -2,9 +2,11 @@ import React from "react"
 import Button from "@theme/Button"
 import { Section } from "../../components/Section"
 import styles from "./styles.module.css"
-import customFields from "../../config/customFields"
+import { useCloudUrl } from "../../utils/cloud-url"
 
 export const Header = () => {
+  const cloudUrl = useCloudUrl()
+
   return (
     <Section fullWidth center>
       <div className={styles.titles}>
@@ -19,7 +21,7 @@ export const Header = () => {
         </Section.Subtitle>
 
         <div className={styles.mainCTA}>
-          <Button to={customFields.cloudUrl} newTab={false}>
+          <Button to={cloudUrl} newTab={false}>
             Start building with Cloud
           </Button>
           <span>$200 in free credits</span>

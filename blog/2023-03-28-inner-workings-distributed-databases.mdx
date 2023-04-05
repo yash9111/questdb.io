@@ -5,48 +5,73 @@ author_title: QuestDB team
 author_url: https://github.com/ideoma
 author_image_url: https://avatars.githubusercontent.com/ideoma
 description: Comparion of replication options of time-series databases.
-image: /img/blog/2023-03-03/database-replication.png
-tags: [replication, comparison, engineering, write ahead log, distributed, high availability, failover]
+image: /img/blog/2023-03-28/database-replication.png
+tags:
+  [
+    replication,
+    comparison,
+    engineering,
+    write ahead log,
+    distributed,
+    high availability,
+    failover,
+  ]
 slug: inner-workings-distributed-databases
 ---
 
-A introduction to how replication works in distributed databases,
-and how common write failover scenarios are handled by time-series databases.
+import Banner from "@theme/Banner"
 
-<!--truncate-->
+<Banner
+  alt="The problem of replication"
+  src="/img/blog/2023-03-28/database-replication.png"
+  width={530}
+></Banner>
 
-After being unable to ride my new electric bike to work yet again because it was in the shop
-(this time because of a wiring problem that prevented the bike from running!), I started to
-think about how I could create some redundancy in my biking setup so I wouldn't be stuck
-riding the Tube for weeks at a time due to simple maintenance or a supply chain issue. What if I had
-another bike to ride while my current one is being fixed? That would definitely help,
-but electric bikes are expensive, and there's little room to store a backup bike
-in my cozy London apartment.
+After being unable to ride my new electric bike to work yet again because it was
+in the shop (this time because of a wiring problem that prevented the bike from
+running!), I started to think about how I could create some redundancy in my
+biking setup so I wouldn't be stuck riding the Tube for weeks at a time due to
+simple maintenance or a supply chain issue. What if I had another bike to ride
+while my current one is being fixed? That would definitely help, but electric
+bikes are expensive, and there's little room to store a backup bike in my cozy
+London apartment.
 
-Believe it or not, this problem is similar to what I've been tackling at my
-day job as a database developer. Just like bicycles, databases can break down too!
-Sometimes hardware fails mysteriously, or a network config has changed and your database is no longer reachable.
-Sure, you could always restore your data from a backup onto new hardware in the event of a failure,
-but then you're stuck with downtime and potentially lost data; and that's assuming you've tested your restore
-process recently to ensure that it even works! Even if you're able to run a restore seamlessly, just like I need
-to wait for the shop to finish fixing my bike before I can start riding it
-to work again, you would also need to wait for the restore to complete and the new database to be configured before
-using it.
+Believe it or not, this problem is similar to what I've been tackling at my day
+job as a database developer. Just like bicycles, databases can break down too!
+Sometimes hardware fails mysteriously, or a network config has changed and your
+database is no longer reachable. Sure, you could always restore your data from a
+backup onto new hardware in the event of a failure, but then you're stuck with
+downtime and potentially lost data; and that's assuming you've tested your
+restore process recently to ensure that it even works! Even if you're able to
+run a restore seamlessly, just like I need to wait for the shop to finish fixing
+my bike before I can start riding it to work again, you would also need to wait
+for the restore to complete and the new database to be configured before using
+it.
 
-But luckily, unlike my bike situation, modern databases have the capability to stay online and continue their normal
-operations when things go wrong. This is especially important in the world of time series databases,
-which are designed to be constantly writing data, in many cases almost nonstop. There's no time to restore from
-a backup, since precious data could be lost during any period of downtime.
+But luckily, unlike my bike situation, modern databases have the capability to
+stay online and continue their normal operations when things go wrong. This is
+especially important in the world of time series databases, which are designed
+to be constantly writing data, in many cases almost nonstop. There's no time to
+restore from a backup, since precious data could be lost during any period of
+downtime.
 
-How can this happen? The answer is through replication! By synchronizing multiple database nodes and
-building a solution for moving execution over to healthy ones when a node breaks down (write failover),
-databases can ensure that no data is lost. This is like if I got a flat tire on my commute and could switch to a spare
-bike right on the spot in the middle of the road! Seems pretty cool, right?
+How can this happen? The answer is through replication! By synchronizing
+multiple database nodes and building a solution for moving execution over to
+healthy ones when a node breaks down (write failover), databases can ensure that
+no data is lost. This is like if I got a flat tire on my commute and could
+switch to a spare bike right on the spot in the middle of the road! Seems pretty
+cool, right?
+
+As we start our journey towards making QuestDB distributed, we take the time to
+analyze how several popular time-series/OLAP databases implement high
+availability to highlight the pros and cons of each approach. Along with a
+review of the fundamentals, we also share QuestDB's own approach and our plans
+for the future.
 
 ## Failover
 
-Let's take a look at a scenario is when an application writes to a database, but it suddenly gets a network disconnect.
-What should happen in this case?
+Let's take a look at a scenario is when an application writes to a database, but
+it suddenly gets a network disconnect. What should happen in this case?
 
 The application should switch to a replicated node and continue inserting data.
 
@@ -55,7 +80,7 @@ DB `Node 2` I could draw this scenario as a sequence diagram:
 
 <Banner
   alt="Write failover use case"
-  src="/img/blog/2023-03-03/Write failover sequence diagram.png"
+  src="/img/blog/2023-03-28/Write failover sequence diagram.png"
   width={531}
 >
   Write failover use case
@@ -86,21 +111,22 @@ To summarize, a database needs to be able to:
 
 Different things can go wrong with databases when a failure happens. For
 instance, there can be two reasons why the database `Node 1` may not reply to
-the second insert, `insert into A values(2)`: it can either be that the node fails to receive and
-process the transaction, or that the data is inserted but the OK reply is not delivered back to the
-application due to a network disconnect.
+the second insert, `insert into A values(2)`: it can either be that the node
+fails to receive and process the transaction, or that the data is inserted but
+the OK reply is not delivered back to the application due to a network
+disconnect.
 
 To avoid losing the second insert after disconnecting from `Node 1`, the
-application has to repeat transaction `insert into A values(2)` to `Node 2`.
-The application also has to do the repeated `insert into A values(2)` attempt
-in such a way that the database does not create a duplicate row
-in the case when the same insert has already been processed by `Node 1`
-but an OK reply is not delivered back to the application.
-In order to achieve these goals, all data inserted into `Node 1` has to be readable from `Node 2`
-immediately for the application to perform the deduplication on failures. Alternatively,
-there must be another built-in mechanism to de-duplicate the inserted data in
-the database. This leads to the conclusion that at least one of the points
-below has to exist for no-gap, no-duplicate write failover:
+application has to repeat transaction `insert into A values(2)` to `Node 2`. The
+application also has to do the repeated `insert into A values(2)` attempt in
+such a way that the database does not create a duplicate row in the case when
+the same insert has already been processed by `Node 1` but an OK reply is not
+delivered back to the application. In order to achieve these goals, all data
+inserted into `Node 1` has to be readable from `Node 2` immediately for the
+application to perform the deduplication on failures. Alternatively, there must
+be another built-in mechanism to de-duplicate the inserted data in the database.
+This leads to the conclusion that at least one of the points below has to exist
+for no-gap, no-duplicate write failover:
 
 - Data written to one node is immediately selectable through all other replicas
   so that the writing application can check for the duplicates
@@ -113,7 +139,8 @@ The first bullet point above is also called Synchronous (Sync) Replication where
 contrast, Asynchronous (Async) replication allows `Node 1` to reply `OK` to the
 `App` before replicating the inserted data to `Node 2`. This way `Node 2` may
 not receive the first insert before `Node 1` goes down, so the database will
-have to reattempt to replicate the data when `Node 1` is started or connected back.
+have to reattempt to replicate the data when `Node 1` is started or connected
+back.
 
 ## Choice of replication flavor
 
@@ -125,7 +152,7 @@ bikes, and that it's nearly impossible to actually cycle quickly!
 
 <Banner
   alt="Sync bike riding"
-  src="/img/blog/2023-03-03/bikes_alongside.jpeg"
+  src="/img/blog/2023-03-28/bikes_alongside.jpeg"
   width={650}
 >
   Sync replication bike riding
@@ -196,9 +223,9 @@ down (STONISHed) and there is no trivial way to move the missing data from that
 ## ClickHouse
 
 ClickHouse had been developed open source for many years by Yandex, a search
-provider in Russia. ClickHouse's functionality in open source (Apache 2.0)
-is comprehensive and includes high availability and horizontal scaling.
-There are also quite a few independent managed cloud offerings that support ClickHouse:
+provider in Russia. ClickHouse's functionality in open source (Apache 2.0) is
+comprehensive and includes high availability and horizontal scaling. There are
+also quite a few independent managed cloud offerings that support ClickHouse:
 
 - [ClickHouse (Yandex spin-off)](https://clickhouse.com/cloud)
 - [Altinity](https://altinity.com/)
@@ -233,7 +260,7 @@ The same process happens simultaneously with `INSERT 2`.
 
 <Banner
   alt="ClickHouse multi-master replication"
-  src="/img/blog/2023-03-03/Multi-maser-replication-ClickHouse.png"
+  src="/img/blog/2023-03-28/Multi-maser-replication-ClickHouse.png"
   width={744}
 >
   ClickHouse multi-master replication
@@ -298,7 +325,7 @@ officially provides.
 
 <Banner
   alt="InfluxDB cloud architecture"
-  src="/img/blog/2023-03-03/Influx Cloud Architecture.png"
+  src="/img/blog/2023-03-28/Influx Cloud Architecture.png"
   width={750}
 >
   InfluxDB cloud architecture
@@ -309,9 +336,10 @@ over a Kafka cluster. It is a clean solution that solves the durability and
 distribution of the WAL and ensures that the data is already replicated when the
 client receives a write confirmation.
 
-WAL application to "Queriable" table storage runs asynchronously in the Ingester component,
-consuming messages from Kafka and writing them to 2 independent TSDB copies. There is a delay
-between reading the message confirmed to be written, in Influx terms this is called
+WAL application to "Queriable" table storage runs asynchronously in the Ingester
+component, consuming messages from Kafka and writing them to 2 independent TSDB
+copies. There is a delay between reading the message confirmed to be written, in
+Influx terms this is called
 [Time to Become Readable](https://docs.influxdata.com/influxdb/cloud/reference/internals/ttbr/).
 
 Influx protocol messages are idempotent in the sense that the same message can
@@ -358,9 +386,9 @@ row out of the 3:
 | 1      | 2000   | 2023-03-03T13:59:50.000Z |
 
 It can even be that the first query returns `field1=1`, a second query returns
-`field1=2` and then a third tries flipping back to `field1=1`. Eventually, the query
-result will become stable and return the same data on each run. This is a very
-typical outcome for querying nodes in Round Robin with Async replication.
+`field1=2` and then a third tries flipping back to `field1=1`. Eventually, the
+query result will become stable and return the same data on each run. This is a
+very typical outcome for querying nodes in Round Robin with Async replication.
 
 The Influx data model also solves the problem of a dynamically evolving schema.
 Since there are no traditional columns (since any unknown fields and tags that
@@ -437,7 +465,7 @@ also be be performed in parallel.
 
 <Banner
   alt="QuestDB WAL writing"
-  src="/img/blog/2023-03-03/QuestDB sequencer WAL diagram.png"
+  src="/img/blog/2023-03-28/QuestDB sequencer WAL diagram.png"
   width={750}
 >
   QuestDB WAL writing

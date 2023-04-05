@@ -4,7 +4,9 @@ description: FAQ for QuestDB troubleshooting.
 ---
 
 The following document contains common hardware and software configuration
-issues met when running QuestDB, as well as solutions to them.
+issues met when running QuestDB, as well as solutions to them. If you cannot
+find the answers to your question, please join our
+[Slack Community]({@slackUrl@}) and post your questions there.
 
 ## Where do I find the log and how tdo I filed the log messages?
 
