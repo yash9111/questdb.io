@@ -59,7 +59,7 @@ The below is some examples of log messages by type.
 
 Advisory:
 
-```shell
+```
 2023-02-24T14:59:45.076113Z A server-main Config:
 2023-02-24T14:59:45.076130Z A server-main  - http.enabled : true
 2023-02-24T14:59:45.076144Z A server-main  - tcp.enabled  : true
@@ -68,7 +68,7 @@ Advisory:
 
 Critical:
 
-```shell
+```
 
 2022-08-08T11:15:13.040767Z C i.q.c.p.WriterPool could not open [table=`sys.text_import_log`, thread=1, ex=could not open read-write [file=/opt/homebrew/var/questdb/db/sys.text_import_log/_todo_], errno=13]
 ...
@@ -79,7 +79,7 @@ Critical:
 
 Error:
 
-```shell
+```
 2023-02-24T14:59:45.059012Z I i.q.c.t.t.InputFormatConfiguration loading input format config [resource=/text_loader.json]
 ...
 2023-03-20T08:38:17.076744Z E i.q.c.l.u.AbstractLineProtoUdpReceiver could not set receive buffer size [fd=140, size=8388608, errno=55]
@@ -89,13 +89,23 @@ Error:
 
 Info:
 
-```shell
+```
 2020-04-15T16:42:32.879970Z I i.q.c.TableReader new transaction [txn=2, transientRowCount=1, fixedRowCount=1, maxTimestamp=1585755801000000, attempts=0]
 2020-04-15T16:42:32.880051Z I i.q.g.FunctionParser call to_timestamp('2020-05-01:15:43:21','yyyy-MM-dd:HH:mm:ss') -> to_timestamp(Ss)
 2020-04-15T16:42:32.880657Z I i.q.c.p.WriterPool >> [table=`table_1`, thread=12]
 2020-04-15T16:42:32.881330Z I i.q.c.AppendMemory truncated and closed [fd=32]
 2020-04-15T16:42:32.881448Z I i.q.c.AppendMemory open /usr/local/var/questdb/db/table_1/2020-05/timestamp.d [fd=32, pageSize=16777216]
 2020-04-15T16:42:32.881708Z I i.q.c.AppendMemory truncated and closed [fd=33]
+```
+
+Debug:
+
+```
+2023-03-31T11:47:05.723715Z D i.q.g.FunctionParser call cast(investmentMill,INT) -> cast(Li)
+2023-03-31T11:47:05.723729Z D i.q.g.FunctionParser call rnd_symbol(4,4,4,2) -> rnd_symbol(iiii)
+2023-03-31T11:47:05.723749Z D i.q.g.FunctionParser call investmentMill * 950399 -> *(LL)
+2023-03-31T11:47:05.723794Z D i.q.g.FunctionParser call cast(1672531200000000L,TIMESTAMP) -> cast(Ln)
+2023-03-31T11:47:05.723803Z D i.q.g.FunctionParser call cast(1672531200000000L,TIMESTAMP) + investmentMill * 950399 -> +(NL)
 ```
 
 ## Log configuration
