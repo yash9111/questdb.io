@@ -1,22 +1,15 @@
 ---
-title: Comparing InfluxDB, TimescaleDB, and QuestDB timeseries databases
+title: Comparing InfluxDB, TimescaleDB, and QuestDB Time-Series Databases
 author: Yitaek Hwang
 author_title: Guest
 author_url: https://github.com/Yitaek
 author_image_url: https://avatars.githubusercontent.com/Yitaek
 description:
-  A high-level overview of timeseries databases to compare features,
+  A high-level overview of time-series databases to compare features,
   functionality, maturity, and performance.
-keywords:
-  - timeseries
-  - influxdb
-  - timescale
-  - questdb
-  - comparison
-
-tags: [benchmark, influxdb, timescale, questdb, timeseries]
+tags: [benchmark, influxdb, timescale, questdb, time-series]
 image: /img/blog/shared/og-influxdb-timescaledb.png
-
+slug: comparing-influxdb-timescaledb-questdb-time-series-databases
 ---
 
 import Banner from "@theme/Banner"
@@ -30,44 +23,49 @@ import Banner from "@theme/Banner"
 
 This comparison comes from [Yitaek Hwang](https://yitaek.medium.com/), who has
 put together his thoughts on the features and functionality you should look out
-for when evaluating timeseries databases. This overview takes a look at QuestDB,
-TimescaleDB, and InfluxDB for features, functionality, maturity, and
+for when evaluating time-series databases. This overview takes a look at
+QuestDB, TimescaleDB, and InfluxDB for features, functionality, maturity, and
 performance.
 
-## Why timeseries databases are popular
+:::note
+
+Post edited in March 2023 to reflect the latest updates
+
+:::
+
+## Why time-series databases are popular
 
 We're living in
 [the golden age of databases](https://www.protocol.com/manuals/the-new-database/golden-age-databases-last),
 as money flows into the industry at historical rates (e.g.,
 [Snowflake](https://www.snowflake.com/), [MongoDB](https://www.mongodb.com/),
 [Cockroach Labs](https://www.cockroachlabs.com/), [Neo4j](https://neo4j.com/)).
-If the debate between relational vs. non-relational or online analytical
-processing (OLAP) vs. online transaction processing (OLTP) ruled the past
-decade, a new type of database has been steadily growing in popularity.
-According to [DB-Engines](https://db-engines.com/en/), an initiative to collect
-and present information on database management systems, timeseries databases are
-the fastest growing sector since 2020:
+The last decade saw an explosion of purpose-built databases designed for use
+cases in which a conventional RDBMS might not be the best fit. According to
+[DB-Engines](https://db-engines.com/en/), an initiative to collect and present
+information on database management systems, time-series databases have been one
+of the fastest growing technologies in the past few years:
 
 import Screenshot from "@theme/Screenshot"
 
 <Screenshot
-  alt="A chart ranking database type by popularity with timeseries databases shown as a clear leader"
+  alt="A chart ranking database type by popularity with time-series databases shown as a clear leader"
   height={591}
-  src="/img/blog/2021-07-05/timeseries-popularity.png"
+  src="/img/blog/2021-07-05/2023-time-series-popularity.png"
   width={770}
 />
 
-### Why use a timeseries database?
+### Why use a time-series database?
 
-Timeseries databases (TSDB) are databases optimized to ingest, process, and
+Time-series databases (TSDB) are databases optimized to ingest, process, and
 store timestamped data. Such data may include metrics from servers and
 applications, readings from IoT sensors, user interaction on a website or an
 app, or trading activity on financial markets.
 
-The following properties usually characterize timeseries workloads:
+The following properties usually characterize time-series workloads:
 
-- Each data point includes a timestamp used to index, aggregate, and sample.
-  This data can also be multi-dimensional and correlated.
+- Each data point includes a timestamp used to index, aggregate, and sample. The
+  data can also be multi-dimensional and correlated.
 - High write speed (ingestion) is preferred to capture data at high frequencies.
 - Summarized view of the data (e.g., downsampled or aggregated view, trend
   lines) may provide more insight than a single data point. For example, given
@@ -78,49 +76,41 @@ The following properties usually characterize timeseries workloads:
   (e.g., give me the click rate data over the past week).
 
 While other databases can also handle time-series data to a certain extent,
-TSDBs are designed with the above properties to handle data ingestion,
-compression, and aggregation over time more efficiently. So as the demand for
-time series data continues to explode on the heels of cloud computing, IoT, and
-machine learning, how should architects go about choosing a TSDB? This article
-will compare popular TSDBs and new players in the market to help you decide.
+TSDBs are designed with the above properties to handle data ingestion, storage,
+and aggregation over time more efficiently. So as the demand for time series
+data continues to explode on the heels of cloud computing, IoT, financial market
+data, and machine learning, how should architects go about choosing a time-series database?
 
-## InfluxDB details
+## InfluxDB
 
 First released in 2013, InfluxDB is the market leader in the TSDB space,
 overtaking Graphite and OpenTSDB that came before. As with many OSS database
-companies, [InfluxDB](https://www.influxdata.com/) licensed with MIT License for
+companies, [InfluxDB](https://www.influxdata.com/) is licensed with MIT License for
 a single node, with paid-plans available for InfluxDB Cloud and InfluxDB
 enterprise that provide clustering and other production-ready features.
 
 <Screenshot
-  alt="A table showing the current popularity of timeseries databases as shown by db-engines.com"
+  alt="A table showing the current popularity of time-series databases as shown by db-engines.com"
   height={591}
-  src="/img/blog/2021-07-05/db-engines-ranking.png"
+  src="/img/blog/2021-07-05/db_engines_ranking_202304.png"
   width={770}
   title="Image Credit: DB-engines"
 />
 
-Before the InfluxDB 2.x release in 2019, the InfluxDB Platform consisted of the
-TICK stack: Telegraf (agent for collecting and reporting metrics), InfluxDB,
-Chronograf (interface to query data from InfluxDB), and Kapacitor (real-time
-streaming data processing engine). As seen in the diagram below, InfluxDB 1.x
-primarily focused on time series data from servers and web applications. Before
-Prometheus came along to take market share in this space, InfluxDB had the most
-significant community and integrations to collect, store, and view application
-metrics.
+Previously, the InfluxDB Platform consisted of the TICK stack: Telegraf (agent
+for collecting and reporting metrics), InfluxDB (the database engine),
+Chronograf (web interface to InfluxDB), and Kapacitor (background processing).
+Since version 2.x InfluxDB is installed as a single binary that bundles the
+database, the UI, and the background processor. If you want to use Telegraf, it
+is still supported as a separate binary.
 
-<Screenshot
-  alt="A diagram describing IndluxDB architecture including Telegraf, Chronograf, and Kapacitor."
-  height={591}
-  src="/img/blog/2021-07-05/influx-architecture.png"
-  width={770}
-  title="Image Credit: Influxdata"
-/>
+:::note
 
-InfluxDB 2.x essentially simplified the architecture to bundle the TICK stack to
-a single binary as well as introducing new features to make collecting (e.g.
-native Prometheus plugin), organizing (e.g., organizations and buckets), and
-visualizing (e.g., Data Explorer) data with its Flux language.
+At the time of this writing (March 2023), InfluxDB offers additional versions
+with different query engines and different capabilities. We are referring here
+to Open Source InfluxDB 2.6.
+
+:::
 
 To understand how InfluxDB works, we need to grasp the following key concepts:
 
@@ -140,86 +130,55 @@ To understand how InfluxDB works, we need to grasp the following key concepts:
   title="Image Credit: Influxdata"
 />
 
-- **Data schema (TSM & TSI):** are data elements stored in time-structured merge
-  tree (TSM) and time series index (TSI) files. TSM can be thought of a
-  [LSM tree with write-ahead log (WAL) and read-only files similar to SSTables](https://docs.influxdata.com/influxdb/v1.8/concepts/storage_engine/)
-  that are sorted and compressed. TSI is an index on files on disk that InfluxDB
-  memory maps to take advantage of the
-  [Least Recently Used (LRU)](https://docs.influxdata.com/influxdb/v1.8/concepts/time-series-index/)
-  the memory of the operating system to help with datasets with high cardinality
-  (i.e., large elements in a set).
-- **Flux scripting language:** a domain-specific language developed by InfluxDB
-  to help with querying data. Flux has an SQL package to help query from SQL
-  data sources as well.
+- **Schemaless Design:** InfluxDB does not enforce a schema before ingesting
+  data. Instead, the schema is automatically inferred from the tags and fields
+  sent over the line protocol. This gives you great flexibility when writing
+  your applications. In any case, it is possible to enforce schemas for specific
+  buckets if needed.
 
-Most notably, InfluxDB does not enforce a schema before ingesting data. Instead,
-the schema automatically created from the input data, inferred from the tags and
-fields. This NoSQL-like experience is both InfluxDB's strength and weakness. For
-datasets with relatively low cardinality that naturally fit this tagset model
-(e.g., most infrastructure and application metrics, some IoT data, some
-financial data), InfluxDB is extremely easy to get started without worrying
-about designing schemas or indexes. It also shines in use cases where the goal
-is to create digital models of physical assets. For example, in IoT, one may
-need to create a digital twin to represent a collection of sensors and ingest
-organized data.
+- **Data storage (TSM & TSI):** data points are stored in time-structured merge
+  tree (TSM), and time series index (TSI) files. TSM can be thought of a
+  [LSM tree with write-ahead log (WAL) and read-only files similar to SSTables](https://docs.influxdata.com/influxdb/v2.6/reference/internals/storage-engine)
+  that are sorted and compressed. In the event of high cardinality (i.e., large
+  number of elements in a set), performance can decrease. The proprietary
+  InfluxDB Cloud (IOx) claims high cardinality is not an issue anymore.
 
-<Screenshot
-  alt="An illustration showing the indexed and non-indexed parts of an InfluxDB line protocol message"
-  height={591}
-  src="/img/blog/2021-07-05/tagset-model.jpeg"
-  width={770}
-  title="Image Credit: Influxdata"
-/>
+- **Query languages:** InfluxDB originally supported only InfluxQL, an SQL-like
+  language, but in 2018
+  [its CTO announced Flux](https://www.influxdata.com/blog/why-were-building-flux-a-new-data-scripting-and-query-language/),
+  a domain-specific functional language developed by InfluxDB, which became then
+  the recommended language. InfluxDB's decision to create its custom functional
+  data scripting language (Flux) presents another layer of complexity to
+  mastering this ecosystem. The team at InfluxDB
+  [points to two motivations](https://www.influxdata.com/blog/why-were-building-flux-a-new-data-scripting-and-query-language/)
+  to move away from SQL-like InfluxQL to Flux. Flux syntax requires some effort
+  to adapt, especially if you're looking for simple SQL queries or not looking
+  to learn yet another new language. Still considering the large community and
+  [integrations](https://www.influxdata.com/products/integrations/) that
+  InfluxDB has assembled, some of the advantages of Flux start to materialize,
+  especially when combined with built-in dashboards.
 
-On the other hand, being "schemaless" can be a disadvantage when the dataset
-requires indexes on continuous fields (i.e., numerics are not supported by
-InfluxDB as tags must be strings) or data validation. Also, since tags are
-indexed, if tags are frequently changing (e.g., use cases where metadata may
-change after initial ingestion), relying on InfluxDB to infer the schema may be
-costly.
+  In the latest (non open source) InfluxDB Cloud IOx,
+  [SQL is now the preferred language](https://docs.influxdata.com/influxdb/cloud-iox/query-data/flux-sql/).
 
-Finally, InfluxDB's decision to create its custom functional data scripting
-language (Flux) presents another layer of complexity to mastering this
-ecosystem. The team at InfluxDB
-[points to two motivations](https://www.influxdata.com/blog/why-were-building-flux-a-new-data-scripting-and-query-language/)
-to move away from SQL-like InfluxQL to Flux:
-
-- Timeseries data line up with a flow-based functional processing model where a
-  stream of data is transformed from one output to the next. The relational
-  algebra model that SQL supports does not handle such chaining of operations
-  and functions as well.
-- InfluxDB wanted first-class support for common operations with time series
-  data (e.g., exponential moving average) that is not part of the SQL standard.
-
-Flux syntax requires some effort to adapt, especially if you're looking for
-simple SQL queries or not looking to learn yet another new language. Still
-considering the large community and
-[integrations](https://www.influxdata.com/products/integrations/) that InfluxDB
-has assembled, some of the advantages of Flux start to materialize, especially
-when combined with built-in dashboards.
-
-<Screenshot
-  alt="A screenshot showing the InfluxDB data explorer"
-  height={591}
-  src="/img/blog/2021-07-05/influx-schema-explorer.png"
-  width={770}
-  title="Image Credit: Influxdata"
-/>
-
-Overall, InfluxDB is a great choice if the time series data fit nicely with the
-tagset model. The main use case seems to be geared towards
-infrastructure/application monitoring, but as the clear market leader in this
-space, InfluxDB also seamlessly integrates with popular data sources.
+Overall, InfluxDB is a great choice if the time series data fits nicely with the
+tagset model. Their main use case seems to be geared towards
+infrastructure/application monitoring, but as the market leader in this space,
+InfluxDB also seamlessly integrates with popular data sources.
 
 - **Pros:** schemaless ingestion, huge community, integrations with popular
   tools
-- **Cons:** datasets with high-cardinality, custom querying/processing language
+- **Cons:** performance decreases on datasets with high-cardinality. Open Source
+  version supports a single instance. Multiple versions with different database
+  engines, supported languages, and features. New querying language (Flux) to
+  learn.
 
-## TimescaleDB details
+## TimescaleDB
 
 Whereas InfluxDB opted to build a new database and custom language from scratch,
 on the other end of the spectrum is [TimescaleDB](https://www.timescale.com/).
-TimescaleDB is built on top of PostgreSQL and adds an intermediary layer called
+TimescaleDB is built as an extension on top of PostgreSQL and adds an
+intermediary layer called
 [hypertables](https://docs.timescale.com/timescaledb/latest/overview/core-concepts/hypertables-and-chunks/)
 that chunks data into multiple underlying tables while abstracting it as a
 single, large table for interacting with the data.
@@ -237,19 +196,19 @@ fully supports all of the SQL features (e.g., joins, secondary and partial
 indexes) as well as popular extensions like [PostGIS](https://postgis.net/).
 More importantly, TimescaleDB inherits decades of knowledge from both developers
 running SQL queries as well as database and sysadmins running PostgreSQL at
-scale. Since TimescaleDB can be treated as a PostgreSQL extension, cloud-managed
-options (e.g.
+scale. Since TimescaleDB is just a PostgreSQL extension, cloud-managed options
+(e.g.
 [Azure Database for PostgreSQL](https://azure.microsoft.com/en-us/updates/timescaledb-for-azure-database-for-postgresql-to-power-iot-and-time-series-workloads/),
 [Aiven](https://help.aiven.io/en/articles/1752157-getting-started-with-timescaledb-in-aiven-for-postgresql))
 aside from TimescaleDB's own managed offering are readily available, not to
-mention the myriad of self-managed options on VMs or containers.
+mention the self-managed options on VMs or containers.
 
 <Screenshot
   alt="A list of the most popular programming languages as reported by the Stack Overflow Developer Survey 2020"
   height={591}
-  src="/img/blog/2021-07-05/popular-languages.png"
+  src="/img/blog/2021-07-05/mostpopularprogramminglanguages2022.png"
   width={770}
-  title="Image Credit: Stack Overflow"
+  title="Most popular languages in 2022. StackOverflow Survey. Credit: Stack Overflow"
 />
 
 Because TimescaleDB began as an IoT platform, where they used InfluxDB at first,
@@ -257,82 +216,69 @@ to store their sensor data, its features bode well for IoT time series data
 which is often 'bursty', frequently out of order due to network unreliability,
 and characterized by high cardinality:
 
-- **Hypertables:** TimescaleDB
+- **Hypertables:** Time-series functionality offerred by TimescaleDB cannot be
+  used on regular PostgreSQL tables. TimescaleDB introduces the concept of a
+  hypertable instead. Even if the user experience is similar to a regular table,
+  hypertables have more complexity behind the scenes. TimescaleDB
   [partitions its hypertables into chunks](https://docs.timescale.com/timescaledb/latest/overview/core-concepts/hypertables-and-chunks/#partitioning-in-hypertables-with-chunks)
   based on a time column as well as other "spatial" values such as a device uid,
   location identifier, or a stock symbol. Users can configure these chunks to
   hold the most recent data in memory, asynchronously compress and re-order data
   by the time column to disk (instead of ingestion time), and replicate or
   migrate transactionally across nodes.
+
 - **Continuous Aggregation:** TimescaleDB also supports
   [continuous aggregation of data](https://docs.timescale.com/timescaledb/latest/overview/core-concepts/continuous-aggregates/)
   to make computing key metrics like hourly average, minimum, and maximum values
-  fast. IoT data is often more useful in aggregate (e.g., give me the average
-  temperature between 3 pm and 4 pm vs. what was the exact temperature at 3 pm),
-  so not needing to scan a huge amount of data on every aggregate query can help
-  create performant dashboards or analyses.
+  fast. Behind the scenes, the data is stored using PostgreSQL materialized
+  views; additional storage is needed as a trade-off for faster queries. For
+  time-based aggregations (e.g., average temperature between 3 pm and 4 pm vs.
+  the exact temperature at 3 pm), scanning fewer data for each aggregation can
+  help performance-wise.
 
 - **Data Retention:** Large deletes are a costly operation in traditional
   relational databases. However, since TimescaleDB stores data in chunks, it
   [provides a `drop_chunks` feature](https://docs.timescale.com/timescaledb/latest/overview/core-concepts/data-retention/#data-retention)
   to quickly drop old data without the same overhead. Since the relevance of old
-  data diminishes over time, TimescaleDB can be used with a longer-term storage
-  (e.g., OLAP or blob storage) to move older data to save disk space and keep
-  performance high on newer data.
+  data diminishes over time, TimescaleDB can be used to move older data to save
+  disk space.
 
-As for performance, TimescaleDB has a comprehensive post detailing insert and
-read latency metrics comparing TimescaleDB version 1.7.1 and InfluxDB 1.8.0
-(both OSS versions) using the
-[Time Series Benchmark Suite](https://github.com/timescale/tsbs) (TSBS). Both
-databases now have 2.x versions, so this analysis may be a bit outdated, but the
-results show superior performance for TimescaleDB as data cardinality grows
-(~3.5x performance).
 
-<Screenshot
-  alt="Benchmark results showing TimescaleDB performance versus InfluxDB on ingestion rates."
-  height={591}
-  src="/img/blog/2021-07-05/influx-versus-timescale.png"
-  width={770}
-  title="Image Credit: TimescaleDB"
-/>
 
-TimescaleDB team points to InfluxDB's log-structured merge tree-based system
-(TSI) versus TimescaleDB's B-tree indexing method for the root cause. However,
-the takeaway here isn't necessarily that TimescaleDB is superior to InfluxDB in
-terms of performance. Performance benchmarks are opinionated and heavily
-influenced by the data model, hardware, and configuration. Instead, this result
-shows that TimescaleDB may be better suited for IoT use cases where data
-cardinality is high (e.g., give me average power usage for device X out of the
-fleet of 10 million devices).
-
-For an in-depth comparison between the two DBs, have a look at Timescale's own
-[TimescaleDB vs. InfluxDB comparison](https://blog.timescale.com/blog/timescaledb-vs-influxdb-for-time-series-data-timescale-influx-sql-nosql-36489299877/).
-
-Overall, TimescaleDB is an excellent fit for teams looking for a significant
+Overall, TimescaleDB is a good fit for teams looking for a
 performance boost without heavy refactoring to migrate off their existing SQL
 databases. Even though TimescaleDB is still relatively new (first release in
 2017), the decision to build on top of PostgreSQL has boosted its adoption
-numbers to reach the top 5 TSDBs. Anecdotally, my previous IoT startup also used
-TimescaleDB is an intermediate data store to quickly pull aggregate metrics
-spanning several months and move old data to long-term storage. Since we were
-already running PostgreSQL on our Kubernetes cluster, installing TimescaleDB and
-migrating our workload was a simple task.
+numbers to reach the top 5 TSDBs. 
+
+One drawback is the lack of a streaming ingestion protocol like the InfluxDB Line Protocol.
+This makes ingestion less flexible and less focused on performance as a result.
 
 - **Pros:** PostgreSQL-compatibility, scales well with data cardinality, various
-  deployment models available
-- **Cons:** fixed schema (adds a bit of complexity and data transformation
-  effort before ingestion)
+  deployment models available.
+- **Cons:** enforced schema (might add a bit of complexity and data
+  transformation effort before ingestion), extra storage needed for continuous
+  aggregations, lack of streaming ingestion protocol.
 
-## QuestDB details
+## QuestDB
 
 For those looking to take advantage of the flexibility of InfluxDB line protocol
-and the familiarity of PostgreSQL, a newer time series database may satisfy both
-requirements without sacrificing performance. QuestDB (YC S20) is an open-source
-TSDB written in Java and C++ that now ranks in the top 15
-[although it launched less than a year ago](https://news.ycombinator.com/item?id=23975807).
-Underneath the hood,
-[QuestDB utilizes memory-mapped files](/docs/concept/storage-model) to support
-fast read and writes before data is committed to disk.
+and the familiarity of PostgreSQL, a younger time series database may satisfy
+both requirements without sacrificing performance. QuestDB (YC S20) is an
+open-source TSDB written in low-lantency Java, C++, and Rust. It ranks in \#10
+on
+[DB-Engines Time Series DBMS](https://db-engines.com/en/ranking/time+series+dbms),
+although it officially
+[launched less than three years ago](https://news.ycombinator.com/item?id=23975807).
+Alongside the Apache 2.0 licensed project, QuestDB also offers a fully managed
+[Cloud offering](https://questdb.io/cloud/), and
+[a commercial Enterprise version](https://questdb.io/enterprise/). QuestDB
+implements a highly optimized
+[column-based storage model](/docs/concept/storage-model). The data is sorted by
+time natively and stored in time partitions. Those partitions are append-only
+and versioned. QuestDB only lifts the latest version of the partition in memory
+for any given time-based query. As such, queries do not slow down as more data
+is being ingested.
 
 <Screenshot
   alt="A diagram showing how QuestDB ingesting schema-agnostic InfluxDB line protocol and relational data"
@@ -341,81 +287,80 @@ fast read and writes before data is committed to disk.
   width={770}
 />
 
-By building the database from scratch with Java and C++, the QuestDB team
-focused on three things:
+By building the database engine from scratch, the QuestDB team focused on three
+things:
 
-- **Performance:** Solving the ingestion bottleneck, especially around high
-  cardinality datasets. It also supports fast data retrieval by storing
-  time-partitioned data always in order (via shuffling in memory) and only
-  analyzing requested columns/partitions instead of the entire table. Finally,
-  QuestDB applies SIMD instructions to parallelize operations.
+- **Performance:** Solving the ingestion bottleneck with high throughput
+  ingestion, for datasets of all sizes. QuestDB addresses one of the pain points
+  of InfluxDB, with its ability to handle high cardinality datasets. To speed up
+  queries, QuestDB leverages modern hardware with SIMD instructions, aggregating
+  multiple rows simultaneously. The engineering team built
+  [a JIT compiler](/docs/concept/jit-compiler/) designed to parallelize query
+  filters during execution. QuestDB stores data in time partitions; this reduces
+  the volume of data which has to fit in memory for reads. Finally, the database
+  is column based and can handle a high degree of parallelism, slicing and
+  processing columns in parallel by all available threads.
+
 - **Compatibility:** QuestDB supports InfluxDB line protocol, PostgreSQL wire,
-  REST API and CSV upload to ingest data. Users accustomed to other TSDBs can
-  easily port over their existing applications without a significant rewrite.
+  REST API and CSV upload to ingest data. Users accustomed to other time-series databases
+  can easily port over their existing applications without a significant rewrite,
+  and users can choose amongst a set of ingestion protocols depending on their
+  use cases. There are client libraries in multiple languages for the InfluxDB
+  Line Protocol.
+
 - **Querying via SQL:** Despite supporting multiple ingestion mechanisms,
   QuestDB uses SQL as the query language, so there's no need to learn a
-  domain-specific language like Flux.
+  domain-specific language like Flux. Additionally, there are
+  time-series-specific [SQL extensions](https://questdb.io/blog/2022/11/23/sql-extensions-time-series-data-questdb-part-ii/)
+  to handle time-series data with ease.
 
 In terms of performance, QuestDB
-[recently posted a blog post showing benchmark results](/blog/2021/05/10/questdb-release-6-0-tsbs-benchmark)
-that achieved write speeds up to 1.4 million rows per second. QuestDB team used
-the TSBS benchmark with the `cpu-only` use case using up to 14 works on
-`m5.8xlarge` instance on AWS (**NOTE:** the 1.4 million number is from using AMD
-Ryzen5 processor).
-
-For datasets with high cardinality (>10 million), QuestDB also outperformed
-other TSDBs with peak ingestion throughput of 904k rows/sec and sustaining about
-640k row/secs at 10 million devices using four threads on `m5.8xlarge` instance
-with Intel Xeon CPUs. When QuestDB ran the same benchmark on AMD Ryzen 3970X,
-QuestDB showed over a million rows/sec ingestion throughput.
+[recently posted some benchmark results](https://github.com/questdb/questdb/releases/tag/7.0.1)
+with an ingestion rate reaching 4.3 million rows per second. This was computed
+through the [TSBS benchmark](https://github.com/timescale/tsbs), currently
+maintained by TimescaleDB, selecting the `cpu-only` use case. The chosen
+instance had 32 CPUs and 64GB of RAM.
 
 <Screenshot
-  alt="A chart showing high-cardinality ingestion performance of InfluxDB, TimescaleDB, and ClickHouse versus QuestDB"
+  alt="A chart showing high-cardinality ingestion performance of InfluxDB, TimescaleDB, and QuestDB"
   height={591}
-  src="/img/blog/2021-07-05/maximum-throughput.png"
+  src="/img/blog/2021-07-05/benchmark_q1_2023.png"
   width={770}
+  title="Benchmark results for QuestDB 7.0, InfluxDB 1.8 and Timescale 2.10"
 />
 
-Again, performance benchmarks can be subjective based on the data model and
-tuning of the DBs, but it nevertheless paints a compelling comparison point for
-QuestDB. It will be interesting to see how the results shake out with DevOps or
-iot modes as both InfluxDB and TimescaleDB support those use cases out of the
-box with TSBS.
+The other interesting component of QuestDB is support for both InfluxDB Line
+Protocol and PostgreSQL wire for ingestion. For existing InfluxDB users, you can
+configure Telegraf to point to QuestDB's address and port. PostgreSQL users can
+leverage their client libraries or JDBC to write data into QuestDB. Regardless
+of the ingestion method, data can be queried using standard SQL with notable
+exceptions listed on the API reference page.
 
-The other interesting component of QuestDB is support for both InfluxDB inline
-protocol and PostgreSQL wire for ingestion. For existing InfluxDB users, you can
-configure Telegraf to point to QuestDB's address and port. Likewise for
-PostgreSQL users use the existing client library or JDBC to write data into
-QuestDB. Regardless of the ingestion method, data can be queried using standard
-SQL with notable exceptions listed on the API reference page.
+Even though a single QuestDB instance can handle multi-billion row datasets, one
+of its shortcomings at the time of writing is the lack of replication, which
+will be available to open source users
+[soon](https://github.com/orgs/questdb/projects/1/views/5). When it comes to
+third party integrations, QuestDB integrates with some of the most popular tools
+(e.g., PostgreSQL, Grafana, Pandas, Apache Kafka, Apache Flink, MindsDB, Telegraf, Kubernetes...).
+There are more integrations underway, such as more dashboards / BI tools.
 
-As a newer entrant in this space, the most apparent downside to QuestDB is the
-lack of features such as replication (this is in the works). It does integrate with some of the most popular tools already
-(e.g., PostgreSQL, Grafana, Kafka, Telegraf, Tableau), but it will need some
-time to reach the level of the other TSDBs mentioned above.
-
-Still, QuestDB is a promising project that can balance the positives of InfluxDB
-and TimescaleDB:
-
-- **Pros:** fast ingestion (especially for datasets with high cardinality),
-  support for both InfluxDB protocol and PostgreSQL wire, querying via standard
-  SQL
-- **Cons:** smaller community, available integrations, lack of some features
+- **Pros:** fast ingestion, better performance using fewer resources, support
+  for both InfluxDB protocol and PostgreSQL wire, querying via standard SQL,
+  optimized queries with SIMD, open source and fully managed QuestDB versions
+  available.
+- **Cons:** smaller community, reduced number of available integrations,
+  replication still under development.
 
 ## Conclusion
 
-As the demand for time series data continues to grow, TSDBs specialized to deal
-with this data will see massive adoption and fierce competition. Besides the
-three open-source TSDBs covered in this article, there are also public cloud
+As the demand for time series data continues to grow, time-series databases
+specialized to deal with this data will see massive adoption and fierce competition. 
+Besides the three open-source TSDBs covered in this article, there are also public cloud
 offerings from AWS (AWS Timestream) and Azure (Azure Series Insights).
 
-As with all databases, choosing the "perfect" TSDB will primarily depend on your
-business needs, data model, and use case. InfluxDB works well if your data fits
-the tagset model with a rich ecosystem of integrations readily available.
-TimescaleDB is a natural fit for existing PostgreSQL users. Finally, if
-performance is the primary concern, QuestDB is a promising project that is
-growing quickly.
-
-If you like this content, we'd love to know your thoughts! Feel free to share
-your feedback or come and say hello in the
-[QuestDB Community Slack]({@slackUrl@}).
+As with all databases, choosing the "perfect" time-series database depends primarily on 
+your business requirements, data model, and use case. InfluxDB works well if your
+data fits the Tagset model with a rich ecosystem of integrations readily
+available. TimescaleDB is a natural fit for existing PostgreSQL users. Finally,
+if performance is the primary concern, QuestDB is a popular and
+developer-friendly database that is growing rapidly.
