@@ -16,7 +16,7 @@ createTableDef
  
 
 createTableLike
-::= 'CREATE' 'TABLE' ( '(' 'LIKE' sourceTableName ')' )? ';'
+nam
 
 alterTable 
   ::= 'ALTER' 'TABLE' tableName
@@ -238,6 +238,9 @@ SetType
 Update
  ::= UPDATE 'tableName' SET columnName '=' 'expression' ( ',' columnName '=' 'expression' )*
 (FROM 'joinTable1' (JOIN 'joinTable2' ON 'joinCondition2')? )? (WHERE 'filter')?
+
+Show
+ ::= 'SHOW' ('TABLES'|('COLUMNS'|'PARTITIONS') 'FROM' tableName ) ';'
 
 TruncateTable
 ::= 'TRUNCATE TABLE' tableName
