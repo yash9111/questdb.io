@@ -195,7 +195,7 @@ order by timestamp desc
 ### Index scan
 
 Index scan first reads row id data associated with one or more index keys and then respective data from the table.
-See [index]((/docs/concept/indexes/)) for more information about QuestDB indexes. 
+See [documentation](https://questdb.io/docs/concept/indexes/) for more information on indexes. 
 `trades` table doesn't have any index so let's switch to another demo table, `pos`, with the following schema : 
 
 ```questdb-sql
