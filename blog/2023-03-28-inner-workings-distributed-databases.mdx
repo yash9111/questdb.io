@@ -4,7 +4,7 @@ author: Alex Pelagenko
 author_title: QuestDB team
 author_url: https://github.com/ideoma
 author_image_url: https://avatars.githubusercontent.com/ideoma
-description: Comparion of replication options of time-series databases.
+description: Comparison of replication options of time-series databases.
 image: /img/blog/2023-03-28/database-replication.png
 tags:
   [
@@ -26,6 +26,14 @@ import Banner from "@theme/Banner"
   src="/img/blog/2023-03-28/database-replication.png"
   width={530}
 ></Banner>
+
+**This post examines the various replication strategies
+used by popular time-series and OLAP databases to implement high-availability.
+Our learnings from this research have inspired us as we continue to build replication
+into our own performance-focused database, [QuestDB](https://github.com/questdb/questdb).
+QuestDB is built in C++, low latency Java, and recently Rust! The codebase
+has no external dependencies and we implement SQL with native time-series
+extensions.**
 
 After being unable to ride my new electric bike to work yet again because it was
 in the shop (this time because of a wiring problem that prevented the bike from
