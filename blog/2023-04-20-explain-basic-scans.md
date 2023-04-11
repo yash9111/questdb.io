@@ -5,7 +5,7 @@ author_title: QuestDB Team
 author_url: https://github.com/bziobrowski
 author_image_url: https://avatars.githubusercontent.com/bziobrowski
 description:
-A tour of scan types available in QuestDB.
+  A tour of scan types available in QuestDB.
 image: /img/blog/2023-04-20/banner.jpg
 tags: [explain, SQL, execution plan, table scan, index scan]
 slug: explain-sql-index-table-scan
