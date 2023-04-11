@@ -18,7 +18,7 @@ import Banner from "@theme/Banner"
 <Banner
 alt="Image of a hard disk drive."
 height={433}
-src="/img/blog/2023-04-20/banner.jpg" --https://unsplash.com/photos/GNyjCePVRs8
+src="/img/blog/2023-04-20/banner.jpg"
 width={650}
 >
 Photo by <a href="https://unsplash.com/@benjaminlehman">Benjamin Lehman</a> via{" "}
