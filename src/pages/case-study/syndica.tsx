@@ -95,7 +95,7 @@ const values = [
 const Page = () => {
   const title = "Syndica"
   const description =
-    "QuestDB is at the core of the observability and analytics capabilities for both Syndica's service to power the Web3 infrastructure and its internal monitoring."
+    "QuestDB is the database for real-time analytics and time-series dashboards at Syndica"
 
   return (
     <Layout
@@ -137,7 +137,7 @@ const Page = () => {
 
         <div className={juCss.jumbotron__banner}>
           <Image
-            description="QuestDB is at the core of the observability and analytics capabilities for both Syndica's service to power the Web3 infrastructure and its internal monitoring."
+            description="Syndica powers the Web3 infrastructure"
             src="/img/pages/case-study/syndica/header.png"
             width={764}
             height={452}
