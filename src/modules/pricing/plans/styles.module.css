@@ -9,13 +9,22 @@
 .plans {
   --cols: 1;
   --gap: 4rem;
+  --col-width: 380px;
   display: grid;
   gap: var(--gap);
-  grid-template-columns: repeat(var(--cols), 380px);
+  grid-template-columns: repeat(var(--cols), minmax(0, var(--col-width)));
   align-items: flex-end;
 }
 
 @media screen and (min-width: 900px) {
+  .plans {
+    --cols: 3;
+    --gap: 1rem;
+    --col-width: 1fr;
+  }
+}
+
+@media screen and (min-width: 1220px) {
   .plans {
     --cols: 3;
     --gap: 2rem;
@@ -33,5 +42,5 @@
 }
 
 :global(html[data-theme="light"]) .root {
-  --color-subtext: #8D8D8D;
+  --color-subtext: #8d8d8d;
 }

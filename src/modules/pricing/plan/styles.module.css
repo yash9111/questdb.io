@@ -18,9 +18,16 @@
   padding: 1rem 4rem;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 900px) {
   .heading {
     gap: 0.5rem;
+    padding: 1rem 0;
+  }
+}
+
+@media screen and (min-width: 1100px) {
+  .heading {
+    padding: 1rem 2rem;
   }
 }
 
@@ -101,11 +108,10 @@
   padding: 2rem 0;
 }
 
-
 :global(html[data-theme="light"]) .root {
-  --color-background: #F0F1F5;
+  --color-background: #f0f1f5;
   --color-header: #dde0e9;
-  --color-description: #55565E;
+  --color-description: #55565e;
   --color-price-period: #929292;
   --color-spec-value: var(--color-price-period);
 }
