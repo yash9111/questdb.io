@@ -6,38 +6,37 @@ author_url: https://github.com/bziobrowski
 author_image_url: https://avatars.githubusercontent.com/bziobrowski
 description:
   A tour of scan types available in QuestDB.
-image: /img/blog/2023-04-20/banner.jpg
+image: /img/blog/2023-04-20/banner.png
 tags: [explain, SQL, execution plan, table scan, index scan]
 slug: explain-sql-index-table-scan
 ---
-
-<!--truncate-->
 
 import Banner from "@theme/Banner"
 
 <Banner
 alt="Image of a hard disk drive."
 height={433}
-src="/img/blog/2023-04-20/banner.jpg"
+src="/img/blog/2023-04-20/banner.png"
 width={650}
 >
 Photo by <a href="https://unsplash.com/@benjaminlehman">Benjamin Lehman</a> via{" "}
 <a href="https://unsplash.com">Unsplash</a>
 </Banner>
 
-Welcome to another post on sql performance tuning !
+Welcome to another post on sql performance tuning!
 This time we'll explore the various scan types (a.k.a. access methods) QuestDB supports.
 It is necessary to understand them before tackling more complex queries. 
 
-What are scan types  ? 
+What are scan types? 
 Scan type is an algorithm used to find and access data. 
 Imagine binary search on sorted data, but with partitions, indexes and column data files instead of arrays.   
 There are two basic scan types in QuestDB, table and index scan.
-The difference is that the former touches table data directly, while latter goes through index first. 
+The difference is that the former touches table data directly, while the latter goes through index first. 
 Both occur in a number of variants so let's go through the list and explore them in depth.
 
 All examples below use tables available in the [QuestDB demo instance](https://demo.questdb.io/).
-Schema: 
+
+The following is the schema for the table `trades`: 
 
 ```questdb-sql
 CREATE TABLE trades (
@@ -49,9 +48,9 @@ CREATE TABLE trades (
 ) timestamp (timestamp) PARTITION BY DAY WAL;
 ```   
 
-### Table scan
+## Table scan
 
-Scans all table rows. Since QuestDB's storage model is column-based, the amount of data to read depends on columns used in the query. 
+Table scan scans all table rows. Since QuestDB's storage model is column-based, the amount of data to read depends on the columns used in the query. 
 It might be a single column/small percentage of table data, or all columns/whole table data.   
 
 <Banner
@@ -61,7 +60,7 @@ src="/img/blog/2023-04-20/forward_scan.svg"
 width={650}
 />
 
-#### Table forward scan
+### Table forward scan
 
 Scans all table rows starting at first row of the oldest partition and ending at last row of the latest partition.
 Differentiating between forward and backward scan makes sense only for tables with designated timestamp because they store data in that timestamp order.
@@ -80,10 +79,10 @@ ORDER BY timestamp
 | &nbsp;&nbsp;&nbsp;&nbsp;Row forward scan              |
 | &nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: trades |
 
-As expected, optimizer recognized that `order by timestamp` can be implemented simply by forward scanning the table, no sorting required.
+As expected, optimizer recognized that `ORDER BY timestamp` can be implemented simply by forward scanning the table, no sorting required.
 In `EXPLAIN` output a Table forward scan is represented on table level - `Frame forward scan` and partition level - `Row forward scan`.
 
-#### Table backward scan
+### Table backward scan
 
 Scans all table rows starting at latest partition and ending at oldest partition.
 
@@ -127,7 +126,7 @@ src="/img/blog/2023-04-20/interval_forward_scan.svg"
 width={650}
 />
 
-#### Interval forward scan
+### Interval forward scan
 
 When query contains a reasonable condition on designated timestamp, QuestDB engine can use it to limit scanning to one or more intervals.
 Interval boundaries are found by binary searching designated timestamp column, for instance :
@@ -198,7 +197,7 @@ ORDER BY timestamp DESC
 | &nbsp;&nbsp;&nbsp;&nbsp;Interval backward scan on: trades                                  |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intervals: [static=[1669852800000000,1669939199999999] |
 
-### Index scan
+## Index scan
 
 Index scan first reads row id data associated with one or more index keys and then respective data from the table.
 See [documentation](https://questdb.io/docs/concept/indexes/) for more information on indexes. 
@@ -212,7 +211,7 @@ CREATE TABLE pos (
  lon DOUBLE,
  geo6 GEOHASH(6c),
  geo12 GEOHASH(12c)
-) timestamp (time) PARTITION BY DAY
+) timestamp (time) PARTITION BY DAY;
 ```
 
 <Banner
@@ -222,7 +221,7 @@ src="/img/blog/2023-04-20/index_forward_scan.svg"
 width={650}
 />
 
-####  Index forward scan with single key
+###  Index forward scan with single key
 
 For any given index key, row ids are stored in table order, which is the same as timestamp order for tables that have designated timestamp.
 That means when querying for a single index key ordering can be implemented with scan direction alone, no sorting required.
@@ -244,7 +243,7 @@ produce the same plan :
 
 Note - `deferred: true` means symbol wasn't found in symbol dictionary so resolution was delayed until run time. 
 
-#### Index backward scan with single key
+### Index backward scan with single key
 
 What if we switch order by direction and add predicate on timestamp?  
 
@@ -267,7 +266,7 @@ This yields :
                                                                                                
 As you can see, not only was potential sort replaced with backward scan, but scanning was reduced to a single timestamp interval. 
 
-#### Index scan with multiple keys
+### Index scan with multiple keys
 
 Things get more interesting when there's more than one index key to scan.
 We can scan row ids in:
@@ -275,7 +274,7 @@ We can scan row ids in:
 - `Table-order` - scan the minimum row id available from all per-key row ids until there's none left.   
 Both have pros and cons, so let's look at a simple example. 
 
-#### Index scan with multiple values in table order
+### Index scan with multiple values in table order
 
 Reads all row ids associated in table (or physical) order.
 It  means memory & disk access is as sequential as possible, which is a good default approach.
@@ -303,7 +302,7 @@ WHERE id in ('X', 'Y')
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='Y'               |
 | &nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: pos                                       |
 
-#### Index scan with multiple values in index order
+### Index scan with multiple values in index order
 
 Scans table rows using row ids associated with first index key value, then second, ..., and finally, the last index value.
 It might be used to avoid sorting at the price of potentially more random memory and disk accesses.
@@ -430,7 +429,7 @@ Comparing all three plans we see:
 
 Remember - the approach above only makes sense if data is really close to end of table, otherwise it might slow things down.  
 
-### Summary  
+## Summary  
 
 Now you should have a good grasp on the basic scan types available in QuestDB, that is :
 - table scan 
@@ -439,4 +438,4 @@ Now you should have a good grasp on the basic scan types available in QuestDB, t
 
 and related optimizations available for tables with designated timestamp.
 
-Happy query tuning !
+Happy query tuning!
