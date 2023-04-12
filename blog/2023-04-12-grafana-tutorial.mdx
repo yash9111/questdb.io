@@ -244,8 +244,8 @@ SELECT
 $__time(pickup_datetime),
 avg(trip_distance) AS distance
 FROM ('taxi_trips_feb_2018.csv' timestamp(pickup_datetime))
-WHERE $**timeFilter(pickup_datetime)
-SAMPLE BY \$**interval;
+WHERE $__timeFilter(pickup_datetime)
+SAMPLE BY $__interval;
 ```
 
 ### Adding multiple queries
