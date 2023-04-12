@@ -59,9 +59,12 @@
   to = "/blog/2020/12/10/non-blocking-io-without-garbage-collection/"
 
 [[redirects]]
-  from = "/tutorial/2020/10/19/grafana"
-  to = "/blog/2020/10/19/grafana-tutorial/"
+  from = "/tutorial/2020/10/19/grafana/"
+  to = "/blog/time-series-monitoring-dashboard-grafana-questdb/"
 
+[[redirects]]
+  from = "/blog/2020/10/19/grafana-tutorial/"
+  to = "/blog/time-series-monitoring-dashboard-grafana-questdb/"
 [[redirects]]
   from = "/tutorial/2020/06/05/iot-on-questdb"
   to = "/blog/2020/06/05/iot-on-questdb/"

@@ -1,18 +1,14 @@
 ---
-title: Build a monitoring dashboard with QuestDB and Grafana
-author: Joan Augsburger
-author_title: QuestDB Team
-author_url: https://github.com/jaugsburger
-author_image_url: https://avatars.githubusercontent.com/jaugsburger
+title: Time-Series Monitoring Dashboard with Grafana and QuestDB
+author: QuestDB
+author_url: https://github.com/questdb
+author_image_url: https://avatars.githubusercontent.com/u/52297642?s=200&v=4
 description:
   Use Grafana with QuestDB to build a monitoring dashboard for visualization of
   time series data.
-keywords:
-  - timeseries
-  - questdb
-  - grafana
 tags: [tutorial, grafana]
-image: /img/blog/shared/og-grafana.png
+image: /img/blog/2023-04-12/banner.png
+slug: time-series-monitoring-dashboard-grafana-questdb
 ---
 
 import Banner from "@theme/Banner"
@@ -20,26 +16,27 @@ import Banner from "@theme/Banner"
 <Banner
   alt="A dashboard showing several graphs with operationnal data"
   height={433}
-  src="/img/blog/2020-10-19/banner.jpg"
+  src="/img/blog/2023-04-12/banner.png"
   width={650}
->
-  Photo by <a href="https://unsplash.com/photos/JKUTrJ4vK00">Luke Chesser</a>{" "}
-  via <a href="https://unsplash.com">Unsplash</a>
-</Banner>
+></Banner>
 
-In this tutorial, we will cover how to load demo data from `.CSV` files into
+In this tutorial, we will cover how to load demo data from .CSV files into
 QuestDB and to use this as a data source for a Grafana dashboard. The dashboard
 will have line charts as data visualizations that make use of aggregate SQL
 functions and Grafana global variables for sampling data based on dashboard
 settings.
 
-<!-- truncate -->
-
 ## What is Grafana?
 
-Grafana is an open-source visualization tool consisting of a server that
-connects to one or more data-sources to retrieve data, which is then visualized
-by the user in a browser.
+Grafana is an open-source visualization and dashboard tool for any type of data.
+It allows you to query, visualize, alert on, and understand your metrics no
+matter where they are stored. With its powerful query language, you can quickly
+analyze complex data sets and create dynamic dashboards to monitor your
+applications and infrastructure. Grafana also provides an ever-growing library
+of plugins for data sources, panel types, and visualizations.
+
+Grafana consists of a server that connects to one or more data sources to
+retrieve data, which the user then visualizes from their browser.
 
 The following three Grafana features will be used in this tutorial:
 
@@ -55,16 +52,13 @@ The following three Grafana features will be used in this tutorial:
 
 ### Start Grafana
 
-:::note
-
-We have discovered that Grafana 9.4.x has issues connecting to QuestDB. An
-[issue](https://github.com/grafana/grafana/issues/64376) has been raised with
-Grafana. For the tutorial to work, we are defining Grafana version to 9.3.8.
-
-:::
+Start Grafana using `docker run` with the `--add-host` parameter:
 
 ```shell
-docker run -it --rm --name=grafana -p 3000:3000 grafana/grafana:9.3.8
+docker run --add-host=host.docker.internal:host-gateway \
+-p 3000:3000 --name=grafana \
+-v grafana-storage:/var/lib/grafana \
+grafana/grafana-oss
 ```
 
 Once the Grafana server has started, you can access it via port 3000
@@ -77,11 +71,17 @@ password:admin
 
 ### Start QuestDB
 
-The Docker version for QuestDB can be run exposing the port `8812` for the
-PostgreSQL connection and port `9000` for the web and REST interface:
+The Docker version for QuestDB can be run by exposing the port `8812` for the
+PostgreSQL connection and port `9000` for the web and REST interface. Similar to
+the Grafana container, we add the `--add-host` parameter:
 
 ```shell
-docker run -p 8812:8812 -p 9000:9000 questdb/questdb
+docker run --add-host=host.docker.internal:host-gateway \
+-p 9000:9000 -p 9009:9009 -p 8812:8812 -p 9003:9003 \
+-v "$(pwd):/var/lib/questdb" \
+-e QDB_PG_READONLY_USER_ENABLED=true \
+questdb/questdb:latest
+
 ```
 
 ### Loading the dataset
@@ -117,30 +117,35 @@ In Grafana, select to the cog icon to expand the **Configuration** menu, select
 plugin and configure it with the following settings:
 
 ```
-host:localhost:8812
+host:host.docker.internal:8812
 database:qdb
-user:admin
+user:user
 password:quest
 TLS/SSL mode:disable
 ```
 
-If `localhost` cannot be resolved by the Grafana docker image, the local IP
-address of your machine should be used for the **host** field, e.g.
-`192.168.0.3:8812`.
+<Screenshot
+  alt="Screenshot of configuring data source"
+  src="/img/blog/2023-04-12/data-source.png"
+/>
 
-Note that Grafana does not validate that queries are read-only. This means it's
-possible to run queries such as `drop table x` in Grafana which would be
-destructive to a dataset.
+Note that by default, Grafana does not validate that queries are read-only. This
+means it's possible to run queries such as `drop table x` in Grafana which would
+be destructive to a dataset.
 
-To protect against this, set a dedicated QuestDB instance **read-only mode** by
-setting the property `http.security.readonly=true` in your `server.conf`.
-Details of setting this configuration can be found on QuestDB's
-[configuration page](/docs/reference/configuration).
+To protect against this, we have set the environment variable
+`QDB_PG_READONLY_USER_ENABLED` to true when starting the QuestDB container. Once
+this configuration is set, we enable a read-only user, and we could use the
+default user (`pg.readonly.user` = user) and password (`pg.readonly.password` =
+quest) to log in. More details for setting this configuration can be found on
+QuestDB's [Docker configuration page](/docs/reference/configuration/#docker).
 
 To avoid unnecessary memory usage, it is also recommended to disable SELECT
-query cache by setting the property `pg.select.cache.enabled=false` in your
-`server.conf`. That's because Grafana does not use prepared statements when
-sending the queries and the query cache becomes much less efficient.
+query cache by setting the environment variable `PG_SELECT_CACHE_ENABLED` to
+false. That's because we are only using Grafana for our queries: Grafana does
+not use prepared statements when sending the queries and the query cache becomes
+much less efficient. Of course, if you are using other tools on top of this
+setup, you will need to evaluate the suitable settings.
 
 ### Create a dashboard and a panel
 
@@ -151,7 +156,7 @@ import Screenshot from "@theme/Screenshot"
 
 <Screenshot
   alt="Screenshot of a new dashboard with a 'Add new panel' button"
-  src="/img/blog/2020-10-19/add-new-panel.png"
+  src="/img/blog/2023-04-12/add-new-panel.png"
 />
 
 The new panel has a graphing area on the top half of the window and a query
@@ -159,7 +164,7 @@ builder in the bottom half:
 
 <Screenshot
   alt="Screenshot of a blank panel after being created"
-  src="/img/blog/2020-10-19/blank-panel.png"
+  src="/img/blog/2023-04-12/blank-panel.png"
 />
 
 Toggle the query editor to **text edit mode** by clicking the pencil icon or by
@@ -168,7 +173,7 @@ statements that we can input directly:
 
 <Screenshot
   alt="Screenshot showing how to toggle text edit mode"
-  src="/img/blog/2020-10-19/toggle-text-edit.png"
+  src="/img/blog/2023-04-12/toggle-text-edit.png"
 />
 
 Paste the following query into the editor:
@@ -178,7 +183,7 @@ SELECT pickup_datetime AS time,
        avg(trip_distance) AS distance
 FROM ('taxi_trips_feb_2018.csv' timestamp(pickup_datetime))
 WHERE $__timeFilter(pickup_datetime)
-SAMPLE BY $__interval
+SAMPLE BY $__interval;
 ```
 
 Click the time range selector above the chart and set the following date range:
@@ -190,10 +195,16 @@ We have built our first panel with aggregations:
 
 <Screenshot
   alt="A panel showing the average distance traveled, filtered by taxi type and with dynamic sampling."
-  src="/img/blog/2020-10-19/first-panel.png"
+  src="/img/blog/2023-04-12/first-panel.png"
 />
 
 #### Query details
+
+To build a time-series dashboard in Grafana, the results need to be sorted by
+time. In QuestDB, we typically don't need to do anything as results tend to be
+sorted already. Check out Grafana
+[time-series queries](https://grafana.com/docs/grafana/latest/datasources/postgres/#time-series-queries)
+for more information.
 
 To graph the average trip distance above, we use the `avg()` function on the
 `trip_distance` column. This function aggregates data over the specified
@@ -223,12 +234,19 @@ panels and dashboards. To learn more about the use of these variables, refer to
 the
 [Grafana reference documentation on Global variables](https://grafana.com/docs/grafana/latest/variables/variable-types/global-variables/#global-variables).
 
-:::note
+Finally, we use alias such as `SELECT pickup_datetime AS time` in all the
+queries. This is because the PostgreSQL Grafana plugin expects a column named
+"time" for any time-series chart. We use an alias to do so here, and you can
+also use the special \$\_\_time() macro, as in:
 
-For existing Grafana query known issue, see
-[Known issues](/docs/third-party-tools/grafana/#known-issues).
-
-:::
+```sql
+SELECT
+$__time(pickup_datetime),
+avg(trip_distance) AS distance
+FROM ('taxi_trips_feb_2018.csv' timestamp(pickup_datetime))
+WHERE $**timeFilter(pickup_datetime)
+SAMPLE BY \$**interval;
+```
 
 ### Adding multiple queries
 
@@ -244,7 +262,7 @@ SELECT pickup_datetime AS time,
 FROM ('taxi_trips_feb_2018.csv' timestamp(pickup_datetime))
 WHERE $__timeFilter(pickup_datetime)
 AND payment_type IN ('Cash')
-SAMPLE BY $__interval
+SAMPLE BY $__interval;
 ```
 
 Click **+ Query** to add a second query (automatically labeled `B`) and paste
@@ -257,7 +275,7 @@ SELECT pickup_datetime AS time,
 FROM ('taxi_trips_feb_2018.csv' timestamp(pickup_datetime))
 WHERE $__timeFilter(pickup_datetime)
 AND payment_type IN ('Card')
-SAMPLE BY $__interval
+SAMPLE BY $__interval;
 ```
 
 Both queries are now layered on the same panel with a green line for cash and a
@@ -265,14 +283,21 @@ yellow line for card payments:
 
 <Screenshot
   alt="A panel showing the average distance travelled, filtered by taxi type and with dynamic sampling."
-  src="/img/blog/2020-10-19/panel-filtering-by-taxi-type.png"
+  src="/img/blog/2023-04-12/panel-filtering-by-taxi-type.png"
 />
 
 We can see in this graph that the distance traveled by those paying with cards
 is longer than for those paying with cash. This could be due to the fact that
 users usually carry less cash than the balance in their card.
 
-Let’s add another panel:
+Let’s add another panel by selecting **Dashboards** and **+ New dashboard**:
+
+<Screenshot
+  alt="A screenshot showing the add new dashboard option."
+  src="/img/blog/2023-04-12/add-new-dashboard.png"
+/>
+
+This time, we will add the following query:
 
 ```
 SELECT
@@ -287,7 +312,7 @@ This is what our query looks like when viewing a time range of 28 days:
 
 <Screenshot
   alt="A panel showing the number of trips over a month using dynamic sampling."
-  src="/img/blog/2020-10-19/panel-count-of-taxi-trips-in-whole-month.png"
+  src="/img/blog/2023-04-12/panel-count-of-taxi-trips-in-whole-month.png"
 />
 
 Zooming in to a single day shows more detailed data points as we are sampling by
@@ -295,7 +320,7 @@ Grafana's `$__interval` property:
 
 <Screenshot
   alt="A panel showing the number of trips in a day using dynamic sampling."
-  src="/img/blog/2020-10-19/panel-count-of-taxi-trips-in-a-day.png"
+  src="/img/blog/2023-04-12/panel-count-of-taxi-trips-in-a-day.png"
 />
 
 The daily cycle of activity is visible, with rides peaking in the early evening
@@ -303,9 +328,8 @@ and reaching a low in the middle of the night.
 
 ## ASOF JOIN
 
-`ASOF JOIN` allows us to join 2 tables based on timestamp where timestamps do
-not exactly match. To join the taxi trips data with weather data, enter the
-following query:
+`ASOF JOIN` allows us to join 2 tables based on timestamps that do not exactly
+match. To join the taxi trips data with weather data, enter the following query:
 
 ```
 SELECT
@@ -323,12 +347,12 @@ chart:
 - Set the **From** value to `2018-02-07 00:00:00`
 - Set the **To** value to `2018-02-14 23:59:59` and click **Apply time range**
 - Enable dual Y-axis in the option panel by using **Overrides**, simply
-  assgining different axis placements and units for fields `fare_amount` and
+  assigning different axis placements and units for fields `fare_amount` and
   `rain1H`.
 
 <Screenshot
   alt="Assign different placement and units respectively for average fare amount and hourly precipitation."
-  src="/img/blog/2020-10-19/enable-2nd-y-axis.png"
+  src="/img/blog/2023-04-12/enable-2nd-y-axis.png"
 />
 
 In this graph, we have 2 series, in green we have the fare amount sampled
@@ -337,14 +361,18 @@ millimeters. From the graph, it’s hard to say whether there is a correlation
 between rain and the amount spent on taxi rides.
 
 <Screenshot
-  alt="A panel showing taxi fares plotted against rain fall"
-  src="/img/blog/2020-10-19/panel-taxi-fares-and-rain.png"
+  alt="A panel showing taxi fares plotted against rainfall"
+  src="/img/blog/2023-04-12/panel-taxi-fares-and-rain.png"
 />
 
 ## Conclusion
 
 We have learned how to import time series data into QuestDB and build a
-dashboard with multiple queries in Grafana. If you like this content and want to
-see more tutorials about third-party integrations, let us know
-[in our Slack Community]({@slackUrl@}) or drop us a
-[star on GitHub]({@githubUrl@}).
+dashboard with multiple queries in Grafana. We can use this dashboard to explore
+the relationship between taxi fares and rainfall, if any. With a dual Y-axis, we
+can easily compare the two datasets and identify any correlations. Data analysis
+with a visualization like this can be extremely useful, as it can provide
+insights into how weather conditions and taxi fares affect each other.
+
+If you like this content and want to see more tutorials about third-party
+integrations, let us know [in our Slack Community]({@slackUrl@}).
