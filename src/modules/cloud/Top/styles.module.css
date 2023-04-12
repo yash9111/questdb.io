@@ -46,10 +46,10 @@
   grid-auto-flow: row;
   gap: 2rem;
   grid-template-areas:
-      "start-building-button"
-      "actions"
-      "instance-details-image"
-      "instance-metrics-image";
+    "start-building-button"
+    "actions"
+    "instance-details-image"
+    "instance-metrics-image";
 }
 
 .startBuildingImage {
@@ -78,30 +78,14 @@
 }
 
 .actions {
-  display: grid;
-  gap: 1rem;
-  grid-auto-flow: column;
-  justify-content: center;
   grid-area: actions;
-}
-
-.actions span {
-  margin-left: 0.75rem;
-}
-
-.actions a {
-  font-weight: var(--ifm-font-weight-semibold);
-}
-
-html[data-theme="light"] .actions svg {
-  filter: invert(1);
 }
 
 @media (min-width: 1000px) {
   .section {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
-    }
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
 
   .columns {
     align-items: center;

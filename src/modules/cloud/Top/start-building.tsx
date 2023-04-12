@@ -1,11 +1,9 @@
 import React from "react"
 import styles from "./styles.module.css"
 import Button from "@theme/Button"
-import CameraIcon from "../../../assets/img/camera.svg"
-import MessageIcon from "../../../assets/img/message.svg"
-import { GetAccess } from "../get-access"
 import { useCloudUrl } from "../../../utils/cloud-url"
 import clsx from "clsx"
+import { BookADemoButtons } from "../../book-a-demo-buttons"
 
 export const StartBuilding = () => {
   const cloudUrl = useCloudUrl()
@@ -35,30 +33,7 @@ export const StartBuilding = () => {
         Start building now
       </Button>
       <span className={styles.startBuildingCredits}>$200 in free credits</span>
-      <div className={styles.actions}>
-        <Button
-          size="xxsmall"
-          variant="tertiary"
-          icon={<CameraIcon />}
-          to="/cloud/book-a-demo"
-          uppercase={false}
-        >
-          Book a demo
-        </Button>
-        or
-        <GetAccess
-          trigger={
-            <Button
-              size="xxsmall"
-              variant="tertiary"
-              icon={<MessageIcon />}
-              uppercase={false}
-            >
-              Contact us
-            </Button>
-          }
-        />
-      </div>
+      <BookADemoButtons className={styles.actions} />
     </div>
   )
 }
