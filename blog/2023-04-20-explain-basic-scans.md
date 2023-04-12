@@ -69,8 +69,9 @@ For tables without designated timestamp scan direction doesn't make a difference
 Let's check a simple select: 
 
 ```questdb-sql
-explain select * from trades 
-order by timestamp
+EXPLAIN 
+SELECT * FROM trades 
+ORDER BY timestamp
 ```
 
  | QUERY PLAN                                            |
@@ -94,8 +95,9 @@ width={650}
 />
 
 ```questdb-sql
-explain select * from trades 
-order by timestamp desc
+EXPLAIN 
+SELECT * FROM trades 
+ORDER BY timestamp DESC
 ```
 
 | QUERY PLAN                                            |
@@ -131,8 +133,9 @@ When query contains a reasonable condition on designated timestamp, QuestDB engi
 Interval boundaries are found by binary searching designated timestamp column, for instance :
 
 ```questdb-sql
-explain select * from trades 
-where timestamp in '2023-01-20'
+EXPLAIN 
+SELECT *  trades 
+WHERE timestamp in '2023-01-20'
 ```
 
  | QUERY PLAN                                                                                 |
@@ -146,9 +149,10 @@ Plan above shows that optimizer reduced scanning to single interval equal to 202
 Engine might even detect conflicting conditions and not run any scan at all, e.g.
 
 ```questdb-sql
-explain select * from trades 
-where timestamp in '2023-01-20' 
-and timestamp < '2022-01-01'
+EXPLAIN 
+SELECT * FROM trades 
+WHERE timestamp in '2023-01-20' 
+AND timestamp < '2022-01-01'
 ```
 produces :
 
@@ -159,8 +163,9 @@ produces :
 If predicate is too complex (especially if designated timestamp is used as function argument), engine will fall back to default table scan with filter, e.g. 
 
 ```questdb-sql
-explain select * from trades 
-where dateadd('m', 1, timestamp) in '2023-01-20'
+EXPLAIN 
+SELECT * FROM trades 
+WHERE dateadd('m', 1, timestamp) in '2023-01-20'
 ```
 
 | QUERY PLAN                                                                          |
@@ -180,9 +185,10 @@ Lesson - keep designated timestamp predicates clean and simple!
 Same as forward scan but runs from last row of last interval to first row of first interval.   
 
 ```questdb-sql
-explain select * from trades 
-where timestamp in '2023-01-20' 
-order by timestamp desc
+EXPLAIN 
+SELECT * FROM trades 
+WHERE timestamp in '2023-01-20' 
+ORDER BY timestamp DESC
 ```
 
 | QUERY PLAN                                                                                 |
@@ -223,8 +229,8 @@ That means when querying for a single index key ordering can be implemented with
 Following queries : 
 
 ```questdb-sql
-explain select * from pos where id in ('X')
-explain select * from pos where id in ('X') order by time 
+EXPLAIN SELECT * FROM pos WHERE id in ('X')
+EXPLAIN SELECT * FROM pos WHERE id in ('X') ORDER BY time 
 ```
 
 produce the same plan :
@@ -243,10 +249,10 @@ Note - `deferred: true` means symbol wasn't found in symbol dictionary so resolu
 What if we switch order by direction and add predicate on timestamp?  
 
 ```questdb-sql
-explain select * from pos 
-where id in ('X') 
-and time in '2023-02-01' 
-order by id, time desc
+EXPLAIN SELECT * FROM pos 
+WHERE id in ('X') 
+AND time in '2023-02-01' 
+ORDER BY id, time DESC
 ```
 
 This yields : 
@@ -283,8 +289,8 @@ width={650}
 />
 
 ```questdb-sql
-explain select * from pos 
-where id in ('X', 'Y')
+EXPLAIN SELECT * FROM pos 
+WHERE id in ('X', 'Y')
 ```
 
 | QUERY PLAN                                                                               |
@@ -310,10 +316,10 @@ width={650}
 />
 
 ```questdb-sql
-explain select * from pos 
-where id in ('X', 'Y') 
-and time in '2023-02-01' 
-order by id,time desc
+EXPLAIN SELECT * FROM pos 
+WHERE id in ('X', 'Y') 
+AND time in '2023-02-01' 
+ORDER BY id,time DESC
 ```
 
  | QUERY PLAN                                                                                 |
@@ -338,7 +344,7 @@ On the other hand, for certain queries, it might be fine to read a handful of ro
 Say we need to count the number of rows in `trades` table :  
 
 ```questdb-sql
-select count(*) from trades;
+SELECT count(*) FROM trades;
 ```
 it returns 1634599313 in just 240μs.
 
@@ -360,7 +366,7 @@ If possible, instead of iterating over all records, `Count` plan node iterates o
 Keep in mind that this optimization only makes sense in absence of where conditions. For comparison, the following query : 
 
 ```questdb-sql
-select count(*) from trips where total_amount > 0 ;
+SELECT count(*) FROM trips WHERE total_amount > 0 ;
 ```
 
 has to evaluate predicate for each table row, and even though it uses parallel execution, it takes about 7 seconds to complete.
@@ -369,9 +375,9 @@ Now, let's assume we need to check if any of the trips finished at specific loca
 A simple way to phrase it is : 
 
 ```questdb-sql
-select count(*) 
-from trips
-where dropoff_location_id = 110 
+SELECT count(*) 
+FROM trips
+WHERE dropoff_location_id = 110 
 ```
 
 Query returns in 120 ms, which is nice, but can we make it faster ? 
@@ -379,12 +385,12 @@ Since we're only interested in knowing if any trip meets the criteria, we don't 
 Instead, we can find the first matching row and stop : 
 
 ```questdb-sql
-select count(*) from
+SELECT count(*) FROM
 (
-  select * 
-  from trips
-  where dropoff_location_id = 110 
-  limit 1
+  SELECT * 
+  FROM trips
+  WHERE dropoff_location_id = 110 
+  LIMIT 1
 )
 ```
 
@@ -392,13 +398,13 @@ This time we got results a bit faster, in 90 ms, and that means first row is awa
 What if we scan from the end then ? How 'full' would scan be then ? Would it be half full or half empty ? 
 
 ```questdb-sql
-select count(*) from
+SELECT count(*) FROM
 (
-  select * 
-  from trips
-  where dropoff_location_id = 110 
-  order by pickup_datetime desc
-  limit 1
+  SELECT * 
+  FROM trips
+  WHERE dropoff_location_id = 110 
+  ORDER BY pickup_datetime DESC
+  LIMIT 1
 )
 ```
 
