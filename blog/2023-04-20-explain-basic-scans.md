@@ -6,7 +6,7 @@ author_url: https://github.com/bziobrowski
 author_image_url: https://avatars.githubusercontent.com/bziobrowski
 description:
   A tour of scan types available in QuestDB.
-image: /img/blog/2023-04-20/banner.jpg
+image: /img/blog/2023-04-20/banner.png
 tags: [explain, SQL, execution plan, table scan, index scan]
 slug: explain-sql-index-table-scan
 ---
@@ -16,7 +16,7 @@ import Banner from "@theme/Banner"
 <Banner
 alt="Image of a hard disk drive."
 height={433}
-src="/img/blog/2023-04-20/banner.jpg"
+src="/img/blog/2023-04-20/banner.png"
 width={650}
 >
 Photo by <a href="https://unsplash.com/@benjaminlehman">Benjamin Lehman</a> via{" "}
