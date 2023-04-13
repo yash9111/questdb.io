@@ -15,80 +15,599 @@ Checking if tables contain a designated timestamp column can be done via the
 
 :::
 
-## systimestamp
+## Date and timestamp format
 
-`systimestamp()` - offset from UTC Epoch in microseconds. Calculates
-`UTC timestamp` using system's real time clock. The value is affected by
-discontinuous jumps in the system time (e.g., if the system administrator
-manually changes the system time).
+The date and timestamp format is formed by units and arbitrary text. A unit is a
+combination of letters representing a date or time component, as defined by the
+table below. The letters used to form a unit are case-sensitive.
 
-:::warning
+See
+[Timestamps in QuestDB](/docs/guides/working-with-timestamps-timezones/#timestamps-in-questdb)
+for more examples of how the units are used to parse inputs.
 
-`systimestamp()` value can change within the query execution timeframe and 
-should not be used in WHERE clause to filter designated timestamp column.
-Please use `now()` instead .  
+| Unit   | Date or Time Component                                                                                         | Presentation       | Examples                              |
+| ------ | -------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------- |
+| `G`    | Era designator                                                                                                 | Text               | AD                                    |
+| `y`    | `y` single digit or greedy year, depending on the input digit number                                           | Year               | 1996; 96; 999; 3                      |
+| `yy`   | Two digit year of the current century                                                                          | Year               | 96 (interpreted as 2096)              |
+| `yyy`  | Three-digit year                                                                                               | Year               | 999                                   |
+| `yyyy` | Four-digit year                                                                                                | Year               | 1996                                  |
+| `M`    | Month in year                                                                                                  | Month              | July; Jul; 07                         |
+| `w`    | Week in year                                                                                                   | Number             | 27                                    |
+| `ww`   | ISO week of year                                                                                               | Number             | 2                                     |
+| `D`    | Day in year                                                                                                    | Number             | 189                                   |
+| `d`    | Day in month                                                                                                   | Number             | 10                                    |
+| `F`    | Day of week in month                                                                                           | Number             | 2                                     |
+| `E`    | Day name in week                                                                                               | Text               | Tuesday; Tue                          |
+| `u`    | Day number of week (1 = Monday, ..., 7 = Sunday)                                                               | Number             | 1                                     |
+| `a`    | Am/pm marker                                                                                                   | Text               | PM                                    |
+| `H`    | Hour in day (0-23)                                                                                             | Number             | 0                                     |
+| `k`    | Hour in day (1-24)                                                                                             | Number             | 24                                    |
+| `K`    | Hour in am/pm (0-11)                                                                                           | Number             | 0                                     |
+| `h`    | Hour in am/pm (1-12)                                                                                           | Number             | 12                                    |
+| `m`    | Minute in hour                                                                                                 | Number             | 30                                    |
+| `s`    | Second in minute                                                                                               | Number             | 55                                    |
+| `SSS`  | 3-digit millisecond                                                                                            | Number             | 978                                   |
+| `S`    | Millisecond up to 3 digits: `S` parses 1 digit when followed by another `unit`. Otherwise, it parses 3 digits. | Number             | 900                                   |
+| `z`    | Time zone                                                                                                      | General time zone  | Pacific Standard Time; PST; GMT-08:00 |
+| `Z`    | Time zone                                                                                                      | RFC 822 time zone  | -0800                                 |
+| `X`    | Time zone                                                                                                      | ISO 8601 time zone | -08; -0800; -08:00                    |
+| `UUU`  | 3-digit microsecond                                                                                            | Number             | 698                                   |
+| `U`    | Microsecond up to 3 digits: `U` parses 1 digit when followed by another `unit`. Otherwise, it parses 3 digits. | Number             | 600                                   |
+| `U+`   | 6-digit microsecond                                                                                            | Number             | 600                                   |
+| `N`    | Nanosecond. QuestDB provides microsecond resolution so the parsed nanosecond will be truncated.                | Number             | N/A (truncated)                       |
+| `N+`   | 9-digit nanosecond. QuestDB provides microsecond resolution so the parsed nanosecond will be truncated.        | Number             | N/A (truncated)                       |
 
-:::
+### Examples for greedy year format `y`
+
+The interpretation of `y` depends on the input digit number:
+
+- If the input year is a two-digit number, the output timestamp assumes the
+  current century.
+- Otherwise, the number is interpreted as it is.
+
+| Input year | Timestamp value interpreted by `y-M` | Notes                                                |
+| ---------- | ------------------------------------ | ---------------------------------------------------- |
+| `5-03`     | `0005-03-01T00:00:00.000000Z`        | Greedily parsing the number as it is                 |
+| `05-03`    | `2005-03-01T00:00:00.000000Z`        | Greedily parsing the number assuming current century |
+| `005-03`   | `0005-03-01T00:00:00.000000Z`        | Greedily parsing the number as it is                 |
+| `0005-03`  | `0005-03-01T00:00:00.000000Z`        | Greedily parsing the number as it is                 |
+
+## date_trunc
+
+`date_trunc(unit, timestamp)` - returns a timestamps truncated to the selected precision
 
 **Arguments:**
 
-- `systimestamp()` does not accept arguments.
+- `unit` is one of the following:
+
+  - `millennium` 
+  - `decade` 
+  - `century` 
+  - `year`
+  - `quarter`
+  - `month`
+  - `week`
+  - `day`
+  - `hour`
+  - `minute`
+  - `second`
+  - `milliseconds`
+  - `microseconds`
+<!--https://github.com/questdb/questdb/pull/3158-->
+
+- `timestamp` is any timestamp value.
 
 **Return value:**
 
-Return value type is `timestamp`.
+Return value type is `timestamp`
 
 **Examples:**
 
-```questdb-sql title="Insert current system timestamp"
-INSERT INTO readings
-VALUES(systimestamp(), 123.5);
+```questdb-sql
+SELECT date_trunc('hour', '2022-03-11T22:00:30.555555Z') hour,
+date_trunc('month', '2022-03-11T22:00:30.555555Z') month,
+date_trunc('year','2022-03-11T22:00:30.555555Z') year;
 ```
 
-| ts                          | reading |
-| :-------------------------- | :------ |
-| 2020-01-02T19:28:48.727516Z | 123.5   |
+|   hour                         |   month                        |   year                         |
+|--------------------------------|--------------------------------|--------------------------------|
+|   2022-03-11T22:00:00.000000Z  |   2022-03-01T00:00:00.000000Z  |   2022-01-01T00:00:00.000000Z  |
 
-## sysdate
 
-`sysdate()` - returns the timestamp of the host system as a `date` with
-`millisecond` precision.
+## dateadd
 
-Calculates `UTC date` with millisecond precision using system's real time clock.
-The value is affected by discontinuous jumps in the system time (e.g., if the
-system administrator manually changes the system time).
-
-:::warning
-
-`sysdate()` value can change within the query execution timeframe and
-should not be used in WHERE clause to filter designated timestamp column.
-Please use `now()` instead .
-
-:::
+`dateadd(period, n, startDate)` - adds `n` `period` to `startDate`.
 
 **Arguments:**
 
-- `sysdate()` does not accept arguments.
+- `period` is a `char`. Period to be added. Available periods are:
+
+  - `s`: second
+  - `m`: minute
+  - `h`: hour
+  - `d`: day
+  - `w`: week
+  - `M`: month
+  - `y`: year
+
+- `n` is an `int` indicating the number of periods to add.
+- `startDate` is a timestamp or date indicating the timestamp to add the period to.
 
 **Return value:**
 
-Return value type is `date`.
+Return value type is `timestamp`
 
 **Examples:**
 
-```questdb-sql title="Insert current system date along with a value"
-INSERT INTO readings
-VALUES(sysdate(), 123.5);
+```questdb-sql title="Adding hours"
+SELECT systimestamp(), dateadd('h', 2, systimestamp())
+FROM long_sequence(1);
 ```
 
-| sysdate                     | reading |
-| :-------------------------- | :------ |
-| 2020-01-02T19:28:48.727516Z | 123.5   |
+| systimestamp                | dateadd                     |
+| :-------------------------- | :-------------------------- |
+| 2020-04-17T00:30:51.380499Z | 2020-04-17T02:30:51.380499Z |
 
-```questdb-sql title="Query based on last minute"
-SELECT * FROM readings
-WHERE date_time > sysdate() - 60000000L;
+```questdb-sql title="Adding days"
+SELECT systimestamp(), dateadd('d', 2, systimestamp())
+FROM long_sequence(1);
 ```
+
+| systimestamp                | dateadd                     |
+| :-------------------------- | :-------------------------- |
+| 2020-04-17T00:30:51.380499Z | 2020-04-19T00:30:51.380499Z |
+
+```questdb-sql title="Adding months"
+SELECT systimestamp(), dateadd('M', 2, systimestamp())
+FROM long_sequence(1);
+```
+
+| systimestamp                | dateadd                     |
+| :-------------------------- | :-------------------------- |
+| 2020-04-17T00:30:51.380499Z | 2020-06-17T00:30:51.380499Z |
+
+## datediff
+
+`datediff(period, date1, date2)` - returns the absolute number of `period`
+between `date1` and `date2`.
+
+**Arguments:**
+
+- `period` is a char. Period to be added. Available periods are:
+
+  - `s`: second
+  - `m`: minute
+  - `h`: hour
+  - `d`: day
+  - `w`: week
+  - `M`: month
+  - `y`: year
+
+- `date1` and `date2` are date or timestamp defining the dates to compare.
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Difference in days"
+SELECT datediff('d', '2020-01-23', '2020-01-27');
+```
+
+| datediff |
+| :------- |
+| 4        |
+
+```questdb-sql title="Difference in months"
+SELECT datediff('M', '2020-01-23', '2020-02-27');
+```
+
+| datediff |
+| :------- |
+| 1        |
+
+
+## day
+
+`day(value)` - returns the `day` of month for a given date or timestamp from `1`
+to `31`.
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Day of the month"
+SELECT day(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
+FROM long_sequence(1);
+```
+
+| day |
+| :-- |
+| 01  |
+
+```questdb-sql title="Using in an aggregation"
+SELECT day(ts), count() FROM transactions;
+```
+
+| day | count |
+| :-- | :---- |
+| 1   | 2323  |
+| 2   | 6548  |
+| ... | ...   |
+| 30  | 9876  |
+| 31  | 2567  |
+
+## day_of_week
+
+`day_of_week(value)` - returns the day number in a week from `1` (Monday) to `7`
+(Sunday)
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql
+SELECT to_str(ts,'EE'),day_of_week(ts) FROM myTable;
+```
+
+| day       | day_of_week |
+| :-------- | :---------- |
+| Monday    | 1           |
+| Tuesday   | 2           |
+| Wednesday | 3           |
+| Thursday  | 4           |
+| Friday    | 5           |
+| Saturday  | 6           |
+| Sunday    | 7           |
+
+## day_of_week_sunday_first
+
+`day_of_week_sunday_first(value)` - returns the day number in a week from `1`
+(Sunday) to `7` (Saturday)
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql
+SELECT to_str(ts,'EE'),day_of_week_sunday_first(ts) FROM myTable;
+```
+
+| day       | day_of_week_sunday_first |
+| :-------- | :----------------------- |
+| Monday    | 2                        |
+| Tuesday   | 3                        |
+| Wednesday | 4                        |
+| Thursday  | 5                        |
+| Friday    | 6                        |
+| Saturday  | 7                        |
+| Sunday    | 1                        |
+
+## extract
+
+`extract (unit, timestamp)` - returns the selected time unit from the input timestamp.
+
+**Arguments:**
+
+- `unit` is one of the following:
+
+  - `millennium` 
+  - `epoch`
+  - `decade` 
+  - `century` 
+  - `year`
+  - `isoyear`
+  - `doy` (day of year)
+  - `quarter`
+  - `month`
+  - `week`
+  - `dow` (day of week)
+  - `isodow`
+  - `day` 
+  - `hour`
+  - `minute`
+  - `second`
+  - `microseconds`
+  - `milliseconds`
+
+- `timestamp` is any timestamp value.
+
+**Return value:**
+
+Return value type is `integer`.
+
+**Examples**
+
+```questdb-sql
+
+SELECT extract(millennium from '2023-03-11T22:00:30.555555Z') millennium, 
+extract(year from '2023-03-11T22:00:30.555555Z') year,
+extract(month from '2023-03-11T22:00:30.555555Z') month,
+extract(week from '2023-03-11T22:00:30.555555Z') quarter,
+extract(hour from '2023-03-11T22:00:30.555555Z') hour,
+extract(second from '2023-03-11T22:00:30.555555Z') second;
+```
+
+|   millennium  |   year  |   month |   quarter  |   hour | second  |
+|---------------|---------|---------|------------|--------|---------|
+|   3           |   2023  |   3     |   10       |   22   | 30      |
+|               |         |         |            |        |         |
+
+## hour
+
+`hour(value)` - returns the `hour` of day for a given date or timestamp from `0`
+to `23`
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Hour of the day"
+SELECT hour(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
+FROM long_sequence(1);
+```
+
+| hour |
+| :--- |
+| 12   |
+
+```questdb-sql title="Using in an aggregation"
+SELECT hour(ts), count() FROM transactions;
+```
+
+| hour | count |
+| :--- | :---- |
+| 0    | 2323  |
+| 1    | 6548  |
+| ...  | ...   |
+| 22   | 9876  |
+| 23   | 2567  |
+
+## is_leap_year
+
+`is_leap_year(value)` - returns `true` if the `year` of `value` is a leap year,
+`false` otherwise.
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `boolean`
+
+**Examples:**
+
+```questdb-sql
+SELECT year(ts), is_leap_year(ts) FROM myTable;
+```
+
+| year | is_leap_year |
+| :--- | :----------- |
+| 2020 | true         |
+| 2021 | false        |
+| 2022 | false        |
+| 2023 | false        |
+| 2024 | true         |
+| 2025 | false        |
+
+## days_in_month
+
+`days_in_month(value)` - returns the number of days in a month from a provided
+timestamp or date.
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql
+SELECT month(ts), days_in_month(ts) FROM myTable;
+```
+
+| month | days_in_month |
+| :---- | :------------ |
+| 4     | 30            |
+| 5     | 31            |
+| 6     | 30            |
+| 7     | 31            |
+| 8     | 31            |
+
+
+## micros
+
+`micros(value)` - returns the `micros` of the millisecond for a given date or
+timestamp from `0` to `999`
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Micros of the second"
+SELECT micros(to_timestamp('2020-03-01:15:43:21.123456', 'yyyy-MM-dd:HH:mm:ss.SSSUUU'))
+FROM long_sequence(1);
+```
+
+| millis |
+| :----- |
+| 456    |
+
+```questdb-sql title="Parsing 3 digits when no unit is added after U"
+SELECT micros(to_timestamp('2020-03-01:15:43:21.123456', 'yyyy-MM-dd:HH:mm:ss.SSSU'))
+FROM long_sequence(1);
+```
+
+| millis |
+| :----- |
+| 456    |
+
+```questdb-sql title="Using in an aggregation"
+SELECT micros(ts), count() FROM transactions;
+```
+
+| second | count |
+| :----- | :---- |
+| 0      | 2323  |
+| 1      | 6548  |
+| ...    | ...   |
+| 998    | 9876  |
+| 999    | 2567  |
+
+## millis
+
+`millis(value)` - returns the `millis` of the second for a given date or
+timestamp from `0` to `999`
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Millis of the second"
+SELECT millis(
+    to_timestamp('2020-03-01:15:43:21.123456', 'yyyy-MM-dd:HH:mm:ss.SSSUUU'))
+FROM long_sequence(1);
+```
+
+| millis |
+| :----- |
+| 123    |
+
+```questdb-sql title="Parsing 3 digits when no unit is added after S"
+SELECT millis(to_timestamp('2020-03-01:15:43:21.123', 'yyyy-MM-dd:HH:mm:ss.S'))
+FROM long_sequence(1);
+```
+
+| millis |
+| :----- |
+| 123    |
+
+```questdb-sql title="Using in an aggregation"
+SELECT millis(ts), count() FROM transactions;
+```
+
+| second | count |
+| :----- | :---- |
+| 0      | 2323  |
+| 1      | 6548  |
+| ...    | ...   |
+| 998    | 9876  |
+| 999    | 2567  |
+
+## minute
+
+`minute(value)` - returns the `minute` of the hour for a given date or timestamp
+from `0` to `59`
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Minute of the hour"
+SELECT minute(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
+FROM long_sequence(1);
+```
+
+| minute |
+| :----- |
+| 43     |
+
+```questdb-sql title="Using in an aggregation"
+SELECT minute(ts), count() FROM transactions;
+```
+
+| minute | count |
+| :----- | :---- |
+| 0      | 2323  |
+| 1      | 6548  |
+| ...    | ...   |
+| 58     | 9876  |
+| 59     | 2567  |
+
+## month
+
+`month(value)` - returns the `month` of year for a given date or timestamp from
+`1` to `12`
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Month of the year"
+SELECT month(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
+FROM long_sequence(1);
+```
+
+| month |
+| :---- |
+| 03    |
+
+```questdb-sql title="Using in an aggregation"
+SELECT month(ts), count() FROM transactions;
+```
+
+| month | count |
+| :---- | :---- |
+| 1     | 2323  |
+| 2     | 6548  |
+| ...   | ...   |
+| 11    | 9876  |
+| 12    | 2567  |
+
 
 ## now
 
@@ -136,6 +655,143 @@ SELECT now() FROM long_sequence(3)
 ```questdb-sql title="Query based on last minute"
 SELECT * FROM readings
 WHERE date_time > now() - 60000000L;
+```
+
+## pg_postmaster_start_time
+
+`pg_postmaster_start_time()` - returns the time when the server started.
+
+**Arguments**
+
+- `pg_postmaster_start_time()` does not accept arguments.
+
+**Return value:**
+
+Return value type is `timestamp`
+
+**Examples**
+
+```questdb-sql
+SELECT pg_postmaster_start_time();
+```
+
+| pg_postmaster_start_time    | 
+| :--------------------------:| 
+| 2023-03-30T16:20:29.763961Z | 
+
+## second
+
+`second(value)` - returns the `second` of the minute for a given date or
+timestamp from `0` to `59`
+
+**Arguments:**
+
+- `value` is any `timestamp` or `date`
+
+**Return value:**
+
+Return value type is `int`
+
+**Examples:**
+
+```questdb-sql title="Second of the minute"
+SELECT second(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
+FROM long_sequence(1);
+```
+
+| second |
+| :----- |
+| 43     |
+
+```questdb-sql title="Using in an aggregation"
+SELECT second(ts), count() FROM transactions;
+```
+
+| second | count |
+| :----- | :---- |
+| 0      | 2323  |
+| 1      | 6548  |
+| ...    | ...   |
+| 58     | 9876  |
+| 59     | 2567  |
+
+
+## systimestamp
+
+`systimestamp()` - offset from UTC Epoch in microseconds. Calculates
+`UTC timestamp` using system's real time clock. The value is affected by
+discontinuous jumps in the system time (e.g., if the system administrator
+manually changes the system time).
+
+`systimestamp()` value can change within the query execution timeframe and 
+should **NOT** be used in WHERE clause to filter designated timestamp column.
+
+:::tip
+
+Use now() with WHERE clause filter. 
+
+:::
+
+**Arguments:**
+
+- `systimestamp()` does not accept arguments.
+
+**Return value:**
+
+Return value type is `timestamp`.
+
+**Examples:**
+
+```questdb-sql title="Insert current system timestamp"
+INSERT INTO readings
+VALUES(systimestamp(), 123.5);
+```
+
+| ts                          | reading |
+| :-------------------------- | :------ |
+| 2020-01-02T19:28:48.727516Z | 123.5   |
+
+## sysdate
+
+`sysdate()` - returns the timestamp of the host system as a `date` with
+`millisecond` precision.
+
+Calculates `UTC date` with millisecond precision using system's real time clock.
+The value is affected by discontinuous jumps in the system time (e.g., if the
+system administrator manually changes the system time).
+
+
+`sysdate()` value can change within the query execution timeframe and 
+should **NOT** be used in WHERE clause to filter designated timestamp column.
+
+:::tip
+
+Use `now()` with WHERE clause filter. 
+ 
+:::
+
+**Arguments:**
+
+- `sysdate()` does not accept arguments.
+
+**Return value:**
+
+Return value type is `date`.
+
+**Examples:**
+
+```questdb-sql title="Insert current system date along with a value"
+INSERT INTO readings
+VALUES(sysdate(), 123.5);
+```
+
+| sysdate                     | reading |
+| :-------------------------- | :------ |
+| 2020-01-02T19:28:48.727516Z | 123.5   |
+
+```questdb-sql title="Query based on last minute"
+SELECT * FROM readings
+WHERE date_time > sysdate() - 60000000L;
 ```
 
 ## timestamp_ceil
@@ -232,73 +888,29 @@ SELECT
 | :-------------------------- | :-------------------------- | :-------------------------- | :-------------------------- | :-------------------------- | :-------------------------- | :-------------------------- | :-------------------------- |
 | 2016-02-10T16:18:22.862145Z | 2016-02-10T16:18:22.862000Z | 2016-02-10T16:18:22.000000Z | 2016-02-10T16:18:00.000000Z | 2016-02-10T16:00:00.000000Z | 2016-02-10T00:00:00.000000Z | 2016-02-01T00:00:00.000000Z | 2016-01-01T00:00:00.000000Z |
 
-## to_timestamp
 
-`to_timestamp(string, format)` - converts `string` to `timestamp` by using the
-supplied `format` to extract the value with microsecond precision.
+## timestamp_shuffle
 
-When the `format` definition does not match the `string` input, the result will
-be `null`.
-
-For more information about recognized timestamp formats, see the
-[date and timestamp format section](#date-and-timestamp-format).
+`timestamp_shuffle(timestamp_1, timestamp_2)` - generates a random timestamp inclusively between the two input timestamps.
 
 **Arguments:**
 
-- `string` is any string that represents a date and/or time.
-- `format` is a string that describes the timestamp format in which `string` is
-  expressed.
+- `timestamp_1` - any timestamp value
+- `timestamp_2` - a timestamp value that is not equal to `timestamp_1`
 
 **Return value:**
 
-Return value type is `timestamp`. QuestDB provides `timestamp` with microsecond
-resolution. Input strings with nanosecond precision will be parsed but lose the
-precision.
+Return value type is `timestamp`. 
 
 **Examples:**
 
-```questdb-sql title="Pattern matching with microsecond precision"
-SELECT to_timestamp('2020-03-01:15:43:21.127329', 'yyyy-MM-dd:HH:mm:ss.SSSUUU')
-FROM long_sequence(1);
+```questdb-sql
+SELECT timestamp_shuffle('2023-03-31T22:00:30.555998Z', '2023-04-01T22:00:30.555998Z');
 ```
 
-| to_timestamp                |
+| timestamp_shuffle           |
 | :-------------------------- |
-| 2020-03-01T15:43:21.127329Z |
-
-```questdb-sql title="Precision loss when pattern matching with nanosecond precision"
-SELECT to_timestamp('2020-03-01:15:43:00.000000001Z', 'yyyy-MM-dd:HH:mm:ss.SSSUUUNNNZ')
-FROM long_sequence(1);
-```
-
-| to_timestamp                |
-| :-------------------------- |
-| 2020-03-01T15:43:00.000000Z |
-
-```questdb-sql title="String does not match format"
-SELECT to_timestamp('2020-03-01:15:43:21', 'yyyy')
-FROM long_sequence(1);
-```
-
-| to_timestamp |
-| :----------- |
-| null         |
-
-```questdb-sql title="Using with INSERT"
-INSERT INTO measurements
-values(to_timestamp('2019-12-12T12:15', 'yyyy-MM-ddTHH:mm'), 123.5);
-```
-
-| timestamp                   | value |
-| :-------------------------- | :---- |
-| 2019-12-12T12:15:00.000000Z | 123.5 |
-
-Note that conversion of ISO timestamp format is optional. QuestDB automatically
-converts `string` to `timestamp` if it is a partial or full form of
-`yyyy-MM-ddTHH:mm:ss.SSSUUU` or `yyyy-MM-dd HH:mm:ss.SSSUUU` with a valid time
-offset, `+01:00` or `Z`. See more examples in
-[Native timestamp](/docs/reference/sql/where#native-timestamp-format)
-format](/docs/reference/sql/where#native-timestamp-format).
+| 2023-04-01T11:44:41.893394Z |
 
 ## to_date
 
@@ -393,6 +1005,74 @@ SELECT to_str(systimestamp(), 'yyyy-MM-dd gooD DAY 123') FROM long_sequence(1);
 | to_str                  |
 | :---------------------- |
 | 2020-03-04 gooD DAY 123 |
+
+## to_timestamp
+
+`to_timestamp(string, format)` - converts `string` to `timestamp` by using the
+supplied `format` to extract the value with microsecond precision.
+
+When the `format` definition does not match the `string` input, the result will
+be `null`.
+
+For more information about recognized timestamp formats, see the
+[date and timestamp format section](#date-and-timestamp-format).
+
+**Arguments:**
+
+- `string` is any string that represents a date and/or time.
+- `format` is a string that describes the timestamp format in which `string` is
+  expressed.
+
+**Return value:**
+
+Return value type is `timestamp`. QuestDB provides `timestamp` with microsecond
+resolution. Input strings with nanosecond precision will be parsed but lose the
+precision.
+
+**Examples:**
+
+```questdb-sql title="Pattern matching with microsecond precision"
+SELECT to_timestamp('2020-03-01:15:43:21.127329', 'yyyy-MM-dd:HH:mm:ss.SSSUUU')
+FROM long_sequence(1);
+```
+
+| to_timestamp                |
+| :-------------------------- |
+| 2020-03-01T15:43:21.127329Z |
+
+```questdb-sql title="Precision loss when pattern matching with nanosecond precision"
+SELECT to_timestamp('2020-03-01:15:43:00.000000001Z', 'yyyy-MM-dd:HH:mm:ss.SSSUUUNNNZ')
+FROM long_sequence(1);
+```
+
+| to_timestamp                |
+| :-------------------------- |
+| 2020-03-01T15:43:00.000000Z |
+
+```questdb-sql title="String does not match format"
+SELECT to_timestamp('2020-03-01:15:43:21', 'yyyy')
+FROM long_sequence(1);
+```
+
+| to_timestamp |
+| :----------- |
+| null         |
+
+```questdb-sql title="Using with INSERT"
+INSERT INTO measurements
+values(to_timestamp('2019-12-12T12:15', 'yyyy-MM-ddTHH:mm'), 123.5);
+```
+
+| timestamp                   | value |
+| :-------------------------- | :---- |
+| 2019-12-12T12:15:00.000000Z | 123.5 |
+
+Note that conversion of ISO timestamp format is optional. QuestDB automatically
+converts `string` to `timestamp` if it is a partial or full form of
+`yyyy-MM-ddTHH:mm:ss.SSSUUU` or `yyyy-MM-dd HH:mm:ss.SSSUUU` with a valid time
+offset, `+01:00` or `Z`. See more examples in
+[Native timestamp](/docs/reference/sql/where#native-timestamp-format)
+format](/docs/reference/sql/where#native-timestamp-format).
 
 ## to_timezone
 
@@ -494,95 +1174,9 @@ SELECT to_utc('2021-06-08T13:45:45.000000Z', 'PST')
 | :-------------------------- |
 | 2021-06-08T20:45:45.000000Z |
 
-## dateadd
+## week_of_year
 
-`dateadd(period, n, startDate)` - adds `n` `period` to `startDate`.
-
-**Arguments:**
-
-- `period` is a char. Period to be added. Available periods are `s`, `m`, `h`,
-  `d`, `M`, `y`.
-- `n` is an int. Number of periods to add.
-- `startDate` is a timestamp or date. Timestamp to add the periods to.
-
-**Return value:**
-
-Return value type is `timestamp`
-
-**Examples:**
-
-```questdb-sql title="Adding hours"
-SELECT systimestamp(), dateadd('h', 2, systimestamp())
-FROM long_sequence(1);
-```
-
-| systimestamp                | dateadd                     |
-| :-------------------------- | :-------------------------- |
-| 2020-04-17T00:30:51.380499Z | 2020-04-17T02:30:51.380499Z |
-
-```questdb-sql title="Adding days"
-SELECT systimestamp(), dateadd('d', 2, systimestamp())
-FROM long_sequence(1);
-```
-
-| systimestamp                | dateadd                     |
-| :-------------------------- | :-------------------------- |
-| 2020-04-17T00:30:51.380499Z | 2020-04-19T00:30:51.380499Z |
-
-```questdb-sql title="Adding months"
-SELECT systimestamp(), dateadd('M', 2, systimestamp())
-FROM long_sequence(1);
-```
-
-| systimestamp                | dateadd                     |
-| :-------------------------- | :-------------------------- |
-| 2020-04-17T00:30:51.380499Z | 2020-06-17T00:30:51.380499Z |
-
-## datediff
-
-`datediff(period, date1, date2)` - returns the absolute number of `period`
-between `date1` and `date2`.
-
-**Arguments:**
-
-- `period` is a char. Period to be added. Available periods are `s`, `m`, `h`,
-  `d`, `M`, `y`.
-- `date1` and `date2` are date or timestamp. Dates to compare
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Difference in days"
-SELECT datediff(
-    'd',
-    to_timestamp('2020-01-23','yyyy-MM-dd'),
-    to_timestamp('2020-01-27','yyyy-MM-dd'))
-FROM long_sequence(1);
-```
-
-| datediff |
-| :------- |
-| 4        |
-
-```questdb-sql title="Difference in months"
-SELECT datediff(
-    'M',
-    to_timestamp('2020-01-23','yyyy-MM-dd'),
-    to_timestamp('2020-02-24','yyyy-MM-dd'))
-FROM long_sequence(1);
-```
-
-| datediff |
-| :------- |
-| 1        |
-
-## millis
-
-`millis(value)` - returns the `millis` of the second for a given date or
-timestamp from `0` to `999`
+`week_of_year(value)` - returns the number representing the week number in the year
 
 **Arguments:**
 
@@ -592,263 +1186,15 @@ timestamp from `0` to `999`
 
 Return value type is `int`
 
-**Examples:**
+**Examples**
 
-```questdb-sql title="Millis of the second"
-SELECT millis(
-    to_timestamp('2020-03-01:15:43:21.123456', 'yyyy-MM-dd:HH:mm:ss.SSSUUU'))
-FROM long_sequence(1);
+```questdb-sql
+SELECT week_of_year('2023-03-31T22:00:30.555998Z');
 ```
 
-| millis |
-| :----- |
-| 123    |
-
-```questdb-sql title="Parsing 3 digits when no unit is added after S"
-SELECT millis(to_timestamp('2020-03-01:15:43:21.123', 'yyyy-MM-dd:HH:mm:ss.S'))
-FROM long_sequence(1);
-```
-
-| millis |
-| :----- |
-| 123    |
-
-```questdb-sql title="Using in an aggregation"
-SELECT millis(ts), count() FROM transactions;
-```
-
-| second | count |
-| :----- | :---- |
-| 0      | 2323  |
-| 1      | 6548  |
-| ...    | ...   |
-| 998    | 9876  |
-| 999    | 2567  |
-
-## micros
-
-`micros(value)` - returns the `micros` of the millisecond for a given date or
-timestamp from `0` to `999`
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Micros of the second"
-SELECT micros(to_timestamp('2020-03-01:15:43:21.123456', 'yyyy-MM-dd:HH:mm:ss.SSSUUU'))
-FROM long_sequence(1);
-```
-
-| millis |
-| :----- |
-| 456    |
-
-```questdb-sql title="Parsing 3 digits when no unit is added after U"
-SELECT micros(to_timestamp('2020-03-01:15:43:21.123456', 'yyyy-MM-dd:HH:mm:ss.SSSU'))
-FROM long_sequence(1);
-```
-
-| millis |
-| :----- |
-| 456    |
-
-```questdb-sql title="Using in an aggregation"
-SELECT micros(ts), count() FROM transactions;
-```
-
-| second | count |
-| :----- | :---- |
-| 0      | 2323  |
-| 1      | 6548  |
-| ...    | ...   |
-| 998    | 9876  |
-| 999    | 2567  |
-
-## second
-
-`second(value)` - returns the `second` of the minute for a given date or
-timestamp from `0` to `59`
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Second of the minute"
-SELECT second(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
-FROM long_sequence(1);
-```
-
-| second |
-| :----- |
-| 43     |
-
-```questdb-sql title="Using in an aggregation"
-SELECT second(ts), count() FROM transactions;
-```
-
-| second | count |
-| :----- | :---- |
-| 0      | 2323  |
-| 1      | 6548  |
-| ...    | ...   |
-| 58     | 9876  |
-| 59     | 2567  |
-
-## minute
-
-`minute(value)` - returns the `minute` of the hour for a given date or timestamp
-from `0` to `59`
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Minute of the hour"
-SELECT minute(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
-FROM long_sequence(1);
-```
-
-| minute |
-| :----- |
-| 43     |
-
-```questdb-sql title="Using in an aggregation"
-SELECT minute(ts), count() FROM transactions;
-```
-
-| minute | count |
-| :----- | :---- |
-| 0      | 2323  |
-| 1      | 6548  |
-| ...    | ...   |
-| 58     | 9876  |
-| 59     | 2567  |
-
-## hour
-
-`hour(value)` - returns the `hour` of day for a given date or timestamp from `0`
-to `23`
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Hour of the day"
-SELECT hour(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
-FROM long_sequence(1);
-```
-
-| hour |
-| :--- |
-| 12   |
-
-```questdb-sql title="Using in an aggregation"
-SELECT hour(ts), count() FROM transactions;
-```
-
-| hour | count |
-| :--- | :---- |
-| 0    | 2323  |
-| 1    | 6548  |
-| ...  | ...   |
-| 22   | 9876  |
-| 23   | 2567  |
-
-## day
-
-`day(value)` - returns the `day` of month for a given date or timestamp from `1`
-to `31`.
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Day of the month"
-SELECT day(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
-FROM long_sequence(1);
-```
-
-| day |
-| :-- |
-| 01  |
-
-```questdb-sql title="Using in an aggregation"
-SELECT day(ts), count() FROM transactions;
-```
-
-| day | count |
-| :-- | :---- |
-| 1   | 2323  |
-| 2   | 6548  |
-| ... | ...   |
-| 30  | 9876  |
-| 31  | 2567  |
-
-## month
-
-`month(value)` - returns the `month` of year for a given date or timestamp from
-`1` to `12`
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql title="Month of the year"
-SELECT month(to_timestamp('2020-03-01:15:43:21', 'yyyy-MM-dd:HH:mm:ss'))
-FROM long_sequence(1);
-```
-
-| month |
-| :---- |
-| 03    |
-
-```questdb-sql title="Using in an aggregation"
-SELECT month(ts), count() FROM transactions;
-```
-
-| month | count |
-| :---- | :---- |
-| 1     | 2323  |
-| 2     | 6548  |
-| ...   | ...   |
-| 11    | 9876  |
-| 12    | 2567  |
+| week_of_year | 
+| :-----------:| 
+| 13           | 
 
 ## year
 
@@ -883,173 +1229,3 @@ SELECT month(ts), count() FROM transactions;
 | 2016 | 9876  |
 | 2017 | 2567  |
 
-## is_leap_year
-
-`is_leap_year(value)` - returns `true` if the `year` of `value` is a leap year,
-`false` otherwise.
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `boolean`
-
-**Examples:**
-
-```questdb-sql
-SELECT year(ts), is_leap_year(ts) FROM myTable;
-```
-
-| year | is_leap_year |
-| :--- | :----------- |
-| 2020 | true         |
-| 2021 | false        |
-| 2022 | false        |
-| 2023 | false        |
-| 2024 | true         |
-| 2025 | false        |
-
-## days_in_month
-
-`days_in_month(value)` - returns the number of days in a month from a provided
-timestamp or date.
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql
-SELECT month(ts), days_in_month(ts) FROM myTable;
-```
-
-| month | days_in_month |
-| :---- | :------------ |
-| 4     | 30            |
-| 5     | 31            |
-| 6     | 30            |
-| 7     | 31            |
-| 8     | 31            |
-
-## day_of_week
-
-`day_of_week(value)` - returns the day number in a week from `1` (Monday) to `7`
-(Sunday)
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql
-SELECT to_str(ts,'EE'),day_of_week(ts) FROM myTable;
-```
-
-| day       | day_of_week |
-| :-------- | :---------- |
-| Monday    | 1           |
-| Tuesday   | 2           |
-| Wednesday | 3           |
-| Thursday  | 4           |
-| Friday    | 5           |
-| Saturday  | 6           |
-| Sunday    | 7           |
-
-## day_of_week_sunday_first
-
-`day_of_week_sunday_first(value)` - returns the day number in a week from `1`
-(Sunday) to `7` (Saturday)
-
-**Arguments:**
-
-- `value` is any `timestamp` or `date`
-
-**Return value:**
-
-Return value type is `int`
-
-**Examples:**
-
-```questdb-sql
-SELECT to_str(ts,'EE'),day_of_week_sunday_first(ts) FROM myTable;
-```
-
-| day       | day_of_week_sunday_first |
-| :-------- | :----------------------- |
-| Monday    | 2                        |
-| Tuesday   | 3                        |
-| Wednesday | 4                        |
-| Thursday  | 5                        |
-| Friday    | 6                        |
-| Saturday  | 7                        |
-| Sunday    | 1                        |
-
-## Date and timestamp format
-
-The date and timestamp format is formed by units and arbitrary text. A unit is a
-combination of letters representing a date or time component, as defined by the
-table below. The letters used to form a unit are case-sensitive.
-
-See
-[Timestamps in QuestDB](/docs/guides/working-with-timestamps-timezones/#timestamps-in-questdb)
-for more examples of how the units are used to parse inputs.
-
-| Unit   | Date or Time Component                                                                                         | Presentation       | Examples                              |
-| ------ | -------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------- |
-| `G`    | Era designator                                                                                                 | Text               | AD                                    |
-| `y`    | `y` single digit or greedy year, depending on the input digit number                                           | Year               | 1996; 96; 999; 3                      |
-| `yy`   | Two digit year of the current century                                                                          | Year               | 96 (interpreted as 2096)              |
-| `yyy`  | Three-digit year                                                                                               | Year               | 999                                   |
-| `yyyy` | Four-digit year                                                                                                | Year               | 1996                                  |
-| `M`    | Month in year                                                                                                  | Month              | July; Jul; 07                         |
-| `w`    | Week in year                                                                                                   | Number             | 27                                    |
-| `ww`   | ISO week of year                                                                                               | Number             | 2                                     |
-| `D`    | Day in year                                                                                                    | Number             | 189                                   |
-| `d`    | Day in month                                                                                                   | Number             | 10                                    |
-| `F`    | Day of week in month                                                                                           | Number             | 2                                     |
-| `E`    | Day name in week                                                                                               | Text               | Tuesday; Tue                          |
-| `u`    | Day number of week (1 = Monday, ..., 7 = Sunday)                                                               | Number             | 1                                     |
-| `a`    | Am/pm marker                                                                                                   | Text               | PM                                    |
-| `H`    | Hour in day (0-23)                                                                                             | Number             | 0                                     |
-| `k`    | Hour in day (1-24)                                                                                             | Number             | 24                                    |
-| `K`    | Hour in am/pm (0-11)                                                                                           | Number             | 0                                     |
-| `h`    | Hour in am/pm (1-12)                                                                                           | Number             | 12                                    |
-| `m`    | Minute in hour                                                                                                 | Number             | 30                                    |
-| `s`    | Second in minute                                                                                               | Number             | 55                                    |
-| `SSS`  | 3-digit millisecond                                                                                            | Number             | 978                                   |
-| `S`    | Millisecond up to 3 digits: `S` parses 1 digit when followed by another `unit`. Otherwise, it parses 3 digits. | Number             | 900                                   |
-| `z`    | Time zone                                                                                                      | General time zone  | Pacific Standard Time; PST; GMT-08:00 |
-| `Z`    | Time zone                                                                                                      | RFC 822 time zone  | -0800                                 |
-| `X`    | Time zone                                                                                                      | ISO 8601 time zone | -08; -0800; -08:00                    |
-| `UUU`  | 3-digit microsecond                                                                                            | Number             | 698                                   |
-| `U`    | Microsecond up to 3 digits: `U` parses 1 digit when followed by another `unit`. Otherwise, it parses 3 digits. | Number             | 600                                   |
-| `U+`   | 6-digit microsecond                                                                                            | Number             | 600                                   |
-| `N`    | Nanosecond. QuestDB provides microsecond resolution so the parsed nanosecond will be truncated.                | Number             | N/A (truncated)                       |
-| `N+`   | 9-digit nanosecond. QuestDB provides microsecond resolution so the parsed nanosecond will be truncated.        | Number             | N/A (truncated)                       |
-
-### Examples for greedy year format `y`
-
-The interpretation of `y` depends on the input digit number:
-
-- If the input year is a two-digit number, the output timestamp assumes the
-  current century.
-- Otherwise, the number is interpreted as it is.
-
-| Input year | Timestamp value interpreted by `y-M` | Notes                                                |
-| ---------- | ------------------------------------ | ---------------------------------------------------- |
-| `5-03`     | `0005-03-01T00:00:00.000000Z`        | Greedily parsing the number as it is                 |
-| `05-03`    | `2005-03-01T00:00:00.000000Z`        | Greedily parsing the number assuming current century |
-| `005-03`   | `0005-03-01T00:00:00.000000Z`        | Greedily parsing the number as it is                 |
-| `0005-03`  | `0005-03-01T00:00:00.000000Z`        | Greedily parsing the number as it is                 |
