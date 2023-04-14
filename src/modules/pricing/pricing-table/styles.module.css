@@ -11,7 +11,7 @@
 
 @media screen and (min-width: 1000px) {
   .root {
-    --cell-padding: 0.5rem 2rem;
+    --cell-padding: 0.5rem 1rem;
   }
 }
 

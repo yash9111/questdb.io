@@ -1,5 +1,5 @@
 ---
-title: "SQL Performance Tuning: Introducing EXPLAIN"
+title: "EXPLAIN Your SQL Query Plan"
 author: Bolek Ziobrowski
 author_title: QuestDB Team
 author_url: https://github.com/bziobrowski
@@ -7,22 +7,14 @@ author_image_url: https://avatars.githubusercontent.com/bziobrowski
 description:
   Introduction to EXPLAIN command, which can help with performance tuning
 image: /img/blog/2023-01-26/banner.jpg
-keywords:
-  - performance
-  - performance tuning
-  - sql
-  - full table scans
-  - database
-  - explain
-  - execution plan
-tags: [explain, SQL, execution plan]
-slug: sql-performance-tuning-introducing-explain
+tags: [explain, SQL, execution plan, full table scan, performance tuning]
+slug: explain-sql-query-plan
 ---
 
 QuestDB's core engineer,
 [Bolek Ziobrowski](https://avatars.githubusercontent.com/u/26925920?v=4), has
 implemented the [`EXPLAIN`](/docs/reference/sql/explain/) SQL keyword. In this series of articles, he is going
-to shed light on how to choose the most efficient query with the help of
+to shed light on how to fine tune your SQL queries to improve performance, with the help of
 `EXPLAIN`. Bolek starts the first post of the series with his journey in
 database optimization and an introduction to the `EXPLAIN` execution plan.
 

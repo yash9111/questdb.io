@@ -1,12 +1,98 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 :root {
   --collapse-button-bg-color-dark: #2e333a;
+}
+
+.sidebar {
+  border-right: 1px solid var(--ifm-toc-border-color);
+}
+
+.menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-x: auto;
+  background: var(--ifm-background-color);
+  overscroll-behavior: contain;
+  padding: 1rem;
+  z-index: var(--ifm-z-index-overlay);
+}
+
+.menu.show {
+  display: inherit;
+}
+
+@media screen and (min-width: 997px) {
+  .menu {
+    display: inherit;
+    position: relative;
+  }
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.menuList .menuList {
+  overflow-y: hidden;
+  will-change: height;
+  transition: height 0.15s ease-in-out;
+  padding-left: 1rem;
+}
+
+.menuItem {
+  margin: 0.2rem 0;
+}
+
+.collapsed .menuList {
+  height: 0;
+}
+
+.link {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.2rem 0.75rem 0.2rem 0.5rem;
+  margin-left: 1rem;
+  border-radius: 0.25rem;
+  color: var(--ifm-menu-color);
+}
+
+.link:hover {
+  text-decoration: none;
+  color: var(--ifm-menu-color);
+  background: var(--ifm-menu-color-background-active);
+}
+
+.linkActive,
+.linkActive:hover {
+  color: var(--ifm-menu-color-active);
+}
+
+.linkActive:not(.sublist) {
+  background: var(--ifm-menu-color-background-active);
+}
+
+.sublist::after {
+  position: absolute;
+  display: inline-block;
+  content: " ";
+  width: 1.5rem;
+  height: 1.5rem;
+  left: -1.3rem;
+  top: 0.27rem;
+  background: var(--ifm-menu-link-sublist-icon) 50% / 1.5rem 1.5rem;
+  filter: var(--ifm-menu-link-sublist-icon-filter);
+  transform: rotate(180deg);
+  transition: height 0.15s ease-in-out;
+}
+
+.collapsed .sublist::after {
+  transform: rotate(90deg);
 }
 
 @media (min-width: 997px) {
@@ -19,33 +105,6 @@
     top: 0;
     padding-top: var(--ifm-navbar-height);
     width: var(--doc-sidebar-width);
-    transition: opacity 50ms ease;
-  }
-
-  .sidebarWithHideableNavbar {
-    padding-top: 0;
-  }
-
-  .sidebarHidden {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
-  }
-
-  .sidebarLogo {
-    display: flex !important;
-    align-items: center;
-    margin: 0 var(--ifm-navbar-padding-horizontal);
-    min-height: var(--ifm-navbar-height);
-    max-height: var(--ifm-navbar-height);
-    color: inherit !important;
-    text-decoration: none !important;
-  }
-
-  .sidebarLogo img {
-    margin-right: 0.5rem;
-    height: 2rem;
   }
 
   .menu {
@@ -53,96 +112,28 @@
     padding: 0.5rem;
   }
 
-  .menuLinkText {
+  .linkText {
     cursor: initial;
   }
 
-  .menuLinkText:hover {
+  .linkText:hover {
     background: none;
   }
-
-  .menuWithAnnouncementBar {
-    margin-bottom: var(--docusaurus-announcement-bar-height);
-  }
-
-  .collapseSidebarButton {
-    display: block !important;
-    background-color: var(--ifm-button-background-color);
-    height: 40px;
-    position: sticky;
-    bottom: 0;
-    border-radius: 0;
-    border: 1px solid var(--ifm-toc-border-color);
-  }
-
-  .collapseSidebarButtonIcon {
-    transform: rotate(180deg);
-    margin-top: 4px;
-  }
-  html[dir='rtl'] .collapseSidebarButtonIcon {
-    transform: rotate(0);
-  }
-
-  html[data-theme='dark'] .collapseSidebarButton {
-    background-color: var(--collapse-button-bg-color-dark);
-  }
-
-  html[data-theme='dark'] .collapseSidebarButton:hover,
-  html[data-theme='dark'] .collapseSidebarButton:focus {
-    background-color: var(--ifm-color-emphasis-200);
-  }
 }
 
-.sidebarLogo,
-.collapseSidebarButton {
-  display: none;
-}
-
-.sidebarMenuIcon {
-  vertical-align: middle;
-}
-
-.sidebarMenuCloseIcon {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  height: 24px;
-  font-size: 1.5rem;
-  font-weight: var(--ifm-font-weight-bold);
-  line-height: 0.9;
-  width: 24px;
-}
-
-:global(.menu__list) :global(.menu__list) {
-  overflow-y: hidden;
-  will-change: height;
-  transition: height var(--ifm-transition-fast) linear;
-}
-
-:global(.menu__list-item--collapsed) :global(.menu__list) {
-  height: 0 !important;
-}
-
-
-
-html[data-theme='light'] .blog-wrapper header h2 a{
-  color: var(--ifm-font-color-base);
-}
-
-html[data-theme='light'] .menuLink {
+html[data-theme="light"] .link {
   color: var(--palette-charade);
 }
 
-html[data-theme='light'] :global(.menu__link--active) {
+html[data-theme="light"] .linkActive {
   color: var(--ifm-menu-color-active);
 }
 
-
-.menuLinkExternal {
+.linkExternal {
   align-items: center;
 }
-.menuLinkExternal:after {
-  content: '';
+.linkExternal:after {
+  content: "";
   height: 1.15rem;
   width: 1.15rem;
   min-width: 1.15rem;
@@ -150,4 +141,23 @@ html[data-theme='light'] :global(.menu__link--active) {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='rgba(0,0,0,0.5)' d='M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z'/%3E%3C/svg%3E")
     no-repeat;
   filter: var(--ifm-menu-link-sublist-icon-filter);
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  color: var(--palette-pink);
+  background: var(--theme-card-bg-color);
+  border-radius: 0.25rem;
+  padding: 0 0.5rem;
+}
+
+.linkActive .tag {
+  background: var(--ifm-menu-color-background-active);
+}
+
+:global(html[data-theme="light"]) .link:hover .tag,
+:global(html[data-theme="light"]) .linkActive .tag {
+  background: #fff;
 }

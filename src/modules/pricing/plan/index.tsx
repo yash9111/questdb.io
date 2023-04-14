@@ -14,6 +14,7 @@ export type PricingPlan = {
   specs: Array<{ label: string; value: string }>
   subtext: string
   highlighted?: boolean
+  url?: string
 }
 
 export const Plan = (plan: PricingPlan) => (
@@ -53,7 +54,7 @@ export const Plan = (plan: PricingPlan) => (
       <Button
         size="small"
         dataHook={`get-access-button-plan-${plan.type}`}
-        to={customFields.cloudUrl}
+        to={plan.url ?? customFields.cloudUrl}
         newTab={false}
       >
         Get started

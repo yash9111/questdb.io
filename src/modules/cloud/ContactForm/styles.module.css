@@ -43,26 +43,26 @@
   width: 100%;
 }
 
-.bookADemo {
+.actions {
   display: flex;
   align-items: center;
   font-size: var(--font-size-large);
   margin-top: 1rem;
 }
 
-.bookADemo svg {
+.actions svg {
   margin-top: 0.15rem;
 }
 
-.bookADemo svg path {
+.actions svg path {
   fill: var(--ifm-font-color-base);
 }
 
-.bookADemo span {
+.actions span {
   margin-left: 0.75rem;
 }
 
-.bookADemo a {
+.actions a {
   font-weight: var(--ifm-font-weight-semibold);
 }
 

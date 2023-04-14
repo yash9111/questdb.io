@@ -1,7 +1,6 @@
 .columns {
   display: grid;
   gap: 4rem;
-  grid-template-columns: 1fr; 
 }
 
 .textColumn {
@@ -9,7 +8,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  grid-row: 2;
 }
 
 .list {
@@ -47,11 +45,28 @@
   display: grid;
   grid-auto-flow: row;
   gap: 2rem;
+  grid-template-areas:
+      "start-building-button"
+      "actions"
+      "instance-details-image"
+      "instance-metrics-image";
 }
 
 .startBuildingImage {
   box-shadow: var(--image-shadow);
   height: auto;
+}
+
+.instanceDetailsImage {
+  grid-area: instance-details-image;
+}
+
+.instanceMetricsImage {
+  grid-area: instance-metrics-image;
+}
+
+.startBuildingButton {
+  grid-area: start-building-button;
 }
 
 .startBuildingCredits {
@@ -60,7 +75,26 @@
   gap: 0.5rem;
   margin: auto;
   text-align: center;
-  font-size: var(--font-size-medium);
+}
+
+.actions {
+  display: grid;
+  gap: 1rem;
+  grid-auto-flow: column;
+  justify-content: center;
+  grid-area: actions;
+}
+
+.actions span {
+  margin-left: 0.75rem;
+}
+
+.actions a {
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+html[data-theme="light"] .actions svg {
+  filter: invert(1);
 }
 
 @media (min-width: 1000px) {
@@ -71,12 +105,19 @@
 
   .columns {
     align-items: center;
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .textColumn {
     align-items: flex-start;
     text-align: left;
-    grid-row: 1;
+  }
+
+  .startBuildingRoot {
+    grid-template-areas:
+      "instance-details-image"
+      "instance-metrics-image"
+      "start-building-button"
+      "actions";
   }
 }

@@ -30,7 +30,7 @@ this will be `http://localhost:9000/`.
 
 import Screenshot from "@theme/Screenshot"
 
-<a href="web-console">
+<a href="/docs/develop/web-console/">
     <Screenshot
     alt="Screenshot of the Web Console"
     height={375}
@@ -67,19 +67,14 @@ connect and query the database with various third-party pre-existing client
 libraries and tools.
 
 ```python
-import psycopg2
 
-connection = None
-try:
-    connection = psycopg2.connect(
-        user="admin",
-        password="quest",
-        host="127.0.0.1",
-        port="8812",
-        database="qdb")
-finally:
-    if (connection):
-        connection.close()
+import psycopg as pg
+
+# Connect to an existing QuestDB instance using the with statement
+
+conn_str = 'user=admin password=quest host=127.0.0.1 port=8812 dbname=qdb'
+with pg.connect(conn_str, autocommit=True) as connection:
+
 ```
 
 See how you can connect through the PostgreSQL wire protocol from
