@@ -261,4 +261,5 @@ methods.
 
 This section includes links to additional information such as tutorials:
 
-- [SQL Performance Tuning: Introducing EXPLAIN](/blog/explain-sql-query-plan/)
+- [EXPLAIN Your SQL Query Plan](/blog/explain-sql-query-plan/)
+- [EXPLAIN Basic Scans ](/blog/explain-basic-scans/)

@@ -60,14 +60,7 @@ columns/whole table data.
 <Banner
   alt="Table forward scan."
   height={433}
-  src="/img/blog/2023-04-20/forward_scan.svg"
-  width={650}
-/>
-
-<Banner
-  alt="Table backward scan."
-  height={433}
-  src="/img/blog/2023-04-20/backward_scan.svg"
+  src="/img/blog/2023-04-20/frame_scan.svg"
   width={650}
 />
 
@@ -129,13 +122,13 @@ Sorting is required here because the data is in an unknown order.
 <Banner
   alt="Interval forward scan."
   height={433}
-  src="/img/blog/2023-04-20/interval_forward_scan.svg"
+  src="/img/blog/2023-04-20/interval_scan.svg"
   width={650}
 />
 
-In addition to the standard table scans, QuestDB implements a more optimized type of table scans for queries with a reasonable condition on the designated timestamp. We call this "Interval scans".
+In addition to the standard table scans, QuestDB implements a more optimized type of table scans for queries with a condition on the designated timestamp. We call this "Interval scans".
 
-The QuestDB engine can use it to limit scanning to one or more intervals. Interval boundaries are defined by binary searching the designated timestamp column, for instance:
+The QuestDB engine analyzes the condition, extracts list of timestamp intervals, and then for each interval it binary searches scan boundaries in designated timestamp column, for instance:
 
 ```questdb-sql
 EXPLAIN
@@ -222,7 +215,7 @@ CREATE TABLE pos (
 <Banner
   alt="Index forward scan."
   height={433}
-  src="/img/blog/2023-04-20/index_forward_scan.svg"
+  src="/img/blog/2023-04-20/index_scan.svg"
   width={650}
 />
 
@@ -288,7 +281,7 @@ Both have pros and cons, so let's look at a simple example.
 <Banner
   alt="Index forward scan in table order."
   height={433}
-  src="/img/blog/2023-04-20/index_forward_scan_table_order.svg"
+  src="/img/blog/2023-04-20/index_scan_table_order.svg"
   width={650}
 />
 
@@ -316,7 +309,7 @@ Index scan with multiple values in index order scans table rows using row ids as
 <Banner
   alt="Index forward scan in index order."
   height={433}
-  src="/img/blog/2023-04-20/index_forward_scan_index_order.svg"
+  src="/img/blog/2023-04-20/index_scan_index_order.svg"
   width={650}
 />
 
