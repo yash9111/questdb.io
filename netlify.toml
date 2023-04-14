@@ -314,6 +314,10 @@
   to = "https://itnext.io/migrating-from-relational-databases-to-time-series-databases-9f059a3e34cb"
 
 [[redirects]]
+  from ="/blog/2021/02/18/realtime-crypto-tracker-with-kafka-and-questdb/"
+  to = "/blog/realtime-crypto-tracker-with-questdb-kafka-connector/"
+
+[[redirects]]
   from ="/blog/2022/06/07/data-pipeline-with-kafka-and-questdb/"
   to = "/blog/processing-time-series-with-questdb-apache-kafka/"
   
