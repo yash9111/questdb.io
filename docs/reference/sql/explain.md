@@ -262,4 +262,4 @@ methods.
 This section includes links to additional information such as tutorials:
 
 - [EXPLAIN Your SQL Query Plan](/blog/explain-sql-query-plan/)
-- [EXPLAIN Basic Scans ](/blog/explain-basic-scans/)
+- [EXPLAIN Basic Scans ](/blog/explain-sql-index-table-scan/)
