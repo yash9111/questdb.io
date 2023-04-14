@@ -80,7 +80,7 @@ First, I installed the
 ```
  FROM alpine:latest AS builder
  RUN wget https://github.com/questdb/kafka-questdb-connector/releases/download/v0.4/kafka-questdb-connector-0.4-bin.zip && \
-     unzip kafka-questdb-connector-*-bin.zi
+     unzip kafka-questdb-connector-*-bin.zip
  FROM confluentinc/cp-kafka-connect:7.3.0-1
  COPY --from=builder /kafka-questdb-connector/*.jar /usr/share/java/kafka/
 ```
@@ -122,18 +122,15 @@ The docker-compose file runs the following services:
 - [Kafka Connect](https://kafka.apache.org/documentation/#connect) with the
   QuestDB Kafka Connector
 
-With the connector, we send the payload directly:
+### Query the data with Python files
 
-```json
-{
-  "timestamp": int(time.time() * 1000),
-  "currency": raw_data["data"]["base"],
-  "amount": float(raw_data["data"]["amount"])
-}
+To finish the setup, I first created the Kafka Connect sink:
+
+```shell title="From ./docker-compose directory"
+$ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @questdb-sink-btc.json http://localhost:8083/connectors
 ```
 
-For the Kafka Connect configuration, we can specify the new fields:
-
+The curl command above submitted a JSON file which contains the configuration for the QuestDB Kafka Connector:
 ```json
 {
   "name": "questdb-sink-btc",
@@ -153,26 +150,16 @@ For the Kafka Connect configuration, we can specify the new fields:
 
 The important things to notice here are:
 
-- `value.converter.schemas.enable`: since schema is not included, we set the
-  converter to false
+- `value.converter.schemas.enable`: since a schema is not included in messages and we do not use Schema Registry either, we have to set this value to `false`.
 
-- `timestamp.field.name`: the connector supports
-  [designated timestamps](/docs/concept/designated-timestamp/) either in integer
-  or timestamp format. For integers, units will be autodetected as long as the
-  field name is configured.
+- `timestamp.field.name`: the connector supports [designated timestamps](/docs/concept/designated-timestamp/) either in integer
+  or timestamp format. For integers, units will be autodetected as long as the field name is configured.
 
 For a full list of configuration options, refer to the
 [configuration manual](/docs/third-party-tools/kafka/questdb-kafka/#configuration-manual).
 
-### Query the data with Python files
 
-To finish the setup, I first created the Kafka Connect sink:
-
-```shell title="From ./docker-compose directory"
-$ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @questdb-sink-btc.json http://localhost:8083/connectors
-```
-
-Then I started polling for the latest prices:
+Then I started a Python script polling for the latest prices:
 
 ```shell
 $ pip install -r requirements.txt
