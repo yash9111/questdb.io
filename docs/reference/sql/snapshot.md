@@ -6,7 +6,7 @@ description: SNAPSHOT SQL keyword reference documentation.
 
 Prepares the database for a filesystem (disk) snapshot.
 
-:::warning
+:::note
 
 Snapshot statements are not supported on Windows OS.
 
