@@ -259,6 +259,29 @@ FROM dbl;
 | 86.91359825  | 100    | 90     | 87    | 87     | 86.92   |
 | 376.3807766  | 400    | 380    | 377   | 376.4  | 376.39  |
 
+## size_pretty
+
+`size_pretty(value)` returns a human-readable string equivalent to the input value.
+
+**Arguments:**
+
+- `value` is a `long` value that represents size in bytes.
+
+**Return value:**
+
+Return value type is `string`. The string contains the size as a floating point with 
+one significant figure followed by the scale [in base 1024](https://en.wikipedia.org/wiki/Byte#Multiple-byte_units).
+
+**Examples:**
+
+```questdb-sql
+SELECT size_pretty(400032);
+```
+
+| size_pretty |
+|-------------|
+| 390.7 KiB   |
+
 ## sqrt
 
 `sqrt(value)` return the square root of a given number.

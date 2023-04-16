@@ -8,6 +8,7 @@ import { OtherUseCases } from "../modules/pricing/other-use-cases"
 import { PricingChoices } from "../modules/pricing/pricing-choices"
 import { HighPerformer } from "../modules/pricing/high-performer"
 import { Quotes } from "../modules/pricing/quotes"
+import { BookADemoButtons } from "../modules/book-a-demo-buttons"
 
 const CloudPage = () => (
   <Layout
@@ -32,6 +33,10 @@ const CloudPage = () => (
     </Section>
 
     <Section center>
+      <BookADemoButtons />
+    </Section>
+
+    <Section center noGap>
       <Quotes />
     </Section>
 

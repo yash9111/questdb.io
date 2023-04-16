@@ -44,7 +44,7 @@ const Cards = () => (
           {
             header: "Network traffic analysis",
             content:
-              "Collect sFlow or other network traffic metadata to run analytics and detect anomalies in real-time.",
+              "Collects Flow or other network traffic metadata to run analytics and detect anomalies in real-time.",
           },
 
           {

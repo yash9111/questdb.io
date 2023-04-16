@@ -237,8 +237,8 @@ const CentralGroup = () => {
               <li>E-commerce platforms: Online order tracking.</li>
               <li>Analytical data: Keyword searches, user data analysis.</li>
               <li>
-                Online marketing data: User interaction with social media
-                feeds, online advertisement.
+                Online marketing data: User interaction with social media feeds,
+                online advertisement.
               </li>
             </ul>
             The CDCs are then streamed into Kafka. QuestDB&#39;s engine consumes

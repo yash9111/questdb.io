@@ -15,21 +15,13 @@ to Grafana via the [Postgres](/docs/reference/api/postgres) endpoint.
 - QuestDB should be installed and running via
   [Docker](/docs/get-started/docker/)
 
-:::note
+## Start Grafana
 
-We have discovered that Grafana 9.4.x has issues connecting to QuestDB. An
-[issue](https://github.com/grafana/grafana/issues/64376) has been raised with
-Grafana. We recommend using Grafana version to 9.3.8 until the issue is fixed.
+You can start a grafana docker container with this command:
 
-:::
-
-
-## Configure database
-
-To avoid unnecessary memory usage, it is recommended to disable QuestDB's `SELECT`
-query cache by setting the property `pg.select.cache.enabled=false` in your
-`server.conf`. This is because Grafana does not use prepared statements when
-sending the queries and the query cache becomes much less efficient.
+```shell
+docker run -it --rm --name=grafana -p 3000:3000 grafana/grafana-oss:latest
+```
 
 ## Add a data source
 
@@ -39,7 +31,7 @@ sending the queries and the query cache becomes much less efficient.
 4. Choose the `PostgreSQL` plugin and configure it with the following settings:
 
 ```bash
-host: localhost:8812
+host: <localhost>:8812
 database: qdb
 user: admin
 password: quest
@@ -47,7 +39,13 @@ SSL mode: disable
 ```
 
 5. When adding a panel, use the "text edit mode" by clicking the pencil icon and
-   adding a query
+  adding a query
+
+:::note
+
+**localhost** will be the IP address reported by QuestDB on startup.
+
+:::
 
 ## Global variables
 
@@ -104,4 +102,4 @@ information.
 
 ## See also
 
-- [Build a monitoring dashboard with QuestDB and Grafana](/blog/2020/10/19/grafana-tutorial/)
+- [Build a monitoring dashboard with QuestDB and Grafana](/blog/time-series-monitoring-dashboard-grafana-questdb/)
