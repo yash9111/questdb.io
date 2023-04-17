@@ -83,6 +83,7 @@ module.exports = {
     "no-var": ["error"],
     "no-console": ["warn", { allow: ["warn", "error", "info"] }],
     "prettier/prettier": ["warn"],
+    "react/no-unescaped-entities": "off",
   },
   settings: {
     react: { version: "detect" },
