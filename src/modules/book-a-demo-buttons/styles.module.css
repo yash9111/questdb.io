@@ -1,0 +1,14 @@
+.root {
+  display: grid;
+  gap: 1rem;
+  grid-auto-flow: column;
+  justify-content: center;
+}
+
+.root a {
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+:global(html[data-theme="light"]) .root svg {
+  filter: invert(1);
+}

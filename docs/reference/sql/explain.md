@@ -70,7 +70,7 @@ The following list contains some plan node types:
 - `GroupBy` - group by with or without key(s). If `vectorized` field shows
   `true`, then the node is parallelized and uses vectorized calculations.
 - `Hash` - subnode of this node is used to build a hash table that is later
-  looked up (usually in a `JION` clause but also applies to `EXCEPT` or
+  looked up (usually in a `JOIN` clause but also applies to `EXCEPT` or
   `INTERSECT`).
 - `Index forward/backward scan` - scans all row ids associated with a given
   `symbol` value from start to finish or vice versa.
