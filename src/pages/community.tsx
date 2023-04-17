@@ -126,10 +126,10 @@ const Community = () => (
             </li>
 
             <li>
-              Watch{" "}
-              <a className={paCss.link} href={customFields.stackoverflowUrl}>
-                QuestDB&apos;s Stack Overflow tag
-              </a>
+              Join{" "}
+              <a className={paCss.link} href={customFields.slackUrl}>
+                QuestDB’s Slack
+              </a>{" "}
             </li>
 
             <li>
