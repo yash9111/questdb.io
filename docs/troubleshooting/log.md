@@ -30,12 +30,17 @@ Log files are stored in the `log` folder:
 │   └── stdout-2020-04-12T13-31-22.txt
 ```
 
+<!--
 ### QuestDB Cloud
+
+QuestDB Cloud log shows log level I and E only.
 
 Log can be found in the `metrics` panel and can be searched by:
 
 - using the time filter
 - dragging and selecting the time range of the monitoring metrics
+
+-->
 
 ## Log levels
 
@@ -110,5 +115,5 @@ Debug:
 
 ## Log configuration
 
-QuestDB logging can be quickly forced globally to `DEBUG` via either providing
+QuestDB logging can be configured globally to `DEBUG` via either providing
 the java option `-Debug` or setting the environment variable `QDB_DEBUG=true`.
