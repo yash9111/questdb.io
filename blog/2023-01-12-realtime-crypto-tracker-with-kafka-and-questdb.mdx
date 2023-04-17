@@ -130,7 +130,9 @@ To finish the setup, I first created the Kafka Connect sink:
 $ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @questdb-sink-btc.json http://localhost:8083/connectors
 ```
 
-The curl command above submitted a JSON file which contains the configuration for the QuestDB Kafka Connector:
+The curl command above submitted a JSON file which contains the configuration
+for the QuestDB Kafka Connector:
+
 ```json
 {
   "name": "questdb-sink-btc",
@@ -150,14 +152,16 @@ The curl command above submitted a JSON file which contains the configuration fo
 
 The important things to notice here are:
 
-- `value.converter.schemas.enable`: since a schema is not included in messages and we do not use Schema Registry either, we have to set this value to `false`.
+- `value.converter.schemas.enable`: since there is no schema in messages and we
+  do not use Schema Registry either, we have to set this value to `false`.
 
-- `timestamp.field.name`: the connector supports [designated timestamps](/docs/concept/designated-timestamp/) either in integer
-  or timestamp format. For integers, units will be autodetected as long as the field name is configured.
+- `timestamp.field.name`: the connector supports
+  [designated timestamps](/docs/concept/designated-timestamp/) either in integer
+  or timestamp format. For integers, units will be autodetected as long as the
+  field name is configured.
 
 For a full list of configuration options, refer to the
 [configuration manual](/docs/third-party-tools/kafka/questdb-kafka/#configuration-manual).
-
 
 Then I started a Python script polling for the latest prices:
 
