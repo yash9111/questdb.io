@@ -1,6 +1,6 @@
 [build]
   base = "/"
-  command = "yarn build"
+  command = "yarn build --cache-folder node_modules/.cache"
   publish = "build"
 
 [[plugins]]
