@@ -151,3 +151,22 @@ cp questdb-${release.name}-no-jre-bin/questdb.jar /usr/local/bin/questdb-${relea
 systemctl restart questdb.service
 systemctl status questdb.service
 ```
+  
+  Some troubleshooting tips:
+  
+1.Check the EC2 Instance Status: Make sure that the instance hosting QuestDB is in a running state and has passed its health checks. If the instance is stopped or failed, you may need to restart it or troubleshoot the underlying issues.
+
+2.Check Security Group Rules: Verify that the security group rules allow the desired traffic to access the QuestDB instance. You can check the inbound and outbound rules configured for the security group in the AWS console.
+
+3.Check Firewall Rules: Verify that the firewall rules on the instance or the network allow the desired traffic to reach the QuestDB instance. You can check the firewall configuration on the instance or network by using the appropriate tools.
+
+4.Check QuestDB Logs: Check the QuestDB logs to see if there are any error messages or warnings that can provide more insight into the issue. The logs are located at /var/log/questdb/questdb.log by default.
+
+5.Check System Logs: Check the system logs on the instance to see if there are any issues related to networking, disk space, memory, or other resources that can cause issues with QuestDB.
+
+6.Check QuestDB Configuration: Verify that the QuestDB configuration file is correct and has the necessary settings for your use case. You can find the configuration file at /var/lib/questdb/conf/server.conf by default.
+
+7.Check QuestDB Processes: Verify that the QuestDB processes are running correctly and have the necessary resources. You can check the process status by using the appropriate tools for your operating system.
+
+8.Check QuestDB Documentation: Check the QuestDB documentation and user forums for known issues, troubleshooting tips, and best practices. You can also reach out to the QuestDB community for support and guidance.
+  
