@@ -145,7 +145,8 @@ for the QuestDB Kafka Connector:
     "key.converter.schemas.enable": "false",
     "value.converter.schemas.enable": "false",
     "host": "questdb",
-    "timestamp.field.name": "timestamp"
+    "timestamp.field.name": "timestamp",
+    "symbols":" currency"
   }
 }
 ```
@@ -197,43 +198,6 @@ The QuestDB console UI also provides the ability to generate basic graphs:
 The QuestDB native charting capabilities are limited to a few graph types, so
 for more advanced visualization, check out
 [Time-Series Monitoring Dashboard with Grafana and QuestDB](/blog/time-series-monitoring-dashboard-grafana-questdb/).
-
-## Calculate moving average
-
-While we store the raw data on QuestDB for more sophisticated analysis, we can
-also consume from the same topics to calculate a quick moving average. This may
-be useful if you want to also post these records to another Kafka topic that you
-may use on a dashboard or to set alerts on pricing trends.
-
-On a separate terminal, run the moving average script:
-
-```bash
-python movingAverage.py
-```
-
-It will print out the moving average of 25 data points and post it to
-`topic_<crypto>_ma_25` :
-
-```log
-Initializing Kafka producer at 2023-04-14 04:04:21.489176
-Initialized Kafka producer at 2023-04-14 04:04:21.607293
-Consume record from topic 'topic_BTC' at time 2023-04-14 04:04:22.615035
-Consume records from topic 'topic_ETH' at time 2023-04-14 04:04:23.616925
-Consume records from topic 'topic_LINK' at time 2023-04-14 04:04:24.618476
-Consume record from topic 'topic_BTC' at time 2023-04-14 04:04:25.620588
-Consume records from topic 'topic_ETH' at time 2023-04-14 04:04:26.624756
-Consume records from topic 'topic_LINK' at time 2023-04-14 04:04:27.628824
-Consume record from topic 'topic_BTC' at time 2023-04-14 04:04:28.632720
-Consume records from topic 'topic_ETH' at time 2023-04-14 04:04:29.635282
-Consume records from topic 'topic_LINK' at time 2023-04-14 04:04:30.637215
-Consume record from topic 'topic_BTC' at time 2023-04-14 04:04:31.639491
-Consume records from topic 'topic_ETH' at time 2023-04-14 04:04:32.641970
-```
-
-If you wish to also populate these data points into QuestDB, supplement the JSON
-data with schema information in `movingAverage.py` similar to the way it is
-defined in the new data JSON block in `getData.py`. Then create another Postgres
-sink via curl with topic set as `topic<crypto>_ma_25`.
 
 ## Wrapping up
 
