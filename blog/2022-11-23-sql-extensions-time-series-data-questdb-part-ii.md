@@ -11,7 +11,7 @@ keywords:
   - questdb
   - time-series
 image: /img/blog/2022-11-23/banner.png
-tags: [tutorial, SQL, time-series, questdb, pinned]
+tags: [tutorial, SQL, time-series, questdb]
 ---
 
 This post comes from [Kovid Rathee](https://kovidrathee.medium.com/), who,
