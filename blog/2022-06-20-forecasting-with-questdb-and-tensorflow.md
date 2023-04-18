@@ -530,3 +530,7 @@ as you have seen in this tutorial.
 If you like this content, we'd love to know your thoughts! Feel free to
 [get started on GitHub](https://github.com/questdb/questdb#try-questdb) and come
 say hello [in our Slack Community]({@slackUrl@}).
+
+## Additional Resources
+
+[What is Time-Series Data?](/blog/time-series-data/)
