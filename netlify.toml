@@ -316,6 +316,10 @@
 [[redirects]]
   from ="/blog/2022/06/07/data-pipeline-with-kafka-and-questdb/"
   to = "/blog/processing-time-series-with-questdb-apache-kafka/"
+
+[[redirects]]
+  from ="/blog/2021/06/18/tracking-multiple-cryptocurrency-exchanges/"
+  to = "/blog/ingesting-market-data-crypto-exchanges-using-time-series-database/"
   
 [[headers]]
   for = "/*"
