@@ -267,7 +267,11 @@ module.exports = {
     {
       label: "Troubleshooting",
       type: "category",
-      items: ["troubleshooting/faq", "troubleshooting/os-error-codes"],
+      items: [
+        "troubleshooting/faq",
+        "troubleshooting/log",
+        "troubleshooting/os-error-codes"
+      ],
     },
     {
       label: "Tutorials",

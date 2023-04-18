@@ -8,6 +8,13 @@ issues met when running QuestDB, as well as solutions to them. If you cannot
 find the answers to your question, please join our
 [Slack Community]({@slackUrl@}) and post your questions there.
 
+## Where do I find the log and how do I filter the log messages?
+
+Log files are stored in the `log` folder under the [root_directory](/docs/concept/root-directory-structure/).
+The log has the following levels to assist filtering:
+
+ Check the [log](/docs/troubleshooting/log/) page for the available log levels.
+
 ## How do I delete a row?
 
 See our guide on [modifying data](/docs/guides/modifying-data).
