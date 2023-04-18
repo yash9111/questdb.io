@@ -5,22 +5,12 @@ author_title: Guest
 author_url: https://github.com/Yitaek
 author_image_url: https://avatars.githubusercontent.com/Yitaek
 description:
-  Send real-time cryptocurrency metrics to Kafka topics, ingest to QuestDB, and calculate moving averages with Pandas.
-keywords:
-  - timeseries
-  - crypto
-  - kafka
-  - pandas
-  - python
+  Send real-time cryptocurrency metrics to Kafka topics, ingest to QuestDB, and
+  calculate moving averages with Pandas.
 tags: [tutorial, python, pandas, kafka, market data, crypto]
 image: "/img/blog/2023-01-12/kafka-questdb.png"
 slug: realtime-crypto-tracker-with-questdb-kafka-connector
 ---
-
-[Yitaek Hwang](https://yitaek.medium.com/) introduces a more performant setup to
-stream data from Kafka to QuestDB leveraging the InfluxDB line protocol.
-
-<!--truncate-->
 
 import Banner from "@theme/Banner"
 
@@ -31,72 +21,78 @@ import Banner from "@theme/Banner"
   width={650}
 ></Banner>
 
-Back in 2021, I
-[wrote about a reference architecture](/blog/2021/02/18/realtime-crypto-tracker-with-kafka-and-questdb)
-for streaming realtime cryptocurrency prices with Kafka and QuestDB. That
-project polled the public Coinbase API for the price of various
-cryptocurrencies, published that information to individual Kafka topics, and
-used the Kafka Connect JDBC driver to ingest data into QuestDB.
+As someone interested in the future of DeFi
+([decentralized finance](https://yitaek.medium.com/intro-to-defi-b4ab2ec0f156)),
+I wanted to better track the price of different cryptocurrencies and store them
+into a timeseries database for further analysis. I found an interesting talk by
+Ludvig Sandman and Bruce Zulu at Kafka Summit London 2019,
+[Using Kafka Streams to Analyze Live Trading Activity for Crypto Exchanges](https://www.confluent.io/kafka-summit-lon19/using-kafka-streams-analyze-trading-crypto-exchanges/),
+so I decided to leverage Kafka and modify it for my own use.
 
-Although this architecture worked as intended, it had some major drawbacks:
-
-1. Degraded performance due to JDBC and parallelism set to 1
-
-1. Required explicit schema information for messages
-
-To address these challenges, the QuestDB team recently released the official
+QuestDB is a fast, open-source, timeseries database with SQL support. This makes
+it a great candidate to store financial market data for further historical trend
+analysis and generating trade signals. The team has released an official
 [QuestDB Kafka connector](/docs/third-party-tools/kafka/questdb-kafka/).
 Underneath the hood, the new connector uses InfluxDB line protocol (ILP), which
-has superior ingestion performance over the JDBC driver utilizing the PostgreSQL
-wire and simplifies schema management. So I decided to give this a spin and
-apply it to my original project,
+has excellent ingestion performance and easy schema management. So I decided to
+give this a spin and apply it to my project,
 [kafka-crypto-questdb](https://github.com/Yitaek/kafka-crypto-questdb).
 
-## Recap
+## Prerequisites
 
-As a quick recap, the original project's goal was to poll the public Coinbase
-API for the price of Bitcoin, Ethereum, and Chainlink. This information was then
-published onto individual topics on Kafka (e.g. topic_BTC) and sent to QuestDb
-via Kafka Connect.
+- [Docker](https://docs.docker.com/get-docker/) with at least 4GB memory
+- [Python 3.7+](https://www.python.org/downloads/) and
+  [pip](https://pypi.org/project/pip/)
+- [GitHub repository](https://github.com/Yitaek/kafka-crypto-questdb) which
+  contains the source for the examples below
+
+**Note:** Memory can be increased on Docker Desktop in **Settings -> Resources
+-> Memory** and increasing the default limit from `2GB` to `4GB`.
+
+## Project setup
+
+At a high level, this project polls the public Coinbase API for the price of
+Bitcoin, Ethereum, and Chainlink. This information was then published onto
+individual topics on Kafka (e.g. topic_BTC) and sent to QuestDb via Kafka
+Connect:
 
 ![Overview from coinbase to QuestDB via Kafka](/img/blog/2023-01-12/overview.png)
 
+```bash
+git clone https://github.com/Yitaek/kafka-crypto-questdb.git
+```
+
 The codebase is organized into three parts:
+
+- **docker**: Dockerfile to set up the Kafka Connector
 
 - **docker-compose**: holds docker-compose file to start Kafka (zookeeper,
   broker, kafka connect), QuestDB, and JSON file to initialize Kafka Connect
 
-- **docker**: Dockerfile to build Kafka Connect image (pre-built image is
-  available via docker-compose)
-
 - **Python files**: grabs latest pricing information from Coinbase and publishes
   information to Kafka
 
-## Project Setup
+### Docker
 
-At a high-level, the architecture does not change much with the new connector.
-The ILP functionality is abstracted away with the connector binary so the code
-changes required was minimal.
-
-First, I needed to
-[update the Dockerfile](https://github.com/Yitaek/kafka-crypto-questdb/blob/main/docker/Dockerfile)
-to install the QuestDB Kafka Connector files:
+First, I installed the
+[QuestDB Kafka Connector files](https://github.com/Yitaek/kafka-crypto-questdb/blob/main/docker/Dockerfile):
 
 ```
  FROM alpine:latest AS builder
  RUN wget https://github.com/questdb/kafka-questdb-connector/releases/download/v0.4/kafka-questdb-connector-0.4-bin.zip && \
-     unzip kafka-questdb-connector-*-bin.zi
- FROM confluentinc/cp-kafka-connect:7.3.0-1
+     unzip kafka-questdb-connector-*-bin.zip
+ FROM confluentinc/cp-kafka-connect:7.3.0
  COPY --from=builder /kafka-questdb-connector/*.jar /usr/share/java/kafka/
 ```
 
 The above Dockerfile simply downloads the binaries for the connector and copies
-the JAR files to the location Kafka Connect expects. As part of the upgrade, the
-base Kafka image was also bumped from 6.1.0 to 7.3.0.
+the JAR files to the location Kafka Connect expects.
+
+### Run docker-compose
 
 Next, the
-[docker compose file was updated](https://github.com/Yitaek/kafka-crypto-questdb/blob/main/docker-compose/docker-compose.yml)
-to expose port 9009 (ILP) on QuestDB instead of 8812 (PostgreSQL):
+[docker compose file](https://github.com/Yitaek/kafka-crypto-questdb/blob/main/docker-compose/docker-compose.yml)
+exposes port 9009 (ILP) on QuestDB instead of 8812 (PostgreSQL):
 
 ```
 questdb:
@@ -109,95 +105,58 @@ questdb:
 ```
 
 At this point, we have all the necessary components for the demo so started the
-stack via docker compose :
+stack via docker compose:
 
 ```shell
 $ cd docker-compose
 $ docker compose up
 ```
 
-:::note
-Previous repo used the now deprecated docker-compose command, which is
-now replaced by the
-[new docker compose command](https://docs.docker.com/compose/reference/).
-:::
+The docker-compose file runs the following services:
 
-## Code Changes
+- QuestDB
+- [Zookeeper](https://cwiki.apache.org/confluence/display/ZOOKEEPER) for Kafka
+  config information, distributed sync, and group services
+- [Kafka Broker](https://kafka.apache.org/documentation/#intro_nutshell) for
+  receiving and storing messages and for consumers to fetch messages by topic
+- [Kafka Connect](https://kafka.apache.org/documentation/#connect) with the
+  QuestDB Kafka Connector
 
-Since ILP can infer the schema, we no longer need to explicitly include the
-schema information in the message published onto Kafka. This simplifies the
-payload significantly. Previously we had this ugly JSON blob:
+### Query the data with Python files
+
+To finish the setup, I first created the Kafka Connect sink:
+
+```shell title="From ./docker-compose directory"
+$ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @questdb-sink-btc.json http://localhost:8083/connectors
+```
+
+The curl command above submitted a JSON file which contains the configuration
+for the QuestDB Kafka Connector:
 
 ```json
 {
-  "schema": {
-    "type": "struct",
-    "fields": [
-      {
-        "type": "string",
-        "optional": False,
-        "field": "currency"
-      },
-      {
-        "type": "float",
-        "optional": False,
-        "field": "amount"
-      },
-      {
-        "type": "string",
-        "optional": False,
-        "field": "timestamp"
-      }
-    ],
-    "optional": False,
-    "name": "coinbase"
-  },
-  "payload": {
-    "timestamp": dt.datetime.utcnow(),
-    "currency": raw_data["data"]["base"],
-    "amount": float(raw_data["data"]["amount"])
+  "name": "questdb-sink-btc",
+  "config": {
+    "connector.class": "io.questdb.kafka.QuestDBSinkConnector",
+    "tasks.max": "1",
+    "topics": "topic_BTC",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+    "host": "questdb",
+    "timestamp.field.name": "timestamp",
+    "symbols":" currency"
   }
 }
 ```
 
-With the new connector, we can just send the payload directly:
-
-```json
-{
- "timestamp": int(time.time() * 1000),
- "currency": raw_data['data']['base'],
- "amount": float(raw_data['data']['amount'])
-}
-```
-
-Then for the Kafka Connect configuration, we can specify the new fields.
-
-```json
- {
-   "name": "questdb-sink-btc",
-   "config": {
-     "connector.class":"io.questdb.kafka.QuestDBSinkConnector",
-     "tasks.max":"1",
-     "topics": "topic_BTC",
-     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-     "key.converter.schemas.enable": "false",
-     "value.converter.schemas.enable": "false",
-     "host": "questdb",
-     "timestamp.field.name": "timestamp"
-   }
- }
-```
-
 The important things to notice here are:
 
-- connector.class : it's now using io.questdb.kafka.QuestDBSinkConnector instead
-  of the Confluent JDBC connector
+- `value.converter.schemas.enable`: since there is no schema in messages and we
+  do not use Schema Registry either, we have to set this value to `false`.
 
-- value.converter.schemas.enable : since schema is no longer included, we set
-  the converter to false
-
-- timestamp.field.name : the connector supports
+- `timestamp.field.name`: the connector supports
   [designated timestamps](/docs/concept/designated-timestamp/) either in integer
   or timestamp format. For integers, units will be autodetected as long as the
   field name is configured.
@@ -205,32 +164,49 @@ The important things to notice here are:
 For a full list of configuration options, refer to the
 [configuration manual](/docs/third-party-tools/kafka/questdb-kafka/#configuration-manual).
 
-## Final Result
-
-To finish the setup, I first created the Kafka Connect sink:
-
-```shell
-$ curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" --data @questdb-sink-btc.json http://localhost:8083/connectors
-```
-
-Then I started polling for the latest prices:
+Then I started a Python script polling for the latest prices:
 
 ```shell
 $ pip install -r requirements.txt
 $ python getData.py
 ```
 
-Navigating to the console UI (localhost:9000), we can see the prices of Bitcoin
-being ingested as before:
+Navigating to the console UI at `localhost:9000`, we can see the prices of
+Bitcoin being ingested:
 
 ![Screenshot of the result](/img/blog/2023-01-12/bitcoin.png)
 
-## Wrapping Up
+You can repeat this process for the other topics as well. If you prefer to run
+without a UI, you can also use the REST API to check:
 
-Compared to the original setup utilizing the JDBC driver, the QuestDB Kafka
-connector was simple to use and made the schema management much easier. The
-[code repo](https://github.com/Yitaek/kafka-crypto-questdb) is now updated to
-leverage the new connector, so feel free to submit a PR or an issue.
+```bash
+curl -G \
+--data-urlencode "query=select * from topic_BTC" \
+http://localhost:9000/exp
+```
+
+## Visualize the data
+
+The QuestDB console UI also provides the ability to generate basic graphs:
+
+1. Click on the **Chart** tab underneath the Tables
+2. Select `line` as the chart type, `timestamp` as the label
+3. Click **Draw**
+
+![Screenshot of the line chart](/img/blog/2023-01-12/visualization.png)
+
+The QuestDB native charting capabilities are limited to a few graph types, so
+for more advanced visualization, check out
+[Time-Series Monitoring Dashboard with Grafana and QuestDB](/blog/time-series-monitoring-dashboard-grafana-questdb/).
+
+## Wrapping up
+
+To stop streaming data, simply stop the Python scripts. To stop and remove the
+Kafka cluster / QuestDB services, run:
+
+```bash
+docker-compose down
+```
 
 The overview page for the
 [QuestDB Kafka connector on the QuestDB website](/docs/third-party-tools/kafka/questdb-kafka/)
