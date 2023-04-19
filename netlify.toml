@@ -325,6 +325,10 @@
   from ="/blog/2021/06/18/tracking-multiple-cryptocurrency-exchanges/"
   to = "/blog/ingesting-market-data-crypto-exchanges-using-time-series-database/"
   
+[[redirects]]
+  from ="/blog/2019/12/19/lineprot/"
+  to = "/blog/"
+
 [[headers]]
   for = "/*"
   [headers.values]
