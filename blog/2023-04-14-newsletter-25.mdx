@@ -1,0 +1,80 @@
+---
+title: QuestDB Release and QuestDB Cloud Public Preview
+author: QuestDB
+author_url: https://github.com/questdb
+author_image_url: https://avatars.githubusercontent.com/u/52297642?s=200&v=4
+description:
+  "We take you through QuestDB's latest release, QuestDB Cloud, and our
+  up-coming events"
+tags: [newsletter, release, community]
+image: /img/blog/newsletter-preview.png
+slug: newsletter-release-cloud-db-engines
+---
+
+![QuestDB newsletter banner](/img/blog/newsletter.png)
+
+## 🏆 QuestDB 7.1.1
+
+We have released QuestDB 7.1.1 following thousands of hours of fuzz testing. The
+highlights for the release include:
+
+- Optimized WAL storage mechanism.
+- Improved Web Console UI.
+- [SHOW PARTITIONS](/docs/reference/sql/show/) SQL and
+  [table_partitions](/docs/reference/function/meta/#table_partitions) function
+  for partition details.
+- Stability improvements in the SQL engine, CSV import, and Web Console UI.
+- QuestDB 7.1 introduced a
+  [UI library dependency](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API)
+  that is not yet readily available to all users. QuestDB 7.1.1 removes this
+  dependency.
+
+This release also includes pull requests from our community. Kudos to
+[@SiyaoIsHiding](https://github.com/SiyaoIsHiding) and
+[@winne42](https://github.com/winne42) for the code contributions! 👏
+
+Read the [Release notes](https://github.com/questdb/questdb/releases/tag/7.1.1).
+
+## ☁️ QuestDB Cloud
+
+QuestDB Cloud is now available in public preview!
+[Sign up now](https://cloud.questdb.com) to claim $200 free credits.
+
+![Screenshot of a running QuestDB CLoud instance](/img/blog/2023-04-14/cloud.png)
+
+## 👏 DB-Engines
+
+QuestDB joins the top 10 TSDB ranking on DB-Engines!
+
+![DB-Engines time series ranking showing QuestDB at #10](/img/blog/2023-04-14/db-engines.png)
+
+## 🙌 Community news
+
+- Our Dev Rel Javier Ramírez, [@supercoco9](https://twitter.com/supercoco9) ,
+  will present at [commitconf](https://2023.commit-conf.com/en/) on April
+  21, 2023. Commit is the Spanish conference that explores all aspects of IT,
+  from software development to Big Data, Cloud, or ML!
+
+![Commit Conf logo](/img/blog/2023-04-14/commit-conf.png)
+
+- Javier will also present
+  ["Your Database Cannot Do This (Well)"](https://developerweekeurope2023.sched.com/?iframe=yes&w=100%&sidebar=yes&bg=no#)
+   at Europe's largest developer & engineering conference, Developer Week
+  Europe, on April 26. We look forward to seeing you there!
+- QuestDB is now available via the
+  [Confluent Hub](https://www.confluent.io/hub/questdb/kafka-questdb-connector).
+  Check out how to stream market data to QuestDB using Kafka in Yitaek's latest
+  article,
+  [Processing Time-Series Data with QuestDB and Apache Kafka](https://questdb.io/blog/processing-time-series-with-questdb-apache-kafka/).
+- Our team published a review of the time-series offering of
+  [MongoDB versus QuestDB](https://questdb.io/blog/mongodb-time-series-benchmark-review/).
+  We conducted a benchmark and compared developer experience between the two.
+- QuestDB has released a
+  [QuestDB Flink Sink connector](https://questdb.io/docs/third-party-tools/flink/)
+  for fast ingestion from Apache Flink into QuestDB.
+
+![Screenshot of QuestDB and Flink logos](/img/blog/2023-04-14/flink-questdb.png)
+
+We hope you enjoy reading our latest issue so far. If you'd like to provide your
+input on our newsletter or product, please reach out to our team members on the
+[QuestDB Community Slack](http://slack.questdb.io/). Thank you!
