@@ -323,7 +323,11 @@
 
 [[redirects]]
   from ="/blog/2021/06/18/tracking-multiple-cryptocurrency-exchanges/"
-  to = "/blog/ingesting-market-data-crypto-exchanges-using-time-series-database/"
+  to ="/blog/ingesting-financial-tick-data-using-time-series-database/"
+
+[[redirects]]
+  from ="/blog/ingesting-market-data-crypto-exchanges-using-time-series-database/"
+  to = "/blog/ingesting-financial-tick-data-using-time-series-database/"
   
 [[redirects]]
   from ="/blog/2019/12/19/lineprot/"
