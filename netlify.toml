@@ -333,6 +333,10 @@
   from ="/blog/2019/12/19/lineprot/"
   to = "/blog/"
 
+[[redirects]]
+  from ="/blog/2022/08/22/using-birch-anomaly-detection-questdb/"
+  to = "/blog/"
+
 [[headers]]
   for = "/*"
   [headers.values]
