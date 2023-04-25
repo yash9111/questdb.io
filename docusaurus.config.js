@@ -220,10 +220,6 @@ const config = {
               to: "/enterprise/",
             },
             {
-              label: "Pricing",
-              to: "/pricing/",
-            },
-            {
               label: "Use Cases",
               to: "/use-cases/",
             },
@@ -235,47 +231,34 @@ const config = {
               label: "Roadmap",
               href: "https://github.com/orgs/questdb/projects/1/views/5",
             },
+            {
+              label: "Pricing",
+              to: "/pricing/",
+            },
           ],
         },
         {
-          title: "Developers",
+          title: "Learn",
           items: [
             {
               label: "Docs",
               to: "/docs/",
             },
             {
-              label: "Tutorials",
-              to: "/blog/tags/tutorial/",
-            },
-            {
               label: "Blog",
               to: "/blog/",
             },
             {
-              label: "Discussions",
-              to: customFields.linenUrl,
+              label: "Tutorials",
+              to: "/blog/tags/tutorial/",
             },
             {
-              label: "Join Slack",
-              to: customFields.slackUrl,
-            },
-            {
-              label: "Swag",
+              label: "QuestDB Swag",
               to: "/community/",
             },
-          ],
-        },
-        {
-          title: "Company",
-          items: [
             {
-              label: "About us",
-              to: "/about-us/",
-            },
-            {
-              label: "Careers",
-              to: "/careers/",
+              label: "Slack Community",
+              to: customFields.slackUrl,
             },
           ],
         },
@@ -305,6 +288,23 @@ const config = {
             {
               label: "Reddit",
               href: customFields.redditUrl,
+            },
+            {
+              label: "Discussions",
+              to: customFields.linenUrl,
+            },
+          ],
+        },
+        {
+          title: "Company",
+          items: [
+            {
+              label: "About us",
+              to: "/about-us/",
+            },
+            {
+              label: "Careers",
+              to: "/careers/",
             },
           ],
         },

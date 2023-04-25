@@ -140,12 +140,17 @@ migration or backups:
 ├── conf
 │   └── server.conf
 ├── db
-└── public
+├── log
+├── public
+└── snapshot (optional)
 ```
 
 For details on passing QuestDB server settings to a Docker container, see the
 [Docker section](/docs/reference/configuration#docker) of the server
 configuration documentation.
+
+For information about the file structure, see
+[root directory](/docs/concept/root-directory-structure/).
 
 ### Upgrade QuestDB version
 

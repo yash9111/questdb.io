@@ -20,10 +20,14 @@ import Screenshot from "@theme/Screenshot"
 
 ## Properties
 
+- Partitioning is only possible on tables with a
+  [designated timestamp](/docs/concept/designated-timestamp/).
 - Available partition intervals are `NONE`, `YEAR`, `MONTH`, `DAY`, and `HOUR`.
-- Default behavior is `PARTITION BY NONE` when using [CREATE TABLE](/docs/reference/sql/create-table) and `PARTITION BY DAY` via [ILP ingestion](/docs/reference/api/ilp/overview/).
+- Default behavior is `PARTITION BY NONE` when using
+  [CREATE TABLE](/docs/reference/sql/create-table) and `PARTITION BY DAY` via
+  [ILP ingestion](/docs/reference/api/ilp/overview/).
 - Partitions are defined at table creation. For more information, refer to
-  [CREATE TABLE section](/docs/reference/sql/create-table).
+  [CREATE TABLE section](/docs/reference/sql/create-table/).
 - The naming convention for partition directories is as follows:
 
 | Table Partition | Partition format |
@@ -33,23 +37,23 @@ import Screenshot from "@theme/Screenshot"
 | `MONTH`         | `YYYY-MM`        |
 | `YEAR`          | `YYYY`           |
 
-:::info
-
-Partitioning is only possible on tables which have a designated timestamp. For
-more information on designated timestamps, refer to the
-[designated timestamp section](/docs/concept/designated-timestamp).
-
-:::
-
 ## Advantages
 
 - Reduced disk IO for timestamp interval searches. This is because our SQL
-  optimiser leverages partitioning.
+  optimizer leverages partitioning.
 - Significantly improved calculations and seek times. This is achieved by
   leveraging the chronology and relative immutability of data for previous
   partitions.
 - Physical separation of data files. This makes it easily to implement file
   retention policies or extract certain intervals.
+
+## Checking partition information
+
+The following SQL keyword and function are implemented to present the partition
+information of a table:
+
+- The SQL keyword [SHOW PARTITIONS](/docs/reference/sql/show/#show-partitions) returns general partition information for the selected table.
+- The function [table_partitions('tableName')](/docs/reference/function/meta/) returns generation partition and allows filtering for the selected table.
 
 ## Storage example
 

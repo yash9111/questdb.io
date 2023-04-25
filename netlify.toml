@@ -171,7 +171,11 @@
 
 [[redirects]]
   from = "/tutorial/2022/03/15/cryptocurrency-grafana-questdb/"
-  to = "/blog/2022/03/15/cryptocurrency-grafana-questdb/"
+  to = "/blog/crypto-data-visualization-dashboards-grafana/"
+
+[[redirects]]
+  from = "/blog/2022/03/15/cryptocurrency-grafana-questdb/"
+  to = "/blog/crypto-data-visualization-dashboards-grafana/"
 
 [[redirects]]
   from = "/tutorial/2022/03/29/crypto-volumes-julia-questdb/"
@@ -314,9 +318,29 @@
   to = "https://itnext.io/migrating-from-relational-databases-to-time-series-databases-9f059a3e34cb"
 
 [[redirects]]
+  from ="/blog/2021/02/18/realtime-crypto-tracker-with-kafka-and-questdb/"
+  to = "/blog/realtime-crypto-tracker-with-questdb-kafka-connector/"
+
+[[redirects]]
   from ="/blog/2022/06/07/data-pipeline-with-kafka-and-questdb/"
   to = "/blog/processing-time-series-with-questdb-apache-kafka/"
+
+[[redirects]]
+  from ="/blog/2021/06/18/tracking-multiple-cryptocurrency-exchanges/"
+  to ="/blog/ingesting-financial-tick-data-using-time-series-database/"
+
+[[redirects]]
+  from ="/blog/ingesting-market-data-crypto-exchanges-using-time-series-database/"
+  to = "/blog/ingesting-financial-tick-data-using-time-series-database/"
   
+[[redirects]]
+  from ="/blog/2019/12/19/lineprot/"
+  to = "/blog/"
+
+[[redirects]]
+  from ="/blog/2022/08/22/using-birch-anomaly-detection-questdb/"
+  to = "/blog/"
+
 [[headers]]
   for = "/*"
   [headers.values]

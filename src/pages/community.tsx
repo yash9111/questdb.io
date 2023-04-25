@@ -126,13 +126,6 @@ const Community = () => (
             </li>
 
             <li>
-              Watch{" "}
-              <a className={paCss.link} href={customFields.stackoverflowUrl}>
-                QuestDB&apos;s Stack Overflow tag
-              </a>
-            </li>
-
-            <li>
               Submit a bugfix, feature or any other meaningful contribution via{" "}
               <a
                 className={paCss.link}

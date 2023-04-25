@@ -236,3 +236,30 @@ SELECT * FROM table_partitions('my_table') WHERE active = true
 | index | partitionBy | name     | minTimestamp          | maxTimestamp          | numRows | diskSize | diskSizeHuman | readOnly | active | attached | detached | attachable |
 | ----- | ----------- | -------- | --------------------- | --------------------- | ------- | -------- |---------------| -------- | ------ | -------- | -------- | ---------- |
 | 3     | WEEK        | 2023-W03 | 2023-01-16 00:00:00.0 | 2023-01-18 12:00:00.0 | 101     | 83902464 | 80.0 MiB      | false    | true   | true     | false    | false      |
+
+## version/pg_catalog.version
+
+`version()` or `pg_catalog.version()` returns the supported version of the PostgreSQL Wire Protocol.
+
+**Arguments:**
+
+- `version()` or `pg_catalog.version()` does not require arguments.
+
+**Return value:**
+
+Returns `string`.
+
+**Examples:**
+
+```questdb-sql
+
+SELECT version();
+
+--The above equals to:
+
+SELECT pg_catalog.version();
+```
+
+| version                                                               |
+| --------------------------------------------------------------------- |
+| PostgreSQL 12.3, compiled by Visual C++ build 1914, 64-bit, QuestDB |

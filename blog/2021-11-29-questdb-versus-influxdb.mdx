@@ -254,11 +254,12 @@ indexed columns in a table and each indexed column containing many unique
 values.
 
 High-cardinality is a known problem area for InfluxDB, and this is likely
-because of the system architecture and storage engine. InfluxDB uses data
-structures based on LSM-trees which are known to perform poorly in
-high-cardinality scenarios. In QuestDB, the storage model is radically different
-from LSM trees or B-trees and instead uses data stored in densely ordered
-vectors on disk.
+because of the system architecture and storage engine. InfluxDB stores each
+time series in its own Time-Structured Merge tree, an LSM-tree like persistent
+data sturucture, so when the total number of time series becomes high reading
+and writing the data becomes more expensive. In QuestDB, the storage model is
+radically different from LSM trees or B-trees and instead uses data stored in
+densely ordered vectors on disk.
 
 We ran the TSBS benchmark specifying different scale values for multiple data
 sets and tested ingestion using up to sixteen threads to determine the maximum

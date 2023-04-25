@@ -1,5 +1,5 @@
 ---
-title: Visualizing cryptocurrency data with Python, Grafana and QuestDB
+title: Crypto Data Visualization Dashboards with Grafana
 author: Tancrede Collard
 author_title: QuestDB Team
 author_url: https://github.com/TheTanc
@@ -7,15 +7,9 @@ author_image_url: https://avatars.githubusercontent.com/TheTanc
 description:
   Learn how to using Python to fetch cryptocurrency data from Coinbase, store it
   in QuestDB, and visualize the data using Grafana.
-keywords:
-  - questdb
-  - python
-  - grafana
-  - marketdata
-  - crypto
-  - database
 tags: [tutorial, market data, crypto, trading, python, grafana]
-image: /img/blog/shared/og-bitcoin-grafana.png
+image: /img/blog/2022-03-15/banner.png
+slug: crypto-data-visualization-dashboards-grafana
 ---
 
 import Banner from "@theme/Banner"

@@ -121,7 +121,7 @@ with docker compose to accompany the step-by-step guides.
 
 The latest additions from Yitaek are:
 
-- [Building a realtime crypto tracker with Kafka and QuestDB](/blog/2021/02/18/realtime-crypto-tracker-with-kafka-and-questdb/)
+- [Building a realtime crypto tracker with Kafka and QuestDB](/blog/realtime-crypto-tracker-with-questdb-kafka-connector/)
 - [Stream heart rate data into QuestDB via Google IoT Core](/blog/2021/02/05/streaming-heart-rate-data-with-iot-core-and-questdb/)
 
 [All QuestDB Tutorials](/blog/tags/tutorial/)

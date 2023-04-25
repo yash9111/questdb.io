@@ -86,7 +86,7 @@ below:
 ```questdb-sql
 CREATE TABLE taxi_trips AS (
   SELECT *
-    FROM 'taxi_trips_feb_2018.csv'
+    FROM "taxi_trips_feb_2018.csv"
    ORDER BY pickup_datetime
 ) TIMESTAMP(pickup_datetime)
 PARTITION BY MONTH;
@@ -104,13 +104,13 @@ following data after running a `SELECT *` query on the `taxi_trips` table:
 ## Understanding the basics of `SAMPLE BY`
 
 The `SAMPLE BY` extension allows you to create groups and buckets of data based
-on time ranges. This is especially valuable for time-series data as you can
-calculate frequently used aggregates with extreme simplicity. `SAMPLE BY` offers
+on time ranges. This is especially valuable for [time-series data](/blog/time-series-data/) 
+as you can calculate frequently used aggregates with extreme simplicity. `SAMPLE BY` offers
 you the ability to summarize or aggregate data from very fine to very coarse
 [units of time](/docs/reference/sql/sample-by#sample-units), i.e., from
-microseconds to months and everything in between (milliseconds, seconds,
-minutes, hours, and days). You can also derive other units of time, such as a
-week, fortnight, and year from the ones provided out of the box.
+microseconds to years and everything in between (milliseconds, seconds,
+minutes, hours, days, and months). You can also derive other units of time, such as a
+week or fortnight from the ones provided out of the box.
 
 Let's look at some examples to understand how to use `SAMPLE BY` in different
 scenarios.
@@ -127,7 +127,8 @@ SELECT
   pickup_datetime,
   COUNT() total_trips
 FROM
-  'taxi_trips' SAMPLE BY 1h;
+  taxi_trips 
+SAMPLE BY 1h;
 ```
 
 There are two ways you can read your data in the QuestDB console: using the
@@ -154,7 +155,8 @@ SELECT
   ROUND(SUM(tip_amount)) total_tip_amount,
   ROUND(SUM(fare_amount + tip_amount)) total_earnings
 FROM
-  'taxi_trips' SAMPLE BY 3h;
+  taxi_trips 
+SAMPLE BY 3h;
 ```
 
 You can view the output of the query in the following grid on the QuestDB
@@ -164,8 +166,8 @@ console:
 
 ### Weekly summary of trips
 
-As mentioned above, although there's no sample unit for a week, a fortnight, or
-a year, you can derive them simply by utilizing the built-in sample units. If
+As mentioned above, although there's no sample unit for a week, or a fortnight, 
+you can derive them simply by utilizing the built-in sample units. If
 you want to sample the data by a week, use `7d` as the sampling time, as shown
 in the query below:
 
@@ -179,9 +181,10 @@ SELECT
   ROUND(SUM(tip_amount)) total_tip_amount,
   ROUND(SUM(fare_amount + tip_amount)) total_earnings
 FROM
-  'taxi_trips'
+  taxi_trips
 WHERE
-  pickup_datetime BETWEEN '2018-02-01' AND '2018-02-28' SAMPLE BY 7d;
+  pickup_datetime BETWEEN '2018-02-01' AND '2018-02-28' 
+SAMPLE BY 7d;
 ```
 
 ![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/f5lVlQL.png)
@@ -212,9 +215,10 @@ SELECT
   ROUND(SUM(tip_amount)) total_tip_amount,
   ROUND(SUM(fare_amount + tip_amount)) total_earnings
 FROM
-  'taxi_trips'
+  taxi_trips
 WHERE
-  pickup_datetime NOT BETWEEN '2018-02-01T04:00:00' AND '2018-02-01T04:59:59' SAMPLE BY 1h FILL(LINEAR);
+  pickup_datetime NOT BETWEEN '2018-02-01T04:00:00' AND '2018-02-01T04:59:59' 
+SAMPLE BY 1h FILL(LINEAR);
 ```
 
 ![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/8hD7Lmw.png)
@@ -239,9 +243,9 @@ data with the help of the `NOT BETWEEN` keyword. Alternatively, you can create a
 separate table with missing trips using the same idea, as shown below:
 
 ```questdb-sql
-CREATE TABLE 'taxi_trips_missing' AS (
+CREATE TABLE taxi_trips_missing AS (
   SELECT *
-  FROM 'taxi_trips'
+  FROM taxi_trips
   WHERE
     pickup_datetime NOT BETWEEN '2018-02-01T04:00:00' AND '2018-02-01T04:59:59'
 );
@@ -266,9 +270,10 @@ SELECT
   ROUND(SUM(tip_amount)) total_tip_amount,
   ROUND(SUM(fare_amount + tip_amount)) total_earnings
 FROM
-  'taxi_trips'
+  taxi_trips
 WHERE
-  pickup_datetime BETWEEN '2018-02-01T13:35:52' AND '2018-02-28' SAMPLE BY 1d;
+  pickup_datetime BETWEEN '2018-02-01T13:35:52' AND '2018-02-28' 
+SAMPLE BY 1d;
 ```
 
 ![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/U9m6k6s.png)
@@ -307,7 +312,8 @@ SELECT
   ROUND(SUM(tip_amount)) total_tip_amount,
   ROUND(SUM(fare_amount + tip_amount)) total_earnings
 FROM
-  'taxi_trips' SAMPLE BY 3h ALIGN TO CALENDAR TIME ZONE ('AEST');
+  taxi_trips 
+SAMPLE BY 3h ALIGN TO CALENDAR TIME ZONE ('AEST');
 ```
 
 ![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/szB7CMD.png)
@@ -330,7 +336,8 @@ SELECT
   ROUND(SUM(tip_amount)) total_tip_amount,
   ROUND(SUM(fare_amount + tip_amount)) total_earnings
 FROM
-  'taxi_trips' SAMPLE BY 3h ALIGN TO CALENDAR WITH OFFSET '-05:30';
+  taxi_trips 
+SAMPLE BY 3h ALIGN TO CALENDAR WITH OFFSET '-05:30';
 ```
 
 ![Screenshot of QuestDB Web Console with results of previous query](/img/blog/2022-11-23/3xyC6kt.png)

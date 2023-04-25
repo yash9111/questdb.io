@@ -1,0 +1,593 @@
+---
+title: "Exploring Query Plan Scan Nodes with SQL EXPLAIN"
+author: Bolek Ziobrowski
+author_title: QuestDB Team
+author_url: https://github.com/bziobrowski
+author_image_url: https://avatars.githubusercontent.com/bziobrowski
+description: A tour of scan nodes available in QuestDB.
+image: /img/blog/2023-04-25/banner.png
+tags: [SQL, tutorial, execution plan, explain, table scan, index scan]
+slug: exploring-query-plan-scan-nodes-sql-explain
+---
+
+import Banner from "@theme/Banner"
+
+<Banner
+  alt="Image of a hard disk drive."
+  height={433}
+  src="/img/blog/2023-04-25/banner.png"
+  width={650}
+></Banner>
+
+Welcome to another post on SQL performance tuning! Previously, in
+[EXPLAIN Your SQL Query Plan](/blog/explain-sql-query-plan/), we learned how to
+use [EXPLAIN](/docs/reference/sql/explain/) to check the estimated execution
+plan of a query. This time we'll focus on the basic methods the QuestDB SQL
+engine uses to read data - scan nodes.
+
+So, what is a scan node?
+
+A scan node is a query execution plan node responsible for fetching data
+according to an algorithm.
+
+Imagine binary search on sorted data but with partitions, indexes, and column
+data files instead of arrays.
+
+Most databases refer to scan nodes using custom terms, like "operations" or
+"select types", while in literature, it's usually "access methods".
+
+The QuestDB SQL engine uses the following scan nodes:
+
+- Frame scan
+- Interval scan
+- Index scan
+  - Index scan in table order
+  - Index scan in index order
+
+All of the above support both forward and backward scanning.
+
+Any non-trivial query is bound to use one of these, so as with traditional CS
+algorithms, it makes sense to learn about their characteristics to write more
+optimized SQL queries.
+
+All the examples in this article use tables available in the
+[QuestDB demo instance](https://demo.questdb.io/).
+
+The following is the schema for the table `trades`:
+
+```questdb-sql
+CREATE TABLE trades (
+ symbol SYMBOL,
+ side SYMBOL,
+ price DOUBLE,
+ amount DOUBLE,
+ timestamp TIMESTAMP
+) timestamp (timestamp) PARTITION BY DAY WAL;
+```
+
+## Frame scan
+
+<Banner
+  alt="Frame scan."
+  height={433}
+  src="/img/blog/2023-04-25/frame_scan.svg"
+  width={650}
+/>
+
+Frame scan, also known as Full Table Scan, reads all table rows. With QuestDB's
+column-based storage model, the amount of data to read depends on the columns
+used in the query.
+
+A query selecting all columns amounts to a traditional Full Table Scan. A query
+selecting a single/a few columns from a wide table might read just a few percent
+of the table's data.
+
+Frame forward scans start at the first row of the oldest partition (the one with
+the lowest timestamp partition key value) and stop at the last row of the latest
+one (the one with the highest timestamp partition key value). Differentiating
+between forward and backward scans only makes sense for tables with a designated
+timestamp because they store data in that timestamp order. For tables without
+designated timestamps, the scan direction is not vital for query performance
+tuning because there's no predictable order to data.
+
+Let's look at a simple `SELECT` statement:
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM trades
+ORDER BY timestamp;
+```
+
+| QUERY PLAN                                            |
+| ----------------------------------------------------- |
+| DataFrame                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;Row forward scan              |
+| &nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: trades |
+
+In the `EXPLAIN` output, the forward scan is represented on the table level as
+`Frame forward scan`, and on the partition level as `Row forward scan`.
+
+Why not just `Seq Scan` like in PostgreSQL?
+
+It might seem verbose to show a simple table scan with so many plan nodes, but
+there's a reason for that.
+
+QuestDB is optimized to work with large time-series data sets stored in
+time-partitioned tables, often with tens or hundreds of partitions. If we were
+to follow PostgreSQL's approach of showing all partitions, for instance:
+
+```
+EXPLAIN
+SELECT *
+FROM trades
+WHERE timestamp < now();
+```
+
+we would get:
+
+| QUERY PLAN                                                                |
+| ------------------------------------------------------------------------- |
+| Append (cost=0.00..176.00 rows=2720 width=12)                             |
+| -> Seq Scan on trades_y2006 trades_1 (cost=0.00..40.60 rows=680 width=12) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Filter: (ts < now())            |
+| -> Seq Scan on trades_y2007 trades_2 (cost=0.00..40.60 rows=680 width=12) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Filter: (ts < now())            |
+| ...                                                                       |
+
+This output would take too much space.
+
+Therefore, QuestDB's EXPLAIN command shows:
+
+- The direction of Data Frame (a piece or the whole partition) iteration, e.g.
+  `Frame forward scan`
+- The direction of Row iteration within a Data Frame, e.g. `Row forward scan`
+- A list of scan boundaries in `Interval scan`, e.g.:
+
+  `intervals: [("1970-01-01T00:00:00.000000Z","1970-01-01T23:59:59.999999Z")]`
+
+Opposite to Frame forward scans, Frame backward scans read all table rows from
+the latest partition and finish at the oldest partition.
+
+Take another exaple:
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM trades
+ORDER BY timestamp DESC;
+```
+
+| QUERY PLAN                                             |
+| ------------------------------------------------------ |
+| DataFrame                                              |
+| &nbsp;&nbsp;&nbsp;&nbsp;Row backward scan              |
+| &nbsp;&nbsp;&nbsp;&nbsp;Frame backward scan on: trades |
+
+The query optimizer implements `ORDER BY` with a backward scan. If you run the
+same query on a table without the designated timestamp, unsurprisingly, you'll
+get:
+
+| QUERY PLAN                                                                     |
+| ------------------------------------------------------------------------------ |
+| Sort light                                                                     |
+| &nbsp;&nbsp;keys: [timestamp desc]                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;DataFrame                                              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row backward scan              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Frame backward scan on: trades |
+
+Sorting is required here because the data is in an unknown order.
+
+### Interval scan
+
+<Banner
+  alt="Interval forward scan."
+  height={433}
+  src="/img/blog/2023-04-25/interval_scan.svg"
+  width={650}
+/>
+
+In addition to the more common Frame scans, QuestDB implements a more optimized
+type of table scan for queries with a condition on the designated timestamp. We
+call this "interval scan". The QuestDB engine analyzes the condition, extracts a
+list of timestamp intervals, and then for each interval, it binary searches scan
+boundaries in the designated timestamp column, for instance:
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM trades
+WHERE timestamp IN '2023-01-20';
+```
+
+| QUERY PLAN                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------- |
+| DataFrame                                                                                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;Row forward scan                                                                       |
+| &nbsp;&nbsp;&nbsp;&nbsp;Interval forward scan on: trades                                                       |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intervals: [("2023-01-20T00:00:00.000000Z","2023-01-20T23:59:59.999999Z")] |
+
+As the plan shows, the query optimizer reduces scanning to a single interval,
+the `2023-01-20` day partition.
+
+The engine might even detect conflicting conditions and not run any scan at all,
+e.g.:
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM trades
+WHERE timestamp in '2023-01-20'
+AND timestamp < '2022-01-01';
+```
+
+| QUERY PLAN  |
+| ----------- |
+| Empty table |
+
+If the condition is too complex (especially if the query uses the designated
+timestamp as a function argument), the engine will fall back to the default
+table scan with a filter, e.g.:
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM trades
+WHERE dateadd('m', 1, timestamp) in '2023-01-20';
+```
+
+| QUERY PLAN                                                                          |
+| ----------------------------------------------------------------------------------- |
+| Async Filter                                                                        |
+| &nbsp;&nbsp;filter: dateadd('m',1,timestamp) in [1674172800000000,1674259199999999] |
+| &nbsp;&nbsp;workers: 24                                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;DataFrame                                                   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row forward scan                    |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: trades       |
+
+Rewriting the `WHERE` condition to the below makes the query use the interval
+scan:
+
+```questdb-sql
+timestamp BETWEEN '2023-01-19T23:59:00.000000Z' AND '2023-01-20T23:59:00.000000Z'
+```
+
+Similarly to Frame scans, QuestDB also supports Interval backward scans. They
+run in the reverse order from their forward counterpart: from the last row of
+the last interval to the first row of the first interval. The scan node can be
+used to implement descending timestamp order without the need to sort:
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM trades
+WHERE timestamp in '2023-01-20'
+ORDER BY timestamp DESC;
+```
+
+| QUERY PLAN                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------- |
+| DataFrame                                                                                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;Row backward scan                                                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;Interval backward scan on: trades                                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intervals: [("2023-01-20T00:00:00.000000Z","2023-01-20T23:59:59.999999Z")] |
+
+## Index scan
+
+In contrast to Frame and Interval scans, which access table data directly, index
+scans first scan an [index](/docs/concept/indexes/) and then use the result
+values - row ids - to access relevant table rows. Another difference is that
+index scans are performed separately for each partition or interval used by a
+query. That's why it appears in the same `EXPLAIN` output location as e.g.
+`Row forward scan`.
+
+The `trades` table doesn't have any index, so let's switch to another demo
+table, `pos`, with the following schema:
+
+```questdb-sql
+CREATE TABLE pos (
+ time TIMESTAMP,
+ id SYMBOL INDEX,
+ lat DOUBLE,
+ lon DOUBLE,
+ geo6 GEOHASH(6c),
+ geo12 GEOHASH(12c)
+) timestamp (time) PARTITION BY DAY;
+```
+
+### Index scan with a single key
+
+<Banner
+alt="Index scan."
+height={433}
+src="/img/blog/2023-04-25/index_scan.svg"
+width={650}
+>
+Index forward scan: scanning from (1) to (6)
+
+Index backward scan: scanning from (6) to (1)
+</Banner>
+
+
+For any given index key, row ids are stored in table order, which is the same as
+timestamp order for tables with the designated timestamp. It means that when
+querying for a single index key, the ordering can be implemented with the scan
+direction alone without the need for sorting:
+
+```questdb-sql
+EXPLAIN SELECT * FROM pos WHERE id in ('X');
+EXPLAIN SELECT * FROM pos WHERE id in ('X') ORDER BY time;
+```
+
+The queries above produce the same plan:
+
+| QUERY PLAN                                                       |
+| ---------------------------------------------------------------- |
+| DeferredSingleSymbolFilterDataFrame                              |
+| &nbsp;&nbsp;&nbsp;&nbsp;Index forward scan on: id deferred: true |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='X'               |
+| &nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: pos               |
+
+Note - `deferred: true` means that `symbol` is not found in the `symbol`
+dictionary, so the resolution was delayed until the query run time.
+
+What if we switch the `ORDER BY` direction and add a condition on the timestamp?
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM pos
+WHERE id in ('X')
+AND time in '2023-02-01'
+ORDER BY id, time DESC;
+```
+
+This yields:
+
+| QUERY PLAN                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------- |
+| DeferredSingleSymbolFilterDataFrame                                                                            |
+| &nbsp;&nbsp;&nbsp;&nbsp;Index backward scan on: id deferred: true                                              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='X'                                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;Interval forward scan on: pos                                                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intervals: [("2023-02-01T00:00:00.000000Z","2023-02-01T23:59:59.999999Z")] |
+
+As you can see, not only is the potential sort replaced by a backward scan, but
+the scanning was reduced to a single timestamp interval by combining an Index
+scan with an Interval scan.
+
+### Index scan with multiple keys
+
+Things get more interesting when there's more than one index key to scan. As
+shown in the index scan diagram above, indexes are partitioned. When QuestDB
+iterates over a partition or interval list and conducts an index scan for each
+partition or interval, the output is still in timestamp order.
+
+This is not the case for an index scan with multiple key values because table
+rows associated with each index key can interleave. Reading all rows associated
+with key k1, then k2, etc. could end up jumping randomly over partition data.
+
+We can scan row ids in different orders:
+
+- `Table-order` - scans the minimum row id available from all per-key row ids
+  until there's none left.
+- `Index-order` - first reads all row ids associated with key k1, then k2, and
+  so on.
+
+#### Table order
+
+<Banner
+  alt="Index scan in table order."
+  height={433}
+  src="/img/blog/2023-04-25/index_scan_table_order.svg"
+  width={650}
+>
+  Index forward scan in table order: scanning from (1) to (6) 
+
+  Index backward scan in table order: scanning from (6) to (1)
+</Banner>
+
+Index scans with multiple keys in table order read all row ids associated in
+table (or physical) order. It means that memory and disk access is as sequential
+as possible, which is a good default approach. This scan node is comparable to
+PostgreSQL's Bitmap Heap Scan.
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM pos
+WHERE id in ('X', 'Y');
+```
+
+| QUERY PLAN                                                                               |
+| ---------------------------------------------------------------------------------------- |
+| FilterOnValues                                                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;Table-order scan                                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index forward scan on: id deferred: true |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='X'               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index forward scan on: id deferred: true |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='Y'               |
+| &nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: pos                                       |
+
+#### Index order
+
+<Banner
+  alt="Index scan in index order."
+  height={433}
+  src="/img/blog/2023-04-25/index_scan_index_order.svg"
+  width={650}
+>
+  Index forward scan in index order: scanning from (1) to (6)
+
+  Index backward scan in index order: scanning from (6) to (1)
+  
+</Banner>
+
+Index scans with multiple keys in index order scan table rows using row ids
+associated with the first index key, followed by those associated with the
+second index key, and so on.
+
+The scan continues until reaching the last index value. It might be used to
+avoid sorting at the price of potentially more random memory and disk accesses.
+
+```questdb-sql
+EXPLAIN
+SELECT * FROM pos
+WHERE id in ('X', 'Y')
+AND time in '2023-02-01'
+ORDER BY id,time DESC;
+```
+
+| QUERY PLAN                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------- |
+| FilterOnValues symbolOrder: asc                                                                                |
+| &nbsp;&nbsp;&nbsp;&nbsp;Cursor-order scan                                                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index backward scan on: id deferred: true                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='X'                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index backward scan on: id deferred: true                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: id='Y'                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;Interval forward scan on: pos                                                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intervals: [("2023-02-01T00:00:00.000000Z","2023-02-01T23:59:59.999999Z")] |
+
+It may look like we're mixing Frame (`Interval forward scan`) and in-Frame
+(`Index backward scan`) scan directions, but in fact, it doesn't matter because
+there's just one partition to scan. While this makes sense with a single
+partition, with multiple partitions it would require sorting. That's because
+combining the results of Index scans for each partition is not guaranteed to
+produce the required order.
+
+Without sorting, the output could look like the following:
+
+| time                        | id  | ... |
+| --------------------------- | --- | --- |
+| 2023-02-01T01:00:00.000000Z | X   |     |
+| 2023-02-01T02:00:00.000000Z | X   |     |
+| 2023-02-01T01:00:00.000000Z | Y   |     |
+| 2023-02-02T01:00:00.000000Z | X   |     |
+| 2023-02-02T02:00:00.000000Z | Y   |     |
+| ...                         |     |     |
+
+## More in-depth examples
+
+Now that we've learned the basics, let's dig a bit deeper.
+
+The Frame scan is commonly known as the Full Table Scan. That's because scanning
+a table might have to, in the pessimistic case, read all table rows. For certain
+queries, however, it might be fine to read just a handful of rows. For example,
+say we need to count the number of rows in the `trades` table:
+
+```questdb-sql
+SELECT count(*) FROM trades;
+```
+
+it returns 1634599313 in just 240μs.
+
+Is the response time right? According to the execution plan:
+
+| QUERY PLAN                                                                    |
+| ----------------------------------------------------------------------------- |
+| Count                                                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;DataFrame                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row forward scan              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Frame forward scan on: trades |
+
+It should be doing a full table scan, but the response time is way too fast for
+this to be possible. Reading all timestamp values, that is about 12GB of memory,
+in 240μs would require 50TB/s bandwidth, way higher than the 'lousy' 20GB/s
+available on the demo instance. What actually happens?
+
+If possible, instead of iterating over all records, the `Count` plan node
+iterates over partitions and sums the number of rows in each using partition
+metadata. This optimization only makes sense in the absence of the `WHERE`
+conditions.
+
+For comparison, the following query has to evaluate the condition for each table
+row, and even with parallel execution, it still takes about 7 seconds to
+complete:
+
+```questdb-sql
+SELECT count(*)
+FROM trips
+WHERE total_amount > 0;
+```
+
+Now, let's check if any of the trips finish at a specific location. A simple way
+to phrase it is:
+
+```questdb-sql
+SELECT count(*)
+FROM trips
+WHERE dropoff_location_id = 110;
+```
+
+The query returns in 120 ms, which is nice, but can we make it faster? Since
+we're only interested in knowing if any trip meets the criteria, we don't really
+need the exact count. Instead, we can find the first matching row and stop:
+
+```questdb-sql
+SELECT count(*) FROM
+(
+  SELECT *
+  FROM trips
+  WHERE dropoff_location_id = 110
+  LIMIT 1
+);
+```
+
+This time, the query returns in 90 ms, which means that the first row is away
+from the start of the table, and the engine has to scan more than half of the
+table. What if we do a backward scan from the end? How 'full' would the scan be
+then? Would it be half full or half empty?
+
+```questdb-sql
+SELECT count(*) FROM
+(
+  SELECT *
+  FROM trips
+  WHERE dropoff_location_id = 110
+  ORDER BY pickup_datetime DESC
+  LIMIT 1
+);
+```
+
+It turns out that it's not full at all! The result comes ~ 12 times faster, in
+10 ms. It makes sense because the designated timestamp value of the matching row
+is `2019-05-21T20:51:26.000000Z`, very close to the maximum in the table -
+`2019-06-30T23:59:56.000000Z`.
+
+Let's check the execution plan:
+
+| QUERY PLAN                                                                    |
+| ----------------------------------------------------------------------------- |
+| Count                                                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;Async JIT Filter                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limit: 1                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter: dropoff_location_id=110           |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;workers: 24                               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DataFrame                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row backward scan             |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Frame backward scan on: trips |
+
+As expected, the query does a backward scan (`Frame backward scan`) and stops on
+the first matching row ( `limit: 1` under `Async JIT Filter`).
+
+Remember that the approach above only makes sense if the data is close to the
+end of the table; otherwise, it might slow things down.
+
+## Using `EXPLAIN` to optimize your SQL queries
+
+We have introduced the basic scan nodes available in QuestDB:
+
+- Frame scan
+- Interval scan
+- Index scan (in table and index order)
+
+Peeking under the database's hood with `EXPLAIN`, we have also demonstrated some
+of the available optimizations for tables with the designated timestamp. Knowing
+how data is accessed, we were able to optimize queries by reducing the volume of
+read data.
+
+In the examples above, we have learned methods such as:
+
+- Limiting the number of columns accessed
+- Reducing table scanning by adding conditions on the designated timestamp
+- Reducing table scanning with `LIMIT` and/or changing the scan direction
+- Accessing records via the index
+
+Feel free to try out examples on the
+[QuestDB demo instance](https://demo.questdb.io/). We hope you enjoy this
+tutorial.
+
+Happy query tuning!
