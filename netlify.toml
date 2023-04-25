@@ -171,7 +171,7 @@
 
 [[redirects]]
   from = "/tutorial/2022/03/15/cryptocurrency-grafana-questdb/"
-  to = "/blog/2022/03/15/cryptocurrency-grafana-questdb/"
+  to = "/blog/crypto-data-visualization-dashboards-grafana/"
 
 [[redirects]]
   from = "/tutorial/2022/03/29/crypto-volumes-julia-questdb/"
